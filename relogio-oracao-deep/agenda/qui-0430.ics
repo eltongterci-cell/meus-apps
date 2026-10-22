@@ -9,8 +9,8 @@ DTSTAMP:20261021T173541Z
 DTSTART:20261029T073000Z
 DTEND:20261029T080000Z
 SUMMARY:Relógio de Oração DEEP
-DESCRIPTION:Tiago 4. Chegai-vos a Deus. Ore por humildade e rendição.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://relogio-oracao-deep.netlify.app
-URL:https://relogio-oracao-deep.netlify.app
+DESCRIPTION:Tiago 4. Chegai-vos a Deus. Ore por humildade e rendição.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
+URL:https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
 BEGIN:VALARM
 TRIGGER:-PT10M
 ACTION:DISPLAY

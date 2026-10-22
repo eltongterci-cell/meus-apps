@@ -9,8 +9,8 @@ DTSTAMP:20261021T173541Z
 DTSTART:20261028T030000Z
 DTEND:20261028T033000Z
 SUMMARY:Relógio de Oração DEEP
-DESCRIPTION:Tiago 3. A língua revela o coração. Ore por palavras que edificam. À noite\, célula de oração.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://relogio-oracao-deep.netlify.app
-URL:https://relogio-oracao-deep.netlify.app
+DESCRIPTION:Tiago 3. A língua revela o coração. Ore por palavras que edificam. À noite\, célula de oração.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
+URL:https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
 BEGIN:VALARM
 TRIGGER:-PT10M
 ACTION:DISPLAY

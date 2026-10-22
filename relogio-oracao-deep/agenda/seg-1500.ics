@@ -9,8 +9,8 @@ DTSTAMP:20261021T173541Z
 DTSTART:20261026T180000Z
 DTEND:20261026T183000Z
 SUMMARY:Relógio de Oração DEEP
-DESCRIPTION:Tiago 1. O que tem dentro de mim? Ore por um coração sincero diante de Deus.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://relogio-oracao-deep.netlify.app
-URL:https://relogio-oracao-deep.netlify.app
+DESCRIPTION:Tiago 1. O que tem dentro de mim? Ore por um coração sincero diante de Deus.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
+URL:https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
 BEGIN:VALARM
 TRIGGER:-PT10M
 ACTION:DISPLAY
