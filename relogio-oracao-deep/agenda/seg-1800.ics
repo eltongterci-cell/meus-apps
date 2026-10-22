@@ -14,7 +14,7 @@ URL:https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep
 BEGIN:VALARM
 TRIGGER:-PT10M
 ACTION:DISPLAY
-DESCRIPTION:Seu turno de oração começa em 10 minutos
+DESCRIPTION:Seu horário de oração começa em 10 minutos
 END:VALARM
 END:VEVENT
 END:VCALENDAR

@@ -30,7 +30,7 @@
 /* =========================================================================
    Relógio de Oração DEEP — tema claro "luz da manhã"
    Ideia: uma luz suave que nasce no centro e se espalha (de dentro para fora).
-   Estrutura: topo → como participar → agora → seus turnos → dias → dia → horários → rodapé
+   Estrutura: topo (ou faixa com a chama) → como participar → agora → seu dia → escala → rodapé
    Regras: espaços só da escala --s*, raios só de --r-*, cores só dos tokens.
    Tema claro único, de propósito (pedido da liderança: leve e espiritual).
    ========================================================================= */
@@ -107,6 +107,9 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .bigbtn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:none}
 .btn.outline{background:var(--surface);color:var(--ember);border:1.5px solid var(--ember)}
 .btn[disabled],.bigbtn[disabled]{opacity:.55}
+.btn.sm{min-height:42px;padding:var(--s2) var(--s3);font-size:var(--t-sm)}
+.btn.danger{color:var(--danger);border-color:var(--danger-line)}
+.btn.danger.sure{background:var(--danger);border-color:var(--danger);color:var(--white)}
 .linkbtn{border:0;background:none;padding:var(--s2) 0;min-height:36px;color:var(--ember);font-weight:700;font-size:var(--t-sm);text-align:left}
 .linkbtn.center{align-self:center}
 .mini{border:0;background:none;border-radius:var(--r-sm);height:36px;padding:0 var(--s2);font-size:var(--t-s);font-weight:700;white-space:nowrap;color:var(--fg)}
@@ -154,6 +157,20 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .bar{height:8px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden}
 .bar i{display:block;height:100%;width:0;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--ember-hi),var(--ember));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
 
+/* faixa do topo durante o propósito: dia, capítulo e a chama que não apaga */
+.band{position:relative;overflow:hidden;isolation:isolate;border-radius:var(--r-lg);padding:var(--s4) var(--s5);color:var(--white);
+  background:linear-gradient(150deg,var(--sun-1) 0%,var(--sun-2) 38%,var(--ember) 72%,var(--sun-3) 100%);box-shadow:0 14px 34px rgba(234,88,12,.32);display:flex;flex-direction:column;gap:var(--s2)}
+.band .hc-rings{right:-170px;top:-170px}
+.band-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.band-day{font-family:var(--display);font-weight:800;font-size:var(--t-2xl);letter-spacing:-.02em;line-height:1.1}
+.band-ref{font-size:var(--t-s);font-weight:700;background:rgba(23,23,28,.18);border-radius:var(--r-pill);padding:var(--pill);white-space:nowrap}
+.chama{display:flex;align-items:center;gap:var(--s2);font-size:var(--t-ms);font-weight:600}
+.chama .flame{width:16px;height:22px}
+.chama b{font-family:var(--display);font-weight:800}
+.band-stats{font-size:var(--t-s);color:rgba(255,255,255,.88);font-variant-numeric:tabular-nums}
+.lider-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);background:var(--fg);color:var(--white);border-radius:var(--r-md);padding:var(--s1) var(--s4);font-size:var(--t-sm)}
+.lider-bar .linkbtn{color:var(--ember-hi)}
+
 /* 8. Como participar ----------------------------------------------------- */
 .steps{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s3)}
 .steps li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--s3);align-items:start}
@@ -188,7 +205,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .person.on{background:var(--ember-soft)}
 .person.on .st{color:var(--ember)}
 .person.off{background:var(--danger-soft)}
-.person.off .nm{color:var(--muted);text-decoration:line-through}
+.person.off .nm{color:var(--fg)}
 .person.off .st{color:var(--danger)}
 /* você: vermelho enquanto não acendeu a chama, verde quando está orando */
 .person.eu{box-shadow:inset 0 0 0 2px var(--danger);background:var(--danger-soft)}
@@ -217,23 +234,38 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .howto .flame{margin-top:2px}
 .lit{display:flex;align-items:center;justify-content:center;gap:var(--s2);font-size:var(--t-ms);text-align:center}
 
-/* 10. Seus turnos -------------------------------------------------------- */
-.mine-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
-.ticket{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:var(--s3);align-items:center;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3);min-height:64px}
-.ticket .day{font-family:var(--display);font-weight:800;font-size:var(--t-xxs);text-transform:uppercase;letter-spacing:.06em;color:var(--ember);text-align:center;line-height:1.1;background:var(--surface);border-radius:var(--r-sm);padding:6px 0}
+/* 10. Seu dia: tarefas + seus horários ------------------------------------ */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:var(--s1);background:var(--surface-2);border-radius:var(--r-md);padding:var(--s1)}
+.seg button{border:0;background:none;height:36px;border-radius:calc(var(--r-md) - var(--s1));font-weight:700;font-size:var(--t-sm);color:var(--muted)}
+.seg [aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--shadow)}
+.md-sec{display:flex;flex-direction:column;gap:var(--s2);border-top:1px solid var(--line);padding-top:var(--s4)}
+.sub-title{font-family:var(--display);font-weight:800;font-size:var(--t-md);line-height:1.2}
+.pin-line{font-size:var(--t-s);color:var(--muted)}
+.pin-line b{color:var(--fg);letter-spacing:.12em;font-variant-numeric:tabular-nums}
+.mine-list{list-style:none;padding:0;display:flex;flex-direction:column}
+.ticket{border-top:1px solid var(--line)}
+.ticket:first-child{border-top:0}
+.tk-main{display:grid;grid-template-columns:44px minmax(0,1fr) 16px;gap:var(--s3);align-items:center;width:100%;min-height:64px;border:0;background:none;padding:var(--s2) 0;text-align:left;color:inherit}
+.tk-main[disabled]{cursor:default;opacity:.6}
+.tk-txt{display:flex;flex-direction:column;gap:var(--s0);min-width:0}
+.chev{width:9px;height:9px;border:solid var(--muted);border-width:0 2px 2px 0;transform:rotate(45deg);margin-top:-4px;transition:transform .15s}
+.ticket.open .chev{transform:rotate(-135deg);margin-top:4px}
+.tk-acts{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);padding-bottom:var(--s3)}
+.ticket .day{font-family:var(--display);font-weight:800;font-size:var(--t-xxs);text-transform:uppercase;letter-spacing:.06em;color:var(--ember);text-align:center;line-height:1.1;background:var(--surface-2);border-radius:var(--r-sm);padding:6px 0}
 .ticket .day b{display:block;font-size:var(--t-xl);color:var(--fg);letter-spacing:0}
 .ticket .hr{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .ticket .sub{font-size:var(--t-s);color:var(--muted);display:flex;align-items:center;gap:var(--s2)}
 .ticket .sub.ok{color:var(--ok)}
 .ticket .sub.hot{color:var(--ember);font-weight:700}
-.acts{display:flex;flex-direction:column;align-items:flex-end;gap:0}
 
 /* 11. Dias --------------------------------------------------------------- */
 /* um cartão só: abas dos dias (fixas ao rolar) → leitura do dia → horários */
 .agenda{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
 .stick-sentinel{position:absolute;top:0;height:1px;width:1px}
-.ag-days{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:var(--s4) var(--pad) var(--s3);display:flex;flex-direction:column;gap:var(--s3);transition:box-shadow .2s,border-radius .2s}
+.esc-head{padding:var(--pad) var(--pad) 0}
+.ag-days{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);padding:var(--s3) var(--pad);display:flex;flex-direction:column;gap:var(--s3);transition:box-shadow .2s,border-radius .2s}
 .ag-days.stuck{border-radius:0 0 var(--r-lg) var(--r-lg);box-shadow:0 8px 18px rgba(23,23,28,.08)}
+.agenda .lista{border-top:0;padding-top:var(--s2)}
 
 .ag-sec{padding:var(--s4) var(--pad);display:flex;flex-direction:column;gap:var(--s4);border-top:1px solid var(--line)}
 .ag-sec.lista{gap:var(--s3);padding-bottom:var(--pad)}
@@ -243,7 +275,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .tab b{font-family:var(--display);font-weight:800;font-size:var(--t-xl);line-height:1}
 .tab .tb{width:56%;height:3px;border-radius:2px;background:var(--surface-2);overflow:hidden}
 .tab .tb i{display:block;height:100%;background:var(--ember)}
-.tab .hoje{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:var(--t-xxs);font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--fg);color:var(--ink);border-radius:var(--r-pill);padding:var(--pill-sm);line-height:1.5}
+.tab .wd.today{color:var(--ember)}
 .tab .done{position:absolute;top:-6px;right:-3px}
 .tab[aria-selected="true"]{background:var(--ember);border-color:var(--ember);color:var(--ink);box-shadow:var(--shadow-hot)}
 .tab[aria-selected="true"] .wd{color:var(--ink);opacity:.85}
@@ -256,10 +288,10 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 
 /* checklist do dia */
 .t-link{border:0;background:none;padding:8px 2px;margin:-8px 0;font:inherit;font-size:var(--t-s);font-weight:700;color:var(--ember);cursor:pointer;min-height:32px}
-.tasks{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
-.task{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:var(--s3);align-items:center;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3);min-height:64px}
+.tasks{list-style:none;padding:0;display:flex;flex-direction:column}
+.task{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:var(--s3);align-items:center;padding:var(--s3) 0;min-height:64px;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
 .tick{width:26px;height:26px;border-radius:var(--r-sm);border:2px solid var(--tick);background:var(--surface);position:relative}
-.task.done{background:var(--ok-soft)}
 .task.done .tick{background:var(--ok);border-color:var(--ok)}
 .task:has(.add:not(.join)) .tick{cursor:pointer;border-color:var(--ember)}
 .tasks.locked .tick{border-style:dashed;background:transparent}
@@ -300,15 +332,17 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .lista{scroll-margin-top:110px}
 .periodos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s1);background:var(--surface-2);border-radius:var(--r-md);padding:var(--s1)}
 .per{border:0;background:transparent;border-radius:calc(var(--r-md) - var(--s1));height:60px;padding:0 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s0);min-width:0}
-.per b{font-size:var(--t-sm);font-weight:700}
+.per b{font-size:var(--t-s);font-weight:700;white-space:nowrap}
 .per small{font-size:var(--t-xxs);color:var(--muted);white-space:nowrap}
-.per[aria-selected="true"]{background:var(--fg);color:var(--ink)}
+.per[aria-selected="true"]{background:var(--ember);color:var(--white);box-shadow:var(--shadow-hot)}
 .per[aria-selected="true"] small{color:var(--ink);opacity:.75}
 .toggle{display:flex;align-items:center;gap:var(--s3);font-size:var(--t-ms);color:var(--muted);cursor:pointer;min-height:36px}
 .toggle input{width:20px;height:20px;margin:0;accent-color:var(--ember)}
-.slots{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
-.slot{grid-template-areas:"t n a";display:grid;grid-template-columns:var(--time-col) minmax(0,1fr) var(--action-col);gap:var(--s3);align-items:center;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-md);padding:10px var(--s2) 10px var(--s3);min-height:64px;column-gap:var(--s2)}
-.slot.mine{border-color:var(--ok);background:var(--ok-soft)}
+.slots{list-style:none;padding:0;display:flex;flex-direction:column}
+.slot{grid-template-areas:"t n a";display:grid;grid-template-columns:var(--time-col) minmax(0,1fr) var(--action-col);gap:var(--s3);align-items:center;border-top:1px solid var(--line);padding:10px 0;min-height:64px;column-gap:var(--s2)}
+.slot:first-child{border-top:0}
+.slot.mine,.slot.agora{border:1px solid var(--ok);border-radius:var(--r-md);background:var(--ok-soft);padding:10px calc(var(--s2) - 1px) 10px calc(var(--s3) - 1px);margin:var(--s1) calc(var(--s2) * -1) var(--s1) calc(var(--s3) * -1)}
+.slot.mine+.slot,.slot.agora+.slot{border-top:0}
 .slot.skel{min-height:64px}
 .slot.skel span{display:block;height:14px;border-radius:var(--r-pill);background:var(--line)}
 .slot.skel span:last-child{height:40px;border-radius:var(--r-sm)}
@@ -319,12 +353,15 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .time{font-family:var(--display);font-weight:800;font-size:var(--t-md);font-variant-numeric:tabular-nums;line-height:1}
 .time span{display:block;font-family:var(--body);font-weight:500;font-size:var(--t-xs);color:var(--muted);margin-top:var(--s1);white-space:nowrap}
 .names{display:flex;flex-wrap:wrap;gap:var(--s2);min-width:0}
-.pchip{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-s);font-weight:600;height:28px;padding:0 var(--s3);border-radius:var(--r-pill);background:var(--surface);max-width:100%}
+.pchip{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-s);font-weight:600;height:28px;padding:0 var(--s3);border-radius:var(--r-pill);background:var(--surface-2);max-width:100%}
+.pchip:has(.rm){height:34px;padding-right:var(--s1)}
+.pchip .rm{border:0;flex:none;min-width:28px;height:28px;border-radius:var(--r-pill);background:var(--danger-soft);color:var(--danger);font-weight:700;font-size:var(--t-sm);padding:0 var(--s2)}
+.pchip .rm.sure{background:var(--danger);color:var(--white)}
 .pchip.eu{box-shadow:inset 0 0 0 1.5px var(--ok);background:var(--ok-soft);color:var(--ok)}
 .pchip.on{background:var(--ember-soft);color:var(--ember)}
 .pchip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .who{display:flex;align-items:center;gap:var(--s2);min-width:0;max-width:100%;min-height:40px;border:0;background:none;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
-.who .cnt{flex:none;font-size:var(--t-xs);font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg);background:var(--surface);border-radius:var(--r-pill);padding:var(--pill-sm)}
+.who .cnt{flex:none;font-size:var(--t-xs);font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg);background:var(--surface-2);border-radius:var(--r-pill);padding:var(--pill-sm)}
 .who .flame{width:11px;height:15px}
 .flist{font-size:var(--t-sm);font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .chips-full{display:flex;flex-wrap:wrap;gap:var(--s2)}
@@ -383,6 +420,10 @@ footer{display:flex;flex-direction:column;gap:var(--s3);padding-top:var(--s4);bo
 .row{display:grid;grid-template-columns:1fr 2fr;gap:var(--s2)}
 .stack{display:flex;flex-direction:column;gap:var(--s2)}
 .err{color:var(--danger);font-size:var(--t-sm)}
+.code-box{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:var(--s3);row-gap:var(--s1);background:var(--ember-soft);border-radius:var(--r-md);padding:var(--s3) var(--s4)}
+.code-box span{font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ember)}
+.code-box b{font-family:var(--display);font-weight:800;font-size:var(--t-2xl);letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.code-box p{grid-column:1 / -1;font-size:var(--t-s);color:var(--muted);line-height:1.45}
 .okmark{width:48px;height:48px;border-radius:var(--r-md);background:var(--ember-soft);display:grid;place-items:center}
 .okmark .flame{width:20px;height:27px}
 .thanks .big{font-size:var(--t-2xl);line-height:1.15;text-wrap:balance}
@@ -579,7 +620,7 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
     <span class="live" id="live" hidden><i></i>Ao vivo</span>
   </header>
 
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-card">
       <div class="hc-rings" aria-hidden="true"></div>
       <span class="hc-tag">#DeDentroParaFora</span>
@@ -592,7 +633,7 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
     </div>
     <div class="bento" aria-live="polite">
       <div class="tile">
-        <span class="lbl">Turnos cobertos</span>
+        <span class="lbl">Horários cobertos</span>
         <b class="num" id="mBig">0<small>/240</small></b>
         <div class="bar"><i id="mBar"></i></div>
       </div>
@@ -604,35 +645,41 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
     </div>
   </section>
 
+  <section class="band" id="band" hidden aria-live="polite">
+    <div class="hc-rings" aria-hidden="true"></div>
+    <div class="band-top"><span class="band-day" id="bDay">Dia 1 de 5</span><span class="band-ref" id="bRef">Tiago 1</span></div>
+    <p class="chama" id="bChama"><span class="flame w"></span><span id="bChamaTxt">Ajude a manter a chama acesa</span></p>
+    <p class="band-stats" id="bStats"></p>
+  </section>
+
+  <div class="lider-bar" id="liderBar" hidden><span><b>Modo líder</b> · toque no × de um nome para remover</span><button class="linkbtn" id="liderSair">Sair</button></div>
+
   <section class="card" id="como" hidden>
     <div class="sec-row"><h2 class="sec-title"><span class="ic ic-help" aria-hidden="true"></span>Como participar</h2><button class="linkbtn" id="comoOk">Entendi</button></div>
     <ol class="steps">
-      <li><span class="n">1</span><div><b>Escolha um horário</b><span>Toque em "Quero orar" e coloque seu nome. Pode escolher quantos quiser.</span></div></li>
-      <li><span class="n">2</span><div><b>Na hora, toque em "Comecei a orar"</b><span>Seu nome ganha uma chama para todo mundo ver.</span></div></li>
-      <li><span class="n">3</span><div><b>Leia o capítulo do dia</b><span>Depois toque em "Concluí a leitura".</span></div></li>
+      <li><span class="n">1</span><div><b>Escolha seu horário</b><span>Toque em "Quero orar" e coloque seu nome.</span></div></li>
+      <li><span class="n">2</span><div><b>Na hora, toque em "Comecei a orar"</b><span>Seu nome ganha uma chama.</span></div></li>
+      <li><span class="n">3</span><div><b>Marque suas tarefas do dia</b><span>Leitura de Tiago e jejum, no quadradinho.</span></div></li>
     </ol>
   </section>
 
   <section class="card" id="resumo" hidden></section>
   <section class="card now" id="now" aria-live="polite" hidden></section>
-  <section class="card" id="mine" hidden></section>
+  <section class="card" id="meudia" aria-label="Seu dia"></section>
 
-  <section class="agenda" aria-label="Dias e horários">
+  <section class="agenda" id="escala" aria-label="Escala de oração">
+    <div class="esc-head sec-head">
+      <h2 class="sec-title"><span class="ic ic-cal" aria-hidden="true"></span>Escala de oração</h2>
+      <p class="sub">30 minutos cada · até 5 pessoas por horário</p>
+    </div>
     <span class="stick-sentinel" id="stickSentinel" aria-hidden="true"></span>
     <div class="ag-days" id="agDays">
-      <h2 class="sec-title"><span class="ic ic-cal" aria-hidden="true"></span><span id="diaTitulo">Segunda, 26/10</span></h2>
       <nav class="days" role="tablist" id="tabs" aria-label="Dias"></nav>
     </div>
 
-    <div class="ag-sec" id="dayhead"></div>
-
     <div class="ag-sec lista" id="lista">
-      <div class="sec-head">
-        <h2 class="sec-title"><span class="ic ic-clock" aria-hidden="true"></span>Horários de oração</h2>
-        <p class="sub">30 minutos cada, até 5 pessoas</p>
-      </div>
-      <div class="foco-box"><span>Foco de oração</span><p id="focoDia"></p></div>
-      <div class="complete" id="diaCompleto" hidden><span class="flame"></span>Dia completo! Todos os turnos têm alguém orando.</div>
+      <div class="foco-box"><span id="focoTit">Foco de oração</span><p id="focoDia"></p></div>
+      <div class="complete" id="diaCompleto" hidden><span class="flame"></span>Dia completo! Todos os horários têm alguém orando.</div>
       <div class="periodos" role="tablist" id="perTabs" aria-label="Período do dia"></div>
       <label class="toggle"><input type="checkbox" id="soVazios"> Mostrar só horários sem ninguém</label>
       <p class="notice" id="notice" hidden></p>
@@ -642,8 +689,8 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
 
   <footer>
     <button class="linkbtn" id="verResumo">Ver o Resumo do Propósito</button>
-    <div class="lider"><span>Liderança:</span> <button class="linkbtn" id="copiar">Copiar escala do dia para o WhatsApp</button></div>
-    <p>Seus turnos ficam salvos neste celular. Para cancelar, use "Seus turnos".</p>
+    <button class="linkbtn" id="abrirRec">Trocou de celular? Recuperar meus horários</button>
+    <div class="lider"><span>Liderança:</span> <button class="linkbtn" id="copiar">Copiar escala do dia</button><span aria-hidden="true">·</span><button class="linkbtn" id="abrirLider">Modo líder</button></div>
     <div class="sign"><svg class="logo" viewBox="181 396 1174 257" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M 183.7 399.7 C 182.8 400.5, 182.8 646.2, 183.6 648.4 C 184.5 650.8, 358 650.8, 380.5 648.4 C 397.5 646.6, 414.4 642, 424.4 636.4 C 426.7 635.1, 430.1 633.2, 432.1 632.1 C 440.2 627.6, 456.5 613.1, 461.3 606 C 468 596.3, 472 589.8, 472 589 C 472 588.1, 474.8 582.1, 477.3 577.5 C 478.4 575.4, 480.2 568.3, 482.5 557 C 483.2 553.4, 484.3 548.5, 484.9 546 C 486.5 539.2, 486.3 509.2, 484.6 501.7 C 483.8 498.3, 482.2 491, 481 485.5 C 479.8 480, 477.7 473.1, 476.4 470.2 C 475 467.2, 473 463, 472 460.7 C 469.8 455.5, 462 443.9, 456 437 C 451.8 432.2, 437.8 420, 436.4 420 C 436.1 420, 433.8 418.6, 431.3 417 C 428.8 415.3, 424.1 412.8, 420.7 411.4 C 417.3 410.1, 413.3 408.3, 411.8 407.5 C 410.4 406.7, 408.5 406, 407.6 406 C 406.8 406, 404 405.3, 401.6 404.5 C 387 399.5, 375.5 399, 276.9 399 C 226 399, 184 399.3, 183.7 399.7 M 503.6 400.6 C 500.9 403.2, 501.2 646, 503.8 648.3 C 506.8 651, 762.9 650.9, 765.3 648.2 C 767.5 645.8, 767.9 588.3, 765.8 586.2 C 764.9 585.3, 743.8 585, 676.9 585 C 598.5 585, 589 584.8, 587.6 583.4 C 584.9 580.8, 585.3 556.7, 588 554 C 590 552, 591.3 552, 676.9 552 C 724.7 552, 764.5 551.7, 765.4 551.4 C 767.6 550.6, 767.8 499.9, 765.7 498.1 C 764.7 497.4, 738.8 497, 676.2 496.8 C 627.8 496.6, 587.8 496.1, 587.3 495.7 C 586.1 494.5, 585.8 467.8, 586.9 466 C 587.8 464.7, 599.3 464.4, 677.2 464 C 726.3 463.7, 766.6 463.4, 766.8 463.2 C 766.9 463.1, 767 449.3, 767 432.6 C 767 406.2, 766.8 401.9, 765.4 400.6 C 763 398.2, 506 398.2, 503.6 400.6 M 777 400 C 774.7 401.4, 774.7 647.6, 777 649 C 777.9 649.6, 828.2 650, 908.2 650 C 1035.4 650, 1037.9 650, 1039 648.1 C 1040.8 644.6, 1040.3 586.3, 1038.4 585.6 C 1037.5 585.3, 997.8 585, 950 585 C 902.2 585, 862.5 584.7, 861.6 584.4 C 859.5 583.6, 859.2 554.6, 861.2 553.3 C 861.9 552.9, 902.3 552.3, 951 552 L 1039.5 551.5 1039.8 526.5 C 1039.9 512.8, 1039.8 500.5, 1039.5 499.2 L 1039 497 952 497 C 898 497, 864.2 496.6, 862.6 496 L 860 495.1 860 480.6 C 860 470.1, 860.3 465.9, 861.2 465.3 C 861.9 464.9, 902.3 464.3, 951 464 L 1039.5 463.5 1039.8 433.2 C 1039.9 413.5, 1039.7 402.2, 1039 401 C 1037.9 399, 1036.1 399, 908.2 399 C 828.2 399, 777.9 399.4, 777 400 M 1062.2 399.7 C 1060.3 400.5, 1060.4 647.3, 1062.4 648.9 C 1064.1 650.3, 1101.3 650.1, 1102.7 648.7 C 1103.1 648.2, 1103.7 632, 1104 612.7 L 1104.5 577.5 1187.5 576.9 C 1253.2 576.4, 1272.5 576, 1280 574.8 C 1289.2 573.4, 1299.4 570.6, 1301.6 568.9 C 1302.2 568.4, 1304.5 567.4, 1306.7 566.6 C 1324.8 560.2, 1346.7 533.8, 1350 514.5 C 1350.6 511.2, 1351.5 506.7, 1352 504.5 C 1353.2 499.3, 1353.2 477.8, 1351.9 472 C 1351.4 469.5, 1350.6 465, 1350.1 462 C 1347.2 443.8, 1327.6 419.3, 1309.5 411.1 C 1306.8 409.9, 1303.7 408.4, 1302.7 407.9 C 1298.5 405.6, 1287.7 402.9, 1275.6 401 C 1263.3 399.1, 1258 399, 1163.1 399.1 C 1108.3 399.1, 1062.9 399.4, 1062.2 399.7 M 1105.2 435.8 C 1104.2 436.5, 1104 447.7, 1104.2 488.6 L 1104.5 540.5 1181.5 540.8 C 1246.1 541, 1259.6 540.8, 1265.5 539.6 C 1269.3 538.8, 1274.5 537.8, 1276.8 537.5 C 1289.1 535.6, 1302.9 523.1, 1307 510.3 C 1310.7 498.9, 1310.7 475.7, 1307.1 466 C 1301.4 450.9, 1289.4 441.2, 1272.5 437.9 C 1269.2 437.3, 1264.5 436.4, 1262 436 C 1256.2 434.9, 1106.9 434.8, 1105.2 435.8 M 240.6 449.2 C 238 452.8, 238.2 597.8, 240.8 600.9 L 242.5 603.1 302.5 602.7 C 369 602.3, 372 602, 390.1 595.7 C 409.1 589, 419.6 577.5, 426.2 556 C 429.6 544.6, 429.6 504.1, 426.1 493.5 C 423.8 486.3, 419.9 476.9, 419 476 C 418.7 475.7, 417.2 473.6, 415.7 471.3 C 412.1 466, 403 458.9, 396.5 456.2 C 375.4 447.7, 375.9 447.7, 303.3 447.3 L 242.2 446.9 240.6 449.2"/></svg><span>Jovens de 18 a 25 anos</span></div>
   </footer>
 </div>
@@ -652,8 +699,8 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
 
 <div class="sheet-bg" id="sheetbg" hidden>
   <form class="sheet" id="form" novalidate>
-    <div class="kicker">Reservar turno</div>
-    <h2 class="display" id="sheetTitle">Turno</h2>
+    <div class="kicker">Reservar horário</div>
+    <h2 class="display" id="sheetTitle">Horário</h2>
     <label class="field" for="nome">Seu nome
       <input class="input" type="text" id="nome" maxlength="40" autocomplete="given-name" placeholder="Ex.: Ana Clara">
     </label>
@@ -741,16 +788,42 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
 <div class="sheet-bg" id="calbg" hidden>
   <div class="sheet" role="dialog" aria-labelledby="calTitle">
     <div class="okmark"><span class="flame"></span></div>
-    <h2 class="display" id="calTitle">Turno reservado!</h2>
+    <h2 class="display" id="calTitle">Horário reservado!</h2>
     <p class="hint" id="calInfo"></p>
     <div class="stack">
       <a class="btn primary" id="calIcs" href="#">Colocar na agenda do celular</a>
       <a class="btn" id="calGoogle" href="#" target="_blank" rel="noopener">Colocar no Google Agenda</a>
     </div>
-    <div class="inset howto"><span class="flame"></span><p><b>Na hora do turno,</b> abra este link e toque em <b>"Comecei a orar"</b>. Seu nome ganha uma chama para todos verem que você está orando.</p></div>
-    <p class="hint">O lembrete da agenda toca 10 minutos antes.</p>
+    <p class="hint">O lembrete toca 10 minutos antes. Na hora, abra o app e toque em <b>"Comecei a orar"</b>.</p>
+    <div class="code-box" id="calCode"><span>Seu código</span><b id="calPin">----</b><p>Seus horários ficam salvos neste celular. Em outro celular, recupere com seu nome e este código.</p></div>
     <button type="button" class="linkbtn center" id="calFechar">Agora não</button>
   </div>
+</div>
+<div class="sheet-bg" id="recbg" hidden>
+  <form class="sheet" id="recForm" novalidate>
+    <h2 class="sec-title"><span class="ic ic-clock" aria-hidden="true"></span>Recuperar meus horários</h2>
+    <p class="hint">Use o mesmo nome da reserva e o código de 4 números que apareceu quando você reservou.</p>
+    <label class="field" for="recNome">Seu nome<input class="input" type="text" id="recNome" maxlength="40" autocomplete="given-name" placeholder="Ex.: Ana Clara"></label>
+    <label class="field" for="recPin">Código<input class="input" type="text" id="recPin" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="0000" autocomplete="off"></label>
+    <p class="err" id="recErr" hidden></p>
+    <p class="hint">O código aparece no celular onde você reservou, em "Seus horários".</p>
+    <div class="row">
+      <button type="button" class="btn" id="recVoltar">Voltar</button>
+      <button type="submit" class="btn primary" id="recOk">Recuperar</button>
+    </div>
+  </form>
+</div>
+<div class="sheet-bg" id="lidbg" hidden>
+  <form class="sheet" id="lidForm" novalidate>
+    <h2 class="sec-title"><span class="ic ic-check" aria-hidden="true"></span>Modo líder</h2>
+    <p class="hint">Para remover nomes errados, repetidos ou de quem desistiu.</p>
+    <label class="field" for="lidSenha">Senha da liderança<input class="input" type="password" id="lidSenha" autocomplete="current-password"></label>
+    <p class="err" id="lidErr" hidden></p>
+    <div class="row">
+      <button type="button" class="btn" id="lidVoltar">Voltar</button>
+      <button type="submit" class="btn primary" id="lidOk">Entrar</button>
+    </div>
+  </form>
 </div>
 <div class="sheet-bg" id="thxbg" hidden>
   <div class="sheet thanks" role="dialog" aria-labelledby="thxTitle">
@@ -803,6 +876,12 @@ const saveMine=()=>ls("rel_mine",JSON.stringify(mine));
 let leituras=[];
 let lido={}; try{lido=JSON.parse(ls("rel_lido")||"{}")||{}}catch(e){lido={}}
 let completos=null; // dias completos, para comemorar só na virada
+/* código de 4 números: junto com o nome, recupera os horários em outro celular */
+let meuPin=ls("rel_pin")||"";
+function garantirPin(){if(!/^\d{4}$/.test(meuPin)){meuPin=String(1000+Math.floor(Math.random()*9000));ls("rel_pin",meuPin)}return meuPin}
+/* modo líder: a senha fica só nesta aba e é conferida no servidor */
+let liderSenha=""; try{liderSenha=sessionStorage.getItem("rel_lider")||""}catch(e){}
+const fmtH=h=>Number.isInteger(h)?String(h):h.toFixed(1).replace(".",",");
 
 function nowSP(){
   const p=Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
@@ -888,7 +967,7 @@ function salvarJejum(){
     t=`comer:${pad(de)}-${pad(ate)}`}
   if(t){jejumTipo=t;ls("rel_jejum_tipo",t)}
   renOn=$("renOn").checked; ls("rel_renuncia",renOn?"1":"0");
-  $("jejbg").hidden=true; renderDay(byKey());
+  $("jejbg").hidden=true; renderMeuDia();
   if(t) toast(`Salvo: ${jejumNome(t)}${renOn?" + renúncia":""}`); else if(renOn) toast("Renúncia extra salva");
 }
 const faixaTxt=(de,ate)=>`das ${de}h ${ate===24?"à meia-noite":`às ${ate}h`}`;
@@ -913,13 +992,13 @@ function tarefasHtml(d,m){
     ? `<span class="t-sub ok">Concluída · Glória a Deus!</span>`
     : `<span class="t-sub"><a href="${bibliaUrl(d)}" target="_blank" rel="noopener">Abrir na Bíblia</a></span>`;
   const lerAcao=leu||!aberto?"":`<button class="add" ${nome?`data-ler="${d.k}"`:"data-pedir-nome"}>Concluí</button>`;
-  const orarSub=orou?`<span class="t-sub ok">Concluída · seu turno foi às ${meus.find(r=>r.orando_em&&passou(d,r.hora)).hora}</span>`
-    : prox?`<span class="t-sub">Seu turno: <b>${prox.hora}–${endOf(prox.hora)}</b>${meus.length>1?` · ${meus.length} turnos`:""}</span>`
-    : `<span class="t-sub">Escolha um horário abaixo</span>`;
-  const orarAcao=orou||prox?"":`<button class="add join" data-ir-lista>Escolher</button>`;
+  const orarSub=orou?`<span class="t-sub ok">Concluída · às ${meus.find(r=>r.orando_em&&passou(d,r.hora)).hora}</span>`
+    : prox?`<span class="t-sub">Seu horário: <b>${prox.hora}–${endOf(prox.hora)}</b>${meus.length>1?` · ${meus.length} no dia`:""}</span>`
+    : Object.keys(mine).length?`<span class="t-sub">Marca sozinha no seu horário</span>`:`<span class="t-sub">Escolha seu horário abaixo</span>`;
+  const orarAcao=orou||prox||!Object.keys(mine).length?"":`<button class="add join" data-ir-lista="${d.k}">Escolher</button>`;
   const algum=leu||orou||jejumFeito[d.k];
-  const nota=!aberto?`<p class="tasks-note lock"><b>Abre na ${d.dia.toLowerCase()}, ${d.date}.</b> Nesse dia, toque no quadradinho de cada tarefa quando concluir.</p>`
-    :!algum?`<p class="tasks-note">Toque no quadradinho quando concluir. A oração marca sozinha quando você toca em <b>Comecei a orar</b> no seu turno.</p>`:"";
+  const nota=!aberto?`<p class="tasks-note lock"><b>Abre na ${d.dia.toLowerCase()}, ${d.date}.</b> Nesse dia, toque no quadradinho de cada tarefa.</p>`
+    :!algum?`<p class="tasks-note">Toque no quadradinho ao concluir. A oração marca sozinha.</p>`:"";
   return `${nota}<ul class="tasks${aberto?"":" locked"}">
     <li class="task${leu?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Ler ${d.ref}</b>${ler}</div>${lerAcao}</li>
     <li class="task${orou?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Orar 30 minutos</b>${orarSub}</div>${orarAcao}</li>
@@ -952,6 +1031,7 @@ async function carregar(){
     const ids=new Set(reservas.map(x=>x.id)); let ch=false;
     if(reservas.length<1000) for(const id of Object.keys(mine)) if(!ids.has(id)){delete mine[id];ch=true}
     if(ch) saveMine();
+    sincronizarPin();
   }catch(e){ if(!loaded) showNotice("Não foi possível carregar o relógio. Verifique a internet e recarregue a página."); }
   render();
 }
@@ -968,7 +1048,8 @@ const FIM=new Date("2026-10-31T00:00:00-03:00").getTime();
 let resumoAberto=location.hash==="#resumo";
 function render(){
   const m=byKey();
-  renderTopo(m); renderResumo(m); renderNow(m); renderMine(); renderTabs(m); renderDay(m); renderSlots(m);
+  $("liderBar").hidden=!liderSenha;
+  renderTopo(m); renderResumo(m); renderNow(m); renderMeuDia(); renderTabs(m); renderDay(m); renderSlots(m);
 }
 function renderTopo(m){
   const covered=DAYS.reduce((s,d)=>s+coverage(m,d),0);
@@ -977,15 +1058,42 @@ function renderTopo(m){
   $("mBig").innerHTML=`${covered}<small>/${TOTAL}</small>`;
   $("mPeople").textContent=people;
   $("mSide").innerHTML=cs?`<span class="flame"></span><b>${orando}</b> orando agora`:"vamos juntos!";
-  const ini=slotStart(DAYS[0],"00:00");
-  $("hStatus").innerHTML=Date.now()>=FIM?"Propósito concluído":cs?`<i class="pulse"></i>Acontecendo agora`:antesDoInicio(ini);
+  const ini=slotStart(DAYS[0],"00:00"), durante=Date.now()>=ini&&Date.now()<FIM;
+  $("hero").hidden=durante; $("band").hidden=!durante;
+  statusTopo();
   $("mBar").style.width=`${(covered/TOTAL*100).toFixed(1)}%`;
+  if(durante){
+    const hi=diaDoUsuario(), d=DAYS[hi], ch=chama(m);
+    $("bDay").textContent=`Dia ${hi+1} de ${DAYS.length}`;
+    $("bRef").textContent=`${d.dia} · ${d.ref}`;
+    $("bChamaTxt").innerHTML=ch.atual>=2?`Há <b>${fmtH(ch.atual/2)} h</b> seguidas tem alguém orando`:ch.atual===1?"A chama está acesa. Bora manter!":"A chama apagou. Que tal acender agora?";
+    $("bStats").textContent=`${covered}/${TOTAL} horários · ${people} ${people===1?"jovem":"jovens"}${ch.recorde>ch.atual&&ch.recorde>=2?` · recorde: ${fmtH(ch.recorde/2)} h`:""}`;
+  }
   // comemoração quando um dia fecha
   const agora=new Set(DAYS.filter(d=>coverage(m,d)===SLOTS.length).map(d=>d.k));
-  if(completos&&loaded){for(const k of agora) if(!completos.has(k)){burst(null);toast(`${dayOf(k).dia} completa! Todos os turnos têm alguém orando.`)}}
+  if(completos&&loaded){for(const k of agora) if(!completos.has(k)){burst(null);toast(`${dayOf(k).dia} completa! Todos os horários têm alguém orando.`)}}
   if(loaded) completos=agora;
 }
 
+function statusTopo(){
+  const ini=slotStart(DAYS[0],"00:00");
+  const h=Date.now()>=FIM?"Propósito concluído":currentSlot()?`<i class="pulse"></i>Acontecendo agora`:antesDoInicio(ini);
+  if($("hStatus").dataset.h!==h){$("hStatus").innerHTML=h;$("hStatus").dataset.h=h}
+}
+/* a chama que não apaga: horários seguidos, até agora, com alguém de chama acesa */
+function chama(m){
+  const cs=currentSlot(); if(!cs) return {atual:0,recorde:0};
+  const seq=[];
+  outer: for(const d of DAYS) for(const t of SLOTS){seq.push((m[d.k+"_"+t]||[]).some(r=>r.orando_em)); if(d===cs.d&&t===cs.t) break outer}
+  let rec=0, run=0; for(const v of seq){run=v?run+1:0; rec=Math.max(rec,run)}
+  let i=seq.length-1; if(!seq[i]) i--;            // o horário de agora ainda pode acender
+  let atual=0; while(i>=0&&seq[i]){atual++;i--}
+  return {atual,recorde:rec};
+}
+function diaDoUsuario(){
+  const i=DAYS.findIndex(d=>d.iso===nowSP().iso);
+  return i>=0?i:(Date.now()<slotStart(DAYS[0],"00:00")?0:DAYS.length-1);
+}
 function renderResumo(m){
   const show=loaded&&(resumoAberto||Date.now()>=FIM);
   $("resumo").hidden=!show; $("verResumo").hidden=Date.now()>=FIM;
@@ -997,24 +1105,23 @@ function renderResumo(m){
   const jovens=new Set(reservas.map(r=>r.nome.trim().toLowerCase())).size;
   const acesos=new Set(conf.map(r=>r.nome.trim().toLowerCase())).size;
   const madrugada=DAYS.reduce((s,d)=>s+SLOTS.slice(0,12).filter(t=>m[d.k+"_"+t]).length,0);
-  const fmtH=h=>Number.isInteger(h)?String(h):h.toFixed(1).replace(".",",");
   const rows=DAYS.map(d=>{const c=coverage(m,d), cf=SLOTS.filter(t=>(m[d.k+"_"+t]||[]).some(r=>r.orando_em)).length;
-    return `<div class="drow"><b>${d.short}</b><div class="dtrack" role="img" aria-label="${d.dia}: ${c} turnos cobertos, ${cf} com chama acesa"><span class="cov" style="width:${(c/SLOTS.length*100).toFixed(1)}%"></span><span class="conf" style="width:${(cf/SLOTS.length*100).toFixed(1)}%"></span></div><span>${Math.round(c/SLOTS.length*100)}%</span></div>`}).join("");
+    return `<div class="drow"><b>${d.short}</b><div class="dtrack" role="img" aria-label="${d.dia}: ${c} horários cobertos, ${cf} com chama acesa"><span class="cov" style="width:${(c/SLOTS.length*100).toFixed(1)}%"></span><span class="conf" style="width:${(cf/SLOTS.length*100).toFixed(1)}%"></span></div><span>${Math.round(c/SLOTS.length*100)}%</span></div>`}).join("");
   $("resumo").innerHTML=`
     <div class="sec-row"><div class="sec-head"><div class="kicker">${terminou?"Propósito concluído":"Até agora"}</div><h2 class="h2">Resumo do Propósito</h2></div>${terminou?"":`<button class="fechar" id="fecharResumo" aria-label="Fechar resumo">×</button>`}</div>
     <div class="hero-num"><b>${fmtH(horasConf)}h</b><span>de oração com a chama acesa<br>de ${fmtH(horasRes)}h reservadas</span></div>
     <div class="stats">
-      <div class="stat inset"><b>${covered}/${TOTAL}</b><span>turnos cobertos</span></div>
+      <div class="stat inset"><b>${covered}/${TOTAL}</b><span>horários cobertos</span></div>
       <div class="stat inset"><b>${jovens}</b><span>jovens no relógio</span></div>
       <div class="stat inset"><b>${acesos}</b><span>jovens acenderam a chama</span></div>
-      <div class="stat inset"><b>${madrugada}</b><span>turnos de madrugada</span></div>
+      <div class="stat inset"><b>${madrugada}</b><span>horários de madrugada</span></div>
       <div class="stat inset"><b>${leituras.length}</b><span>leituras de Tiago</span></div>
       <div class="stat inset"><b>${new Set(leituras.map(l=>l.nome.trim().toLowerCase())).size}</b><span>jovens leram</span></div>
       <div class="stat inset"><b>${jejuns.length}</b><span>dias de jejum</span></div>
       <div class="stat inset"><b>${renuncias.length}</b><span>dias de renúncia</span></div>
     </div>
     <div class="byday"><h3>Cada dia</h3>${rows}
-      <div class="legend"><span><i class="lg-cov"></i>turnos reservados</span><span><i class="lg-conf"></i>com chama acesa</span></div>
+      <div class="legend"><span><i class="lg-cov"></i>horários reservados</span><span><i class="lg-conf"></i>com chama acesa</span></div>
     </div>
     <p class="verse">“A oração feita por um justo pode muito em seus efeitos.”<small>Tiago 5:16</small></p>`;
 }
@@ -1038,7 +1145,7 @@ function renderNow(m){
     $("now").innerHTML=`
     <div class="now-top"><h2 class="sec-title"><span class="ic"><span class="pulse"></span></span>Orando agora</h2><span class="when">${cs.t}–${endOf(cs.t)}</span>${meuAgora?"":`<button class="mini" data-now-close aria-label="Recolher o relógio">Recolher</button>`}</div>
     <div class="clock-wrap">
-      <svg class="dial" viewBox="0 0 120 120" role="img" aria-label="Tempo que falta para o turno acabar">
+      <svg class="dial" viewBox="0 0 120 120" role="img" aria-label="Tempo que falta para o horário acabar">
         <defs><linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ea580c"/></linearGradient></defs>
         <circle class="track" cx="60" cy="60" r="52"/>
         <circle class="arc" id="arc" cx="60" cy="60" r="52" transform="rotate(-90 60 60)" stroke-dasharray="326.73" stroke-dashoffset="${(326.73*(1-fracTurno(cs))).toFixed(2)}"/>
@@ -1061,13 +1168,13 @@ function renderNow(m){
     const eu=!!mine[r.id];
     return `<li class="person ${st}${eu?" eu":""}">${icon}<span class="nm">${esc(r.nome)}</span>${eu?'<span class="voce">você</span>':""}<span class="st">${txt}</span></li>`}).join("");
   let acao="";
-  if(meu&&!meu.orando_em) acao=`<div class="stack"><button class="bigbtn pulsing" data-confirm="${meu.id}"><span class="flame w"></span>Comecei a orar</button><p class="hint center">Toque quando começar. Seu nome ganha uma chama para todos verem que você está orando.</p></div>`;
-  else if(meu) acao=`<p class="lit"><span class="flame"></span>Sua chama está acesa. O turno termina sozinho no fim dos 30 minutos.</p>`;
-  else if(list.length<MAX) acao=`<button class="bigbtn${list.length?" ghost":""}" data-slot-now>${list.length?"Entrar neste turno":"Orar agora"}</button>`;
+  if(meu&&!meu.orando_em) acao=`<div class="stack"><button class="bigbtn pulsing" data-confirm="${meu.id}"><span class="flame w"></span>Comecei a orar</button><p class="hint center">Seu nome ganha uma chama.</p></div>`;
+  else if(meu) acao=`<p class="lit"><span class="flame"></span>Sua chama está acesa. Termina sozinho em 30 min.</p>`;
+  else if(list.length<MAX) acao=`<button class="bigbtn${list.length?" ghost":""}" data-slot-now>Quero orar agora</button>`;
   const html=`${list.length?`<ul class="people">${rows}</ul>`:`<p class="empty-now">Ninguém orando agora.<br>Que tal você?</p>`}
     <div class="now-meta">
       <div class="inset"><span>Chama acesa</span><b>${list.length?`${on} de ${list.length}`:"Ninguém ainda"}</b></div>
-      <div class="inset"><span>${nx?`Próximo · ${nx.t}`:"Próximo"}</span><b>${nx?(nl.length?nl.map(r=>esc(r.nome)).join(", "):"Turno vazio"):"Fim do propósito"}</b></div>
+      <div class="inset"><span>${nx?`Próximo · ${nx.t}`:"Próximo"}</span><b>${nx?(nl.length?nl.map(r=>esc(r.nome)).join(", "):"Horário vazio"):"Fim do propósito"}</b></div>
     </div>
     ${acao}`;
   if($("nowBody").dataset.h!==html){$("nowBody").innerHTML=html;$("nowBody").dataset.h=html}   // só troca se mudou
@@ -1088,14 +1195,14 @@ function renderNowCompacto(m,cs,key){
   }
   const names=list.length?list.map(r=>`<span class="pchip${r.orando_em?" on":""}">${r.orando_em?'<span class="flame"></span>':'<span class="dot"></span>'}<span class="nm">${esc(r.nome)}</span></span>`).join(""):`<span class="vazio">Ninguém orando agora. Que tal você?</span>`;
   if($("nowBody").dataset.h!==names){$("nowBody").innerHTML=names;$("nowBody").dataset.h=names}
-  const acts=`<button class="btn" data-now-open>Ver relógio</button>${list.length<MAX?`<button class="btn primary" data-slot-now>${list.length?"Entrar":"Orar agora"}</button>`:""}`;
+  const acts=`<button class="btn" data-now-open>Ver relógio</button>${list.length<MAX?`<button class="btn primary" data-slot-now>Quero orar</button>`:""}`;
   if($("nowActs").dataset.h!==acts){$("nowActs").innerHTML=acts;$("nowActs").dataset.h=acts;$("nowActs").classList.toggle("one",list.length>=MAX)}
   $("now").hidden=false; tick();
 }
 const fracTurno=cs=>Math.min(1,Math.max(0,(Date.now()-slotStart(cs.d,cs.t))/(TURNO_MIN*60000)));
 function tick(){
   if(!loaded) return;
-  checarConcluidos(); checarFesta();
+  checarConcluidos(); checarFesta(); if(!$("hero").hidden) statusTopo();
   const cs=currentSlot();
   if((cs?cs.d.k+cs.t:"")!==nowKey){if(cs&&!diaManual&&current!==cs.d.k){current=cs.d.k;periodo=null}render();return}
   if(!cs) return;
@@ -1108,8 +1215,10 @@ function tick(){
   if(document.querySelector(".person.wait")&&el>TOLERANCIA_MIN*60000) renderNow(byKey());
 }
 function antesDoInicio(ini){
-  const dias=Math.ceil((ini-Date.now())/86400000);
-  return dias>1?`Começa em ${dias} dias`:quandoComeca(ini);
+  const min=Math.max(0,Math.floor((ini-Date.now())/60000)), d=Math.floor(min/1440), h=Math.floor(min%1440/60), mm=min%60;
+  if(d>=1) return `Começa em ${d} ${d>1?"dias":"dia"} e ${h} h`;
+  if(h>=1) return `Começa em ${h} h ${pad(mm)} min`;
+  return `Começa em ${Math.max(1,mm)} min`;
 }
 function quandoComeca(ini){
   const min=Math.round((ini-Date.now())/60000);
@@ -1117,45 +1226,60 @@ function quandoComeca(ini){
   if(min<24*60){const h=Math.floor(min/60),mm=min%60;return `Começa em ${h} h${mm?` ${mm} min`:""}`;}
   const dias=Math.round(min/1440); return dias===1?"Amanhã":`Daqui a ${dias} dias`;
 }
-let mineTodos=false;
-function renderMine(){
+let mineTodos=false, meuDiaOff=0, ticketAberto="";
+function ticketHtml(r){
+  const d=dayOf(r.dia), fim=passou(d,r.hora), ab=ticketAberto===r.id&&!fim;
+  const sub=fim?(r.orando_em?`<span class="sub ok"><span class="check sm"></span>Concluído</span>`:`<span class="sub">Encerrado</span>`):(r.orando_em?`<span class="sub"><span class="flame"></span>Orando agora</span>`:(Date.now()>=slotStart(d,r.hora)?`<span class="sub hot"><span class="pulse"></span>É agora!</span>`:`<span class="sub">${quandoComeca(slotStart(d,r.hora))}</span>`));
+  return `<li class="ticket${ab?" open":""}${fim?" fim":""}">
+    <button class="tk-main" ${fim?"disabled":`data-ticket="${r.id}" aria-expanded="${ab}"`}><span class="day">${d.short}<b>${d.date.slice(0,2)}</b></span><span class="tk-txt"><span class="hr">${r.hora}–${endOf(r.hora)}</span>${sub}</span>${fim?"":'<span class="chev" aria-hidden="true"></span>'}</button>
+    ${ab?`<div class="tk-acts"><button class="btn sm" data-agenda="${r.id}">Lembrete</button><button class="btn sm danger" data-cancel="${r.id}">Cancelar horário</button></div>`:""}</li>`;
+}
+function renderMeuDia(){
   $("como").hidden=!loaded||Object.keys(mine).length>0||ls("rel_como_ok")==="1";
+  const hi=diaDoUsuario(), comecou=Date.now()>=slotStart(DAYS[0],"00:00");
+  const temOntem=comecou&&hi>0;
+  if(!temOntem) meuDiaOff=0;
+  const d=DAYS[hi+meuDiaOff];
   const ini=r=>slotStart(dayOf(r.dia),r.hora), acabou=r=>passou(dayOf(r.dia),r.hora);
   const meus=reservas.filter(r=>mine[r.id]).sort((a,b)=>(acabou(a)-acabou(b))||(ini(a)-ini(b)));
-  if(!meus.length){$("mine").hidden=true;return}
-  const mostra=mineTodos?meus:meus.slice(0,3), resto=meus.length-mostra.length;
-  $("mine").innerHTML=`<h2 class="sec-title"><span class="ic ic-clock" aria-hidden="true"></span>Seus turnos</h2><ul class="mine-list">${mostra.map(r=>{const d=dayOf(r.dia), fim=passou(d,r.hora);
-    const sub=fim?(r.orando_em?`<span class="sub ok"><span class="check sm"></span>Concluído</span>`:`<span class="sub">Encerrado</span>`):(r.orando_em?`<span class="sub"><span class="flame"></span>Orando agora</span>`:(Date.now()>=slotStart(d,r.hora)?`<span class="sub hot"><span class="pulse"></span>É agora!</span>`:`<span class="sub">${quandoComeca(slotStart(d,r.hora))}</span>`));
-    return `<li class="ticket"><span class="day">${d.short}<b>${d.date.slice(0,2)}</b></span><div><div class="hr">${r.hora}–${endOf(r.hora)}</div>${sub}</div>${fim?"":`<span class="acts"><button class="mini" data-agenda="${r.id}">Lembrete</button><button class="mini danger" data-cancel="${r.id}">Cancelar</button></span>`}</li>`}).join("")}</ul>
-    ${meus.length>3?`<button class="btn" data-mine-all>${mineTodos?"Mostrar menos":`Ver todos os seus turnos (${meus.length})`}</button>`:""}`;
-  $("mine").hidden=false;
+  const mostra=mineTodos?meus:meus.slice(0,3);
+  const seg=temOntem?`<div class="seg" role="tablist" aria-label="Qual dia"><button role="tab" aria-selected="${meuDiaOff===0}" data-meudia="0">Hoje</button><button role="tab" aria-selected="${meuDiaOff===-1}" data-meudia="-1">Ontem</button></div>`:"";
+  const horarios=meus.length
+    ?`<ul class="mine-list">${mostra.map(ticketHtml).join("")}</ul>
+      ${meus.length>3?`<button class="linkbtn" data-mine-all>${mineTodos?"Mostrar menos":`Ver todos os seus horários (${meus.length})`}</button>`:""}
+      ${meuPin?`<p class="pin-line">Código para outro celular: <b>${meuPin}</b></p>`:""}`
+    :`<button class="bigbtn" data-ir-lista="${d.k}">Escolher meu horário</button>`;
+  const html=`<div class="sec-row"><h2 class="sec-title"><span class="ic ic-check" aria-hidden="true"></span>Seu dia</h2><span class="when">${d.dia}, ${d.date}</span></div>
+    ${seg}${tarefasHtml(d)}
+    <div class="md-sec"><h3 class="sub-title">Seus horários</h3>${horarios}</div>`;
+  if($("meudia").dataset.h!==html){$("meudia").innerHTML=html;$("meudia").dataset.h=html}
 }
 function renderTabs(m){
   $("tabs").innerHTML=DAYS.map(d=>{const c=coverage(m,d), full=c===SLOTS.length;
     const hoje=nowSP().iso===d.iso;
-    return `<button class="tab" role="tab" aria-selected="${d.k===current}" data-day="${d.k}" aria-label="${d.dia}, ${d.date}: ${c} de ${SLOTS.length} turnos">${hoje?'<span class="hoje">Hoje</span>':""}<span class="wd">${d.short}</span><b>${d.date.slice(0,2)}</b><span class="tb"><i style="width:${Math.round(c/SLOTS.length*100)}%"></i></span>${full?'<span class="flame done" aria-label="Dia completo"></span>':""}</button>`}).join("");
+    return `<button class="tab" role="tab" aria-selected="${d.k===current}" data-day="${d.k}" aria-label="${d.dia}, ${d.date}${hoje?" (hoje)":""}: ${c} de ${SLOTS.length} horários"><span class="wd${hoje?" today":""}">${hoje?"Hoje":d.short}</span><b>${d.date.slice(0,2)}</b><span class="tb"><i style="width:${Math.round(c/SLOTS.length*100)}%"></i></span>${full?'<span class="flame done" aria-label="Dia completo"></span>':""}</button>`}).join("");
 }
 function guiaHtml(d,aberto){
   return `<details class="guide" id="guia"${aberto?" open":""}><summary>Roteiro para os 30 minutos</summary><ol>
       <li><b>0–5 min</b><span>Agradeça antes de pedir.</span></li>
       <li><b>5–15 min</b><span>Leia ${d.ref} e anote o versículo que falou com você.</span></li>
       <li><b>15–25 min</b><span>Ore pelo foco do dia: primeiro por você, depois pela família, amigos e o DEEP.</span></li>
-      <li><b>25–30 min</b><span>Ore pelo Retiro DEEP 2026 e por quem vem no próximo turno.</span></li>
+      <li><b>25–30 min</b><span>Ore pelo Retiro DEEP 2026 e por quem vem no próximo horário.</span></li>
     </ol></details>`;
 }
 function renderDay(m){
   const d=dayOf(current), full=coverage(m,d)===SLOTS.length;
-  $("diaTitulo").textContent=`${d.dia}, ${d.date}`;
-  $("dayhead").innerHTML=`<h2 class="sec-title"><span class="ic ic-check" aria-hidden="true"></span>Suas tarefas do dia</h2>${tarefasHtml(d,m)}`;
+  $("focoTit").textContent=`Foco de ${d.dia.toLowerCase()} · ${d.ref}`;
   $("focoDia").textContent=d.foco;
   $("diaCompleto").hidden=!full;
 }
 /* nomes numa linha de horário: você e quem está orando primeiro; com mais de 3, mostra 2 e "+N" */
 const abertos=new Set();
-function chipHtml(r){return `<span class="pchip${mine[r.id]?" eu":""}${r.orando_em?" on":""}">${r.orando_em?'<span class="flame"></span>':`<span class="dot d-${esc(r.equipe)}"></span>`}<span class="nm">${esc(r.nome)}</span></span>`}
+function chipHtml(r){return `<span class="pchip${mine[r.id]?" eu":""}${r.orando_em?" on":""}">${r.orando_em?'<span class="flame"></span>':`<span class="dot d-${esc(r.equipe)}"></span>`}<span class="nm">${esc(r.nome)}</span>${liderSenha?`<button class="rm" data-adm-rm="${r.id}" aria-label="Remover ${esc(r.nome)}">×</button>`:""}</span>`}
 function nomesHtml(key,list,agora){
   const ord=[...list].sort((a,b)=>(!!mine[b.id]-!!mine[a.id])||(!!b.orando_em-!!a.orando_em));
   // turno que está acontecendo agora (ou aberto com um toque): todos os nomes, com a chama de quem está orando
+  if(liderSenha) return `<div class="chips-full">${ord.map(chipHtml).join("")}</div>`;
   if(agora||abertos.has(key)) return `<div class="chips-full">${ord.map(chipHtml).join("")}${!agora?`<button class="pchip more" data-more="${key}">fechar</button>`:""}</div>`;
   // demais turnos: uma linha limpa com a contagem e os primeiros nomes
   const nomes=ord.map(r=>mine[r.id]?'<b class="me">Você</b>':esc(r.nome.trim().split(/\s+/)[0])).join(", ");
@@ -1178,15 +1302,25 @@ function renderSlots(m){
   $("slotList").innerHTML=ts.length?ts.map(t=>{
     const list=m[d.k+"_"+t]||[], acabou=passou(d,t);
     const chips=list.length?nomesHtml(d.k+"_"+t,list,t===live):`<span class="vazio">${acabou?"Ninguém orou":"Ninguém ainda"}</span>`;
-    const btn=acabou?`<span class="state">Encerrado</span>`:list.some(r=>mine[r.id])?`<span class="state me">Você está<br>aqui</span>`:list.length>=MAX?`<span class="state">Completo</span>`:`<button class="add${list.length?" join":""}" data-slot="${t}"${loaded?"":" disabled"}>${list.length?"Entrar":"Quero orar"}</button>`;
+    const btn=acabou?`<span class="state">Encerrado</span>`:list.some(r=>mine[r.id])?`<span class="state me">Você está<br>aqui</span>`:list.length>=MAX?`<span class="state">Completo</span>`:`<button class="add${list.length?" join":""}" data-slot="${t}"${loaded?"":" disabled"}>Quero orar</button>`;
     return `<li class="slot${list.length?"":" empty"}${t===live?" agora":""}${acabou?" past":""}${!acabou&&list.some(r=>mine[r.id])?" mine":""}"><div class="time">${t}<span>até ${endOf(t)}</span></div><div class="names">${chips}</div>${btn}</li>`}).join("")
-    :`<li class="notice">Nenhum horário vazio neste período. Tente outro período ou entre num turno que ainda tem vaga.</li>`;
+    :`<li class="notice">Nenhum horário vazio neste período.</li>`;
   renderCta();
 }
 
 /* ---------- ações ---------- */
 document.addEventListener("click",async e=>{
   const t=e.target;
+  const tkt=t.closest("[data-ticket]"); if(tkt){ticketAberto=ticketAberto===tkt.dataset.ticket?"":tkt.dataset.ticket;renderMeuDia();return}
+  const md=t.closest("[data-meudia]"); if(md){meuDiaOff=Number(md.dataset.meudia);pedirNome=false;renderMeuDia();return}
+  const rm=t.closest("[data-adm-rm]");
+  if(rm){
+    if(rm.dataset.sure!=="1"){rm.dataset.sure="1";rm.classList.add("sure");rm.textContent="Remover?";setTimeout(()=>{if(rm.isConnected){rm.dataset.sure="";rm.classList.remove("sure");rm.textContent="×"}},4000);return}
+    rm.disabled=true; const id=rm.dataset.admRm;
+    try{await rpc("relogio_admin_remover",{p_senha:liderSenha,p_id:id});
+      reservas=reservas.filter(x=>x.id!==id); if(mine[id]){delete mine[id];saveMine()} render(); toast("Nome removido"); avisar()}
+    catch(err){toast(err.message); if(/senha/i.test(err.message)) sairLider()}
+    carregar(); return}
   const tab=t.closest("[data-day]"); if(tab){current=tab.dataset.day;diaManual=true;ls("rel_day",current);render();return}
   const mo=t.closest("[data-more]"); if(mo){const k=mo.dataset.more;abertos.has(k)?abertos.delete(k):abertos.add(k);renderSlots(byKey());return}
   if(t.closest("[data-guia]")){$("guiabg").hidden=false;$("guiabg").querySelector(".guia-body").scrollTop=0;return}
@@ -1200,7 +1334,7 @@ document.addEventListener("click",async e=>{
   const jo=t.closest("[data-jejum-ok]");
   if(jo){
     const dia=jo.dataset.jejumOk, nome=ls("rel_nome")||"";
-    if(!nome){pedirNome=true;renderDay(byKey());toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+    if(!nome){pedirNome=true;renderMeuDia();toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
     jo.disabled=true;
     try{await rpc("relogio_jejuar",{p_dia:dia,p_nome:nome,p_tipo:jejumTipo});
       jejumFeito[dia]=jejumTipo; ls("rel_jejum_feito",JSON.stringify(jejumFeito)); jejuns.push({dia,tipo:jejumTipo});
@@ -1210,7 +1344,7 @@ document.addEventListener("click",async e=>{
   const ro=t.closest("[data-ren-ok]");
   if(ro){
     const dia=ro.dataset.renOk, nome=ls("rel_nome")||"";
-    if(!nome){pedirNome=true;renderDay(byKey());toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+    if(!nome){pedirNome=true;renderMeuDia();toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
     ro.disabled=true;
     try{await rpc("relogio_renunciar",{p_dia:dia,p_nome:nome});
       renFeito[dia]=1; ls("rel_renuncia_feito",JSON.stringify(renFeito)); renuncias.push({dia});
@@ -1218,11 +1352,11 @@ document.addEventListener("click",async e=>{
     catch(err){toast(err.message);ro.disabled=false}
     return}
   const tk=t.closest(".task .tick"); if(tk){const b=tk.closest(".task").querySelector(".add:not(.join)"); if(b) b.click(); return}
-  if(t.closest("[data-pedir-nome]")){pedirNome=true;renderDay(byKey());setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
-  if(t.closest("[data-ir-lista]")){$("lista").scrollIntoView({behavior:"smooth",block:"start"});return}
+  if(t.closest("[data-pedir-nome]")){pedirNome=true;renderMeuDia();setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+  const il=t.closest("[data-ir-lista]"); if(il){if(il.dataset.irLista&&il.dataset.irLista!==current){current=il.dataset.irLista;diaManual=true;periodo=null;render()} $("escala").scrollIntoView({behavior:"smooth",block:"start"});return}
   const per=t.closest("[data-per]"); if(per){periodo=Number(per.dataset.per);render();return}
   const add=t.closest("[data-slot]"); if(add){openSheet(current,add.dataset.slot);return}
-  if(t.closest("[data-mine-all]")){mineTodos=!mineTodos;renderMine();return}
+  if(t.closest("[data-mine-all]")){mineTodos=!mineTodos;renderMeuDia();return}
   if(t.closest("[data-now-open]")){nowAberto=true;renderNow(byKey());return}
   if(t.closest("[data-now-close]")){nowAberto=false;renderNow(byKey());return}
   if(t.closest("[data-slot-now]")){const cs=currentSlot();if(cs)openSheet(cs.d.k,cs.t);return}
@@ -1239,12 +1373,12 @@ document.addEventListener("click",async e=>{
       render(); burst(null); toast("Chama acesa! Deus está ouvindo."); avisar()}
     catch(err){toast(err.message);cf.disabled=false;cf.lastChild.textContent="Comecei a orar"}
     carregar();return}
-  const ag=t.closest("[data-agenda]"); if(ag){const r=reservas.find(x=>x.id===ag.dataset.agenda);if(r){abrirAgenda(r.dia,r.hora,r.id);$("calTitle").textContent="Lembrete do turno"}return}
+  const ag=t.closest("[data-agenda]"); if(ag){const r=reservas.find(x=>x.id===ag.dataset.agenda);if(r){abrirAgenda(r.dia,r.hora,r.id);$("calTitle").textContent="Lembrete do horário"}return}
   const cc=t.closest("[data-cancel]");
   if(cc){
-    if(cc.dataset.sure!=="1"){cc.dataset.sure="1";cc.classList.add("sure");cc.textContent="Confirmar";setTimeout(()=>{if(cc.isConnected){cc.dataset.sure="";cc.classList.remove("sure");cc.textContent="Cancelar"}},4000);return}
+    if(cc.dataset.sure!=="1"){const txt=cc.textContent;cc.dataset.sure="1";cc.classList.add("sure");cc.textContent="Sim, cancelar";setTimeout(()=>{if(cc.isConnected){cc.dataset.sure="";cc.classList.remove("sure");cc.textContent=txt}},4000);return}
     cc.disabled=true;const id=cc.dataset.cancel;
-    try{await rpc("relogio_cancelar",{p_id:id,p_token:mine[id]});delete mine[id];saveMine();reservas=reservas.filter(x=>x.id!==id);render();toast("Turno cancelado");avisar()}
+    try{await rpc("relogio_cancelar",{p_id:id,p_token:mine[id]});delete mine[id];saveMine();reservas=reservas.filter(x=>x.id!==id);ticketAberto="";render();toast("Horário cancelado");avisar()}
     catch(err){toast(err.message)}
     carregar();
   }
@@ -1260,7 +1394,7 @@ $("copiar").onclick=()=>{
   const d=dayOf(current), m=byKey();
   const linhas=SLOTS.map(t=>{const l=m[d.k+"_"+t]||[];return `${t} · ${l.length?l.map(r=>r.nome).join(", "):"(vago)"}`});
   const vagos=SLOTS.filter(t=>!m[d.k+"_"+t]).length;
-  copiar(`🔥 *Relógio de Oração DEEP*\n*${d.full}* · ${d.ref}\n${d.foco}\n\n${linhas.join("\n")}\n\n${vagos?`Ainda ${vagos===1?"falta 1 turno":`faltam ${vagos} turnos`}! Reserve o seu: `:"Dia completo! Glória a Deus! "}${SITE}`,"Escala copiada. É só colar no grupo.");
+  copiar(`🔥 *Relógio de Oração DEEP*\n*${d.full}* · ${d.ref}\n${d.foco}\n\n${linhas.join("\n")}\n\n${vagos?`Ainda ${vagos===1?"falta 1 horário":`faltam ${vagos} horários`}! Reserve o seu: `:"Dia completo! Glória a Deus! "}${SITE}`,"Escala copiada. É só colar no grupo.");
 };
 async function copiar(txt,ok){
   try{await navigator.clipboard.writeText(txt);toast(ok)}
@@ -1285,7 +1419,7 @@ document.querySelectorAll("input[name=team]").forEach(i=>{
 });
 document.querySelectorAll(".tpick label").forEach(l=>l.addEventListener("pointerdown",()=>{const i=$(l.htmlFor);i.dataset.era=i.checked?"1":""}));
 $("sheetbg").addEventListener("click",e=>{if(e.target.id==="sheetbg")closeSheet()});
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("guiabg").hidden){$("guiabg").hidden=true;return}$("jejbg").hidden=true;if(!$("sheetbg").hidden)closeSheet();$("calbg").hidden=true;$("thxbg").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("guiabg").hidden){$("guiabg").hidden=true;return}$("jejbg").hidden=true;$("recbg").hidden=true;$("lidbg").hidden=true;if(!$("sheetbg").hidden)closeSheet();$("calbg").hidden=true;$("thxbg").hidden=true});
 $("form").addEventListener("submit",async e=>{
   e.preventDefault();
   const nome=$("nome").value.trim(), equipe=(document.querySelector("input[name=team]:checked")||{}).value||"";
@@ -1295,7 +1429,8 @@ $("form").addEventListener("submit",async e=>{
   $("salvar").disabled=true; $("salvar").textContent="Reservando…";
   try{
     const {dia,hora}=pending;
-    const j=await rpc("relogio_reservar",{p_dia:dia,p_hora:hora,p_nome:nome,p_equipe:equipe});
+    const j=await rpc("relogio_reservar",{p_dia:dia,p_hora:hora,p_nome:nome,p_equipe:equipe,p_pin:garantirPin()});
+    ls("rel_pin_sync","1");
     const row=Array.isArray(j)?j[0]:j;
     if(row&&row.id){mine[row.id]=row.token;saveMine();reservas.push({id:row.id,dia,hora,nome,equipe,orando_em:null})}
     closeSheet(); render(); burst(null); avisar(); abrirAgenda(dia,hora,row&&row.id);
@@ -1311,7 +1446,7 @@ function checarConcluidos(){
   if(!r) return;
   thanked[r.id]=1; ls("rel_thanked",JSON.stringify(thanked));
   thxNome=r.nome.split(" ")[0]; thxDia=r.dia; atualizarThx();
-  $("thxbg").hidden=false; burst(null); renderMine();
+  $("thxbg").hidden=false; burst(null); renderMeuDia();
 }
 let thxNome="", thxDia="";
 function atualizarThx(){
@@ -1330,8 +1465,9 @@ function abrirAgenda(dia,hora,id){
   // arquivo .ics servido pelo próprio site (funciona no iPhone, Android e no navegador do WhatsApp/Instagram)
   $("calIcs").href=`${SITE}/agenda/${dia}-${hora.replace(":","")}.ics`;
   $("calGoogle").href=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${icsDate(ini)}/${icsDate(fim)}&details=${encodeURIComponent(desc)}`;
-  $("calInfo").textContent=`${d.dia}, ${d.date}, das ${hora} às ${endOf(hora)}. Coloque na agenda para não esquecer.`;
-  $("calTitle").textContent="Turno reservado!"; $("calbg").hidden=false;
+  $("calInfo").textContent=`${d.dia}, ${d.date}, das ${hora} às ${endOf(hora)}.`;
+  $("calPin").textContent=meuPin; $("calCode").hidden=!meuPin;
+  $("calTitle").textContent="Horário reservado!"; $("calbg").hidden=false;
 }
 $("calFechar").onclick=()=>{$("calbg").hidden=true};
 $("calbg").addEventListener("click",e=>{if(e.target.id==="calbg")$("calbg").hidden=true});
@@ -1339,6 +1475,52 @@ $("calbg").addEventListener("click",e=>{if(e.target.id==="calbg")$("calbg").hidd
 function ferr(msg){$("ferr").textContent=msg;$("ferr").hidden=false}
 function showNotice(msg){$("notice").textContent=msg;$("notice").hidden=!msg}
 let tt; function toast(msg){$("toast").textContent=msg;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>{$("toast").hidden=true},3000)}
+
+/* ---------- recuperar horários em outro celular ---------- */
+function recErr(m){$("recErr").textContent=m;$("recErr").hidden=!m}
+$("abrirRec").onclick=()=>{$("recNome").value=ls("rel_nome")||"";$("recPin").value="";recErr("");$("recbg").hidden=false;setTimeout(()=>$($("recNome").value?"recPin":"recNome").focus(),50)};
+$("recVoltar").onclick=()=>{$("recbg").hidden=true};
+$("recbg").addEventListener("click",e=>{if(e.target.id==="recbg")$("recbg").hidden=true});
+$("recForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const nome=$("recNome").value.trim(), pin=$("recPin").value.trim();
+  if(!nome||!/^\d{4}$/.test(pin)){recErr("Escreva seu nome e o código de 4 números.");return}
+  $("recOk").disabled=true; $("recOk").textContent="Procurando…";
+  try{
+    const rows=await rpc("relogio_recuperar",{p_nome:nome,p_pin:pin})||[];
+    if(!rows.length){recErr("Não achamos horários com esse nome e código.");return}
+    rows.forEach(r=>{mine[r.id]=r.token}); saveMine();
+    ls("rel_nome",nome); meuPin=pin; ls("rel_pin",pin); ls("rel_pin_sync","1");
+    $("recbg").hidden=true; render(); toast(rows.length>1?`${rows.length} horários recuperados!`:"1 horário recuperado!"); carregar();
+  }catch(err){recErr(err.message)}
+  finally{$("recOk").disabled=false;$("recOk").textContent="Recuperar"}
+});
+/* quem reservou antes do código existir ganha um código agora (uma vez) */
+function sincronizarPin(){
+  if(ls("rel_pin_sync")||!Object.keys(mine).length) return;
+  ls("rel_pin_sync","1"); const p=garantirPin();
+  for(const [id,tk] of Object.entries(mine)) rpc("relogio_definir_pin",{p_id:id,p_token:tk,p_pin:p}).catch(()=>{});
+}
+
+/* ---------- modo líder ---------- */
+function lidErr(m){$("lidErr").textContent=m;$("lidErr").hidden=!m}
+function sairLider(){liderSenha="";try{sessionStorage.removeItem("rel_lider")}catch(e){}render()}
+$("abrirLider").onclick=()=>{$("lidSenha").value="";lidErr("");$("lidbg").hidden=false;setTimeout(()=>$("lidSenha").focus(),50)};
+$("lidVoltar").onclick=()=>{$("lidbg").hidden=true};
+$("lidbg").addEventListener("click",e=>{if(e.target.id==="lidbg")$("lidbg").hidden=true});
+$("liderSair").onclick=()=>{sairLider();toast("Você saiu do modo líder")};
+$("lidForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const senha=$("lidSenha").value; if(!senha){lidErr("Digite a senha.");return}
+  $("lidOk").disabled=true; $("lidOk").textContent="Conferindo…";
+  try{
+    const ok=await rpc("relogio_admin_ok",{p_senha:senha});
+    if(ok!==true){lidErr("Senha incorreta.");return}
+    liderSenha=senha; try{sessionStorage.setItem("rel_lider",senha)}catch(x){}
+    $("lidbg").hidden=true; render(); toast("Modo líder ativo"); $("escala").scrollIntoView({behavior:"smooth",block:"start"});
+  }catch(err){lidErr(err.message)}
+  finally{$("lidOk").disabled=false;$("lidOk").textContent="Entrar"}
+});
 
 /* ---------- brasas ---------- */
 const fx=$("fx"), cx=fx.getContext("2d"); let parts=[], raf=0;
@@ -1366,7 +1548,7 @@ function step(){
 let listaVisivel=false;
 function renderCta(){ $("cta").hidden=!loaded||Object.keys(mine).length>0||listaVisivel||!$("sheetbg").hidden; }
 try{new IntersectionObserver(es=>{listaVisivel=es[0].isIntersecting;renderCta()},{threshold:0.05}).observe($("lista"))}catch(e){}
-$("ctaBtn").onclick=()=>$("lista").scrollIntoView({behavior:"smooth",block:"start"});
+$("ctaBtn").onclick=()=>$("escala").scrollIntoView({behavior:"smooth",block:"start"});
 
 
 /* ---------- comemoração da meia-noite: um dia de propósito concluído ---------- */
