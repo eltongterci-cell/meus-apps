@@ -261,6 +261,11 @@ button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{o
 .tick{width:26px;height:26px;border-radius:var(--r-sm);border:2px solid var(--tick);background:var(--surface);position:relative}
 .task.done{background:var(--ok-soft)}
 .task.done .tick{background:var(--ok);border-color:var(--ok)}
+.task:has(.add:not(.join)) .tick{cursor:pointer;border-color:var(--ember)}
+.tasks.locked .tick{border-style:dashed;background:transparent}
+.tasks-note{font-size:var(--t-sm);color:var(--muted);background:var(--ember-soft);border-radius:var(--r-md);padding:var(--s3)}
+.tasks-note b{color:var(--fg)}
+.tasks-note.lock::before{content:"";display:inline-block;width:12px;height:14px;margin-right:6px;vertical-align:-2px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 14'%3E%3Crect x='1' y='6' width='10' height='8' rx='2' fill='%23ea580c'/%3E%3Cpath d='M3.5 6V4a2.5 2.5 0 015 0v2' stroke='%23ea580c' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat}
 .task.done .tick::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid var(--white);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
 .t-txt{display:flex;flex-direction:column;gap:var(--s0);min-width:0}
 .t-txt b{font-size:var(--t-md)}
@@ -912,14 +917,17 @@ function tarefasHtml(d,m){
     : prox?`<span class="t-sub">Seu turno: <b>${prox.hora}–${endOf(prox.hora)}</b>${meus.length>1?` · ${meus.length} turnos`:""}</span>`
     : `<span class="t-sub">Escolha um horário abaixo</span>`;
   const orarAcao=orou||prox?"":`<button class="add join" data-ir-lista>Escolher</button>`;
-  return `<ul class="tasks">
+  const algum=leu||orou||jejumFeito[d.k];
+  const nota=!aberto?`<p class="tasks-note lock"><b>Abre na ${d.dia.toLowerCase()}, ${d.date}.</b> Nesse dia, toque no quadradinho de cada tarefa quando concluir.</p>`
+    :!algum?`<p class="tasks-note">Toque no quadradinho quando concluir. A oração marca sozinha quando você toca em <b>Comecei a orar</b> no seu turno.</p>`:"";
+  return `${nota}<ul class="tasks${aberto?"":" locked"}">
     <li class="task${leu?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Ler ${d.ref}</b>${ler}</div>${lerAcao}</li>
     <li class="task${orou?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Orar 30 minutos</b>${orarSub}</div>${orarAcao}</li>
     ${jejumTask(d)}
     ${renunciaTask(d)}
   </ul>
   ${!leu&&aberto&&!nome&&pedirNome?`<div class="ask-name"><label for="nomeLeitura">Qual é o seu nome?</label><div class="row-in"><input class="input" type="text" id="nomeLeitura" maxlength="40" placeholder="Ex.: Ana Clara" autocomplete="given-name"><button class="add" data-ler="${d.k}">Marcar</button></div></div>`:""}
-  ${!aberto&&!leu?`<p class="hint">A leitura deste dia é marcada no dia ${d.date}.</p>`:""}`;
+`;
 }
 
 function byKey(){const m={};for(const r of reservas)(m[r.dia+"_"+r.hora] ||= []).push(r);return m}
@@ -1209,6 +1217,7 @@ document.addEventListener("click",async e=>{
       render(); burst(null); toast("Renúncia concluída. Deus vê em secreto!"); avisar(); carregar()}
     catch(err){toast(err.message);ro.disabled=false}
     return}
+  const tk=t.closest(".task .tick"); if(tk){const b=tk.closest(".task").querySelector(".add:not(.join)"); if(b) b.click(); return}
   if(t.closest("[data-pedir-nome]")){pedirNome=true;renderDay(byKey());setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
   if(t.closest("[data-ir-lista]")){$("lista").scrollIntoView({behavior:"smooth",block:"start"});return}
   const per=t.closest("[data-per]"); if(per){periodo=Number(per.dataset.per);render();return}
