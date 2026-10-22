@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//DEEP//Relogio de Oracao//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:qua-0800@relogio-oracao-deep
+DTSTAMP:20261021T173541Z
+DTSTART:20261028T110000Z
+DTEND:20261028T113000Z
+SUMMARY:Relógio de Oração DEEP
+DESCRIPTION:Tiago 3. A língua revela o coração. Ore por palavras que edificam. À noite\, célula de oração.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://relogio-oracao-deep.netlify.app
+URL:https://relogio-oracao-deep.netlify.app
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Seu turno de oração começa em 10 minutos
+END:VALARM
+END:VEVENT
+END:VCALENDAR

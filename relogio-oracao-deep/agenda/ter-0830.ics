@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//DEEP//Relogio de Oracao//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:ter-0830@relogio-oracao-deep
+DTSTAMP:20261021T173541Z
+DTSTART:20261027T113000Z
+DTEND:20261027T120000Z
+SUMMARY:Relógio de Oração DEEP
+DESCRIPTION:Tiago 2. Fé que se vê. Ore para que a sua fé vire atitude.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://relogio-oracao-deep.netlify.app
+URL:https://relogio-oracao-deep.netlify.app
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Seu turno de oração começa em 10 minutos
+END:VALARM
+END:VEVENT
+END:VCALENDAR

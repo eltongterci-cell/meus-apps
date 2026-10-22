@@ -1,0 +1,1435 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Relógio de Oração DEEP</title>
+<meta name="description" content="Jejum e oração do DEEP, 26 a 30 de outubro. Escolha seu horário para orar.">
+<meta name="theme-color" content="#ea580c">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DEEP">
+<meta property="og:title" content="Relógio de Oração DEEP · 26 a 30 de outubro">
+<meta property="og:description" content="Jejum e oração antes do Retiro. Escolha seu horário e ore com a gente.">
+<meta property="og:url" content="https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep">
+<meta property="og:image" content="https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Relógio DEEP">
+<link rel="preconnect" href="https://pplhwupjbrtzqdwzlcem.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://pplhwupjbrtzqdwzlcem.supabase.co">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* =========================================================================
+   Relógio de Oração DEEP — tema claro "luz da manhã"
+   Ideia: uma luz suave que nasce no centro e se espalha (de dentro para fora).
+   Estrutura: topo → como participar → agora → seus turnos → dias → dia → horários → rodapé
+   Regras: espaços só da escala --s*, raios só de --r-*, cores só dos tokens.
+   Tema claro único, de propósito (pedido da liderança: leve e espiritual).
+   ========================================================================= */
+
+/* 1. Tokens ------------------------------------------------------------- */
+:root{
+  /* cor */
+  --bg:#f6f5f2; --sky:#e9eff9; --surface:#ffffff; --surface-2:#f3f1ed; --line:#e7e3dd;
+  --fg:#17171c; --muted:#6c6862; --ink:#ffffff;
+  --ember:#ea580c; --ember-hi:#ff9a3c; --ember-soft:#fff1e6; --ember-mid:#fdc9a3; --ember-line:#f8c7a4;
+  --light:#ffd9a8; --white:#ffffff;
+  --sun-1:#ffad5c; --sun-2:#ff7a2b; --sun-3:#d4460a; --sun-4:#cf4209; --dawn-1:#fff6ec; --dawn-2:#fdf1e6; --dawn-3:#fff3e3; --warm:#ffe9d6; --warm-2:#ffe8d2; --now-glow:#fff3e6;
+  --track:#f1ece6; --tick:#d9d2c9; --tick-major:#a9a097; --dot:#c9c4bd; --orb-1:#ffd9a8; --orb-2:#ffb066; --orb-3:#ff8a3d; --gold-1:#ff9a3c; --gold-2:#c43d08;
+  --ok:#16a34a; --ok-soft:#e9f8ef; --danger:#dc3b2f; --danger-soft:#fdecea; --danger-line:#f3b8b2;
+  --verde:#16a34a; --azul:#2f6fe4; --laranja:#ea580c;
+  --shadow:0 1px 2px rgba(23,23,28,.04),0 6px 20px rgba(23,23,28,.06);
+  --shadow-hot:0 8px 24px rgba(234,88,12,.28);
+  /* tipo */
+  --display:"Archivo", ui-sans-serif, system-ui, sans-serif;
+  --body:"Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --t-xxs:11px; --t-xs:12px; --t-s:13px; --t-sm:14px; --t-ms:15px; --t-md:16px; --t-lg:17px; --t-xl:20px; --t-2xl:22px; --t-3xl:28px;
+  /* espaço */
+  --s0:2px; --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  /* raio */
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:24px; --r-pill:999px;
+  --pill:var(--s1) var(--s3); --pill-sm:var(--s0) var(--s2);
+  /* medidas */
+  --pad:var(--s4); --tap:50px; --time-col:54px; --action-col:92px;
+  color-scheme:light;
+}
+
+/* 2. Base --------------------------------------------------------------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg)}
+body{margin:0;min-height:100%;background:linear-gradient(180deg,var(--sky) 0,var(--bg) 520px);color:var(--fg);font-family:var(--body);font-size:var(--t-md);line-height:1.5;padding-top:env(safe-area-inset-top,0px);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sky)}
+[hidden]{display:none!important}
+h1,h2,h3,p,ol,ul{margin:0}
+button{font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;cursor:pointer}
+a{color:inherit}
+button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--ember);outline-offset:3px}
+
+/* 3. Tipografia ---------------------------------------------------------- */
+.display{font-family:var(--display);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.h2{font-family:var(--display);font-weight:800;font-size:var(--t-xl);line-height:1.2;letter-spacing:-.01em}
+.kicker{display:flex;align-items:center;gap:var(--s2);font-size:var(--t-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ember)}
+.hint{font-size:var(--t-sm);color:var(--muted)}
+
+/* títulos de seção: ícone num quadradinho laranja + nome, igual em todo o app */
+.sec-title{display:flex;align-items:center;gap:var(--s3);font-family:var(--display);font-weight:800;font-size:var(--t-lg);line-height:1.2;letter-spacing:-.01em;margin:0}
+.ic{width:30px;height:30px;border-radius:var(--r-sm);background:var(--ember-soft);display:grid;place-items:center;flex:none;position:relative}
+.ic-cal::before{content:"";width:14px;height:13px;border:2px solid var(--ember);border-top-width:4px;border-radius:3px}
+.ic-clock::before{content:"";width:15px;height:15px;border:2px solid var(--ember);border-radius:50%}
+.ic-clock::after{content:"";position:absolute;left:50%;top:10px;width:2px;height:6px;margin-left:-1px;background:var(--ember);border-radius:1px}
+.ic-check::before{content:"";width:12px;height:7px;border:solid var(--ember);border-width:0 0 2.5px 2.5px;transform:rotate(-45deg) translate(1px,-1px)}
+.ic-help::before{content:"?";font-family:var(--display);font-weight:800;font-size:var(--t-md);color:var(--ember);line-height:1}
+
+/* 4. Layout -------------------------------------------------------------- */
+.glow{position:absolute;inset:0 0 auto;height:520px;pointer-events:none;overflow:hidden;z-index:0}
+.glow::before{content:"";position:absolute;left:50%;top:-220px;width:720px;height:720px;transform:translateX(-50%);
+  background:repeating-radial-gradient(circle at center,rgba(234,88,12,.07) 0 1px,transparent 1px 60px),radial-gradient(circle at center,rgba(255,200,140,.55),rgba(255,217,168,0) 62%);
+  -webkit-mask:radial-gradient(circle at center,#000 30%,transparent 70%);mask:radial-gradient(circle at center,#000 30%,transparent 70%)}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding-left:max(var(--s4),env(safe-area-inset-left,0px));padding-right:max(var(--s4),env(safe-area-inset-right,0px));padding-block:var(--s4) 112px;display:flex;flex-direction:column;gap:var(--s5)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--pad);display:flex;flex-direction:column;gap:var(--s4);box-shadow:var(--shadow)}
+.inset{background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3)}
+.sec-head{display:flex;flex-direction:column;gap:var(--s1)}
+.sec-head .sub{font-size:var(--t-sm);color:var(--muted)}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+
+/* 5. Botões -------------------------------------------------------------- */
+.btn,.bigbtn{border:0;border-radius:var(--r-md);min-height:var(--tap);padding:var(--s3) var(--s4);font-family:var(--display);font-weight:700;font-size:var(--t-md);display:flex;align-items:center;justify-content:center;gap:var(--s2);width:100%;text-decoration:none;text-align:center}
+.btn{background:var(--surface);color:var(--fg);border:1px solid var(--line)}
+.btn.primary,.bigbtn{background:var(--ember);color:var(--ink);border-color:var(--ember);box-shadow:var(--shadow-hot)}
+.bigbtn.ghost{background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:none}
+.btn.outline{background:var(--surface);color:var(--ember);border:1.5px solid var(--ember)}
+.btn[disabled],.bigbtn[disabled]{opacity:.55}
+.linkbtn{border:0;background:none;padding:var(--s2) 0;min-height:36px;color:var(--ember);font-weight:700;font-size:var(--t-sm);text-align:left}
+.linkbtn.center{align-self:center}
+.mini{border:0;background:none;border-radius:var(--r-sm);height:36px;padding:0 var(--s2);font-size:var(--t-s);font-weight:700;white-space:nowrap;color:var(--fg)}
+.mini.danger{color:var(--danger)}
+.mini.sure{background:var(--danger);color:var(--ink);border-color:var(--danger)}
+
+/* 6. Elementos pequenos -------------------------------------------------- */
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--ember);flex:none}
+.flame{display:inline-block;width:14px;height:19px;flex:none;position:relative;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'%3E%3Cdefs%3E %3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffc061'/%3E%3Cstop offset='1' stop-color='%23ea4f0c'/%3E%3C/linearGradient%3E %3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffe08a'/%3E%3Cstop offset='1' stop-color='%23ff9a3c'/%3E%3C/linearGradient%3E %3CradialGradient id='c' cx='.5' cy='.6' r='.5'%3E%3Cstop offset='0' stop-color='%23fffbea'/%3E%3Cstop offset='1' stop-color='%23fffbea' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E %3Cpath fill='url(%23a)' d='M12 1c1 5 7.2 9 7.6 16.2C20 24.3 16.6 31 12 31S4 27.4 4.3 20.6C4.6 15.4 7.7 12.8 9 8.6c1 3.2 2.1 4.6 3.6 5.6C12.4 9.8 11.4 5.6 12 1z'/%3E %3Cpath fill='url(%23b)' d='M12 12.5c1.6 3.2 4.3 6 4.3 10.4C16.3 27 14.5 30 12 30s-4.3-2.4-4.3-6c0-3.2 2.1-5.2 2.7-7.8.6 2 1.4 2.9 2.4 3.4.1-2.8-.6-4.7-.8-7.1z'/%3E %3Cellipse fill='url(%23c)' cx='12' cy='25.5' rx='3.4' ry='4.4'/%3E%3C/svg%3E") center bottom/contain no-repeat;transform-origin:50% 100%}
+.flame.w,.bigbtn .flame,.festa .trail .flame{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'%3E%3Cdefs%3E %3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%23ffe3c8'/%3E%3C/linearGradient%3E %3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff6e8'/%3E%3Cstop offset='1' stop-color='%23ffd8b0'/%3E%3C/linearGradient%3E %3CradialGradient id='c' cx='.5' cy='.6' r='.5'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E %3Cpath fill='url(%23a)' d='M12 1c1 5 7.2 9 7.6 16.2C20 24.3 16.6 31 12 31S4 27.4 4.3 20.6C4.6 15.4 7.7 12.8 9 8.6c1 3.2 2.1 4.6 3.6 5.6C12.4 9.8 11.4 5.6 12 1z'/%3E %3Cpath fill='url(%23b)' d='M12 12.5c1.6 3.2 4.3 6 4.3 10.4C16.3 27 14.5 30 12 30s-4.3-2.4-4.3-6c0-3.2 2.1-5.2 2.7-7.8.6 2 1.4 2.9 2.4 3.4.1-2.8-.6-4.7-.8-7.1z'/%3E %3Cellipse fill='url(%23c)' cx='12' cy='25.5' rx='3.4' ry='4.4'/%3E%3C/svg%3E")}
+.check{width:22px;height:22px;border-radius:50%;background:var(--ok);flex:none;position:relative}
+.check::after{content:"";position:absolute;left:8px;top:4px;width:6px;height:11px;border:solid var(--ink);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.check.sm{width:16px;height:16px}
+.check.sm::after{left:5.5px;top:2.5px;width:4px;height:8px;border-width:0 2px 2px 0}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--dot)}
+.d-Verde{background:var(--verde)} .d-Azul{background:var(--azul)} .d-Laranja{background:var(--laranja)} .d-Comissao{background:var(--fg)}
+.ghostdot{width:12px;height:12px;border-radius:50%;border:1.5px dashed var(--muted);flex:none}
+.xdot{width:12px;height:12px;border-radius:50%;background:var(--danger);flex:none}
+
+/* 7. Topo ---------------------------------------------------------------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);min-height:36px}
+.logo{height:22px;width:auto;color:var(--fg);display:block}
+.live{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-xs);font-weight:700;color:var(--ok);background:var(--ok-soft);border-radius:var(--r-pill);padding:var(--pill)}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.hero{display:flex;flex-direction:column;gap:var(--s3)}
+.hero-card{position:relative;overflow:hidden;border-radius:var(--r-lg);padding:var(--s5) var(--s5) var(--s4);color:var(--white);
+  background:linear-gradient(150deg,var(--sun-1) 0%,var(--sun-2) 38%,var(--ember) 72%,var(--sun-3) 100%);box-shadow:0 14px 34px rgba(234,88,12,.32);display:flex;flex-direction:column;gap:var(--s3);isolation:isolate}
+.hc-rings{position:absolute;right:-120px;top:-110px;width:340px;height:340px;border-radius:50%;z-index:-1;
+  background:radial-gradient(circle,rgba(255,255,255,.55) 0 10px,rgba(255,255,255,0) 11px),repeating-radial-gradient(circle,rgba(255,255,255,.22) 0 1.5px,transparent 1.5px 30px)}
+.hc-tag{align-self:flex-start;font-size:var(--t-xs);font-weight:700;letter-spacing:.02em;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:var(--r-pill);padding:var(--pill)}
+.hero h1{font-size:clamp(36px,11vw,48px);line-height:.98;color:var(--white);letter-spacing:-.03em}
+.hc-lead{font-size:var(--t-ms);color:rgba(255,255,255,.92);max-width:30ch}
+.hc-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);margin-top:var(--s1);flex-wrap:wrap}
+.hc-date{display:inline-flex;align-items:baseline;gap:var(--s2);background:var(--white);color:var(--ember);border-radius:var(--r-md);padding:var(--pill);font-family:var(--display);font-weight:800;font-size:var(--t-sm);text-transform:uppercase;transform:rotate(-3deg);box-shadow:0 6px 14px rgba(120,40,0,.18)}
+.hc-date b{font-size:var(--t-xl);color:var(--fg);letter-spacing:-.02em}
+.hc-status{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-s);font-weight:700;background:rgba(23,23,28,.18);border-radius:var(--r-pill);padding:var(--pill)}
+.hc-status .pulse{background:var(--white)}
+.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3)}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--s4);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:var(--s2);min-width:0}
+.tile .lbl{font-size:var(--t-xs);font-weight:600;color:var(--muted)}
+.tile .num{font-family:var(--display);font-weight:800;font-size:var(--t-3xl);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.tile .num small{font-size:var(--t-sm);color:var(--muted);font-weight:700;letter-spacing:0}
+.tile .tsub{font-size:var(--t-s);color:var(--muted);display:flex;align-items:center;gap:var(--s2)}
+.tile .tsub b{color:var(--ember)}
+.bar{height:8px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--ember-hi),var(--ember));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+
+/* 8. Como participar ----------------------------------------------------- */
+.steps{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s3)}
+.steps li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:var(--s3);align-items:start}
+.steps .n{width:32px;height:32px;border-radius:var(--r-sm);background:var(--ember-soft);color:var(--ember);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:var(--t-md)}
+.steps b{display:block;font-size:var(--t-ms)}
+.steps span{font-size:var(--t-sm);color:var(--muted)}
+
+/* 9. Orando agora + relógio --------------------------------------------- */
+.now{border-color:var(--ember-line);background:radial-gradient(130% 70% at 50% 0%,var(--now-glow) 0,rgba(255,243,230,0) 70%),var(--surface)}
+.now-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.now-top .when{font-size:var(--t-sm);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.clock-wrap{position:relative;width:208px;height:208px;align-self:center}
+.clock-wrap::before{content:"";position:absolute;inset:22px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--white) 0,var(--dawn-1) 55%,var(--warm-2) 100%);box-shadow:inset 0 0 0 1px rgba(234,88,12,.12),0 10px 30px rgba(234,88,12,.15)}
+.dial{position:relative;width:100%;height:100%;display:block}
+.dial .track{fill:none;stroke:var(--track);stroke-width:6}
+.dial .arc{fill:none;stroke:url(#arcGrad);stroke-width:6;stroke-linecap:round}
+.dial .tk{stroke:var(--tick);stroke-width:1.2;stroke-linecap:round}
+.dial .tk.major{stroke:var(--tick-major);stroke-width:2}
+.dial .tk.past{stroke:var(--ember-mid)}
+.dial .tk.major.past{stroke:var(--ember)}
+.dial .num{fill:var(--muted);font-family:var(--body);font-size:7px;font-weight:600}
+.dial .tip{fill:var(--white);stroke:var(--ember);stroke-width:3}
+.dial .tip-glow{fill:rgba(234,88,12,.18)}
+.dial .tl{fill:var(--fg);font-family:var(--display);font-weight:800;font-size:var(--t-2xl);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dial .tls{fill:var(--muted);font-family:var(--body);font-weight:600;font-size:6.5px;letter-spacing:.14em}
+.dial #hand{transform-origin:60px 60px}
+.people{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
+.person{display:flex;align-items:center;gap:var(--s3);min-width:0;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3);min-height:46px}
+.person > :first-child{width:13px;display:flex;justify-content:center}
+.person .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.person .st{font-size:var(--t-s);margin-left:auto;white-space:nowrap;color:var(--muted);font-weight:600}
+.person.on{background:var(--ember-soft)}
+.person.on .st{color:var(--ember)}
+.person.off{background:var(--danger-soft)}
+.person.off .nm{color:var(--muted);text-decoration:line-through}
+.person.off .st{color:var(--danger)}
+/* você: vermelho enquanto não acendeu a chama, verde quando está orando */
+.person.eu{box-shadow:inset 0 0 0 2px var(--danger);background:var(--danger-soft)}
+.person.eu.on{box-shadow:inset 0 0 0 2px var(--ok);background:var(--ok-soft)}
+.person.eu .nm{color:var(--fg);text-decoration:none}
+.person .voce{flex:none;font-size:var(--t-xxs);font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--white);background:var(--danger);border-radius:var(--r-pill);padding:var(--pill-sm)}
+.person.eu.on .voce{background:var(--ok)}
+.person.eu{flex-wrap:wrap;row-gap:var(--s1)}
+.person.eu .nm{min-width:min(7.5em,40%)}
+.person.eu.on .st{color:var(--ok)}
+.empty-now{font-family:var(--display);font-weight:700;font-size:var(--t-lg);text-align:center;color:var(--fg)}
+.now-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2)}
+.now-meta .inset{display:flex;flex-direction:column;gap:var(--s0);font-size:var(--t-xs);color:var(--muted)}
+.now-meta .inset b{font-size:var(--t-sm);color:var(--fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#nowBody{gap:var(--s4)}
+.now-top .mini{margin-left:auto;height:28px;color:var(--muted)}
+.now-mini{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s4);align-items:center}
+.mini-time{display:flex;flex-direction:column;align-items:center;justify-content:center;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 50% 40%,var(--white),var(--dawn-1) 60%,var(--warm-2));box-shadow:inset 0 0 0 3px var(--ember-mid)}
+.mini-time b{font-family:var(--display);font-weight:800;font-size:var(--t-2xl);font-variant-numeric:tabular-nums;line-height:1}
+.mini-time span{font-size:var(--t-xxs);color:var(--muted);font-weight:600;margin-top:2px}
+.mini-names{display:flex;flex-wrap:wrap;gap:var(--s2);min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.row2.one{grid-template-columns:1fr}
+.hint.center{text-align:center}
+.howto{display:flex;gap:var(--s3);align-items:flex-start;font-size:var(--t-ms)}
+.howto .flame{margin-top:2px}
+.lit{display:flex;align-items:center;justify-content:center;gap:var(--s2);font-size:var(--t-ms);text-align:center}
+
+/* 10. Seus turnos -------------------------------------------------------- */
+.mine-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
+.ticket{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:var(--s3);align-items:center;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3);min-height:64px}
+.ticket .day{font-family:var(--display);font-weight:800;font-size:var(--t-xxs);text-transform:uppercase;letter-spacing:.06em;color:var(--ember);text-align:center;line-height:1.1;background:var(--surface);border-radius:var(--r-sm);padding:6px 0}
+.ticket .day b{display:block;font-size:var(--t-xl);color:var(--fg);letter-spacing:0}
+.ticket .hr{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ticket .sub{font-size:var(--t-s);color:var(--muted);display:flex;align-items:center;gap:var(--s2)}
+.ticket .sub.ok{color:var(--ok)}
+.ticket .sub.hot{color:var(--ember);font-weight:700}
+.acts{display:flex;flex-direction:column;align-items:flex-end;gap:0}
+
+/* 11. Dias --------------------------------------------------------------- */
+/* um cartão só: abas dos dias (fixas ao rolar) → leitura do dia → horários */
+.agenda{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.stick-sentinel{position:absolute;top:0;height:1px;width:1px}
+.ag-days{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:var(--s4) var(--pad) var(--s3);display:flex;flex-direction:column;gap:var(--s3);transition:box-shadow .2s,border-radius .2s}
+.ag-days.stuck{border-radius:0 0 var(--r-lg) var(--r-lg);box-shadow:0 8px 18px rgba(23,23,28,.08)}
+
+.ag-sec{padding:var(--s4) var(--pad);display:flex;flex-direction:column;gap:var(--s4);border-top:1px solid var(--line)}
+.ag-sec.lista{gap:var(--s3);padding-bottom:var(--pad)}
+.days{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--s2)}
+.tab{border:1px solid transparent;background:var(--surface-2);border-radius:var(--r-md);height:66px;padding:var(--s2) 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s1);min-width:0;position:relative}
+.tab .wd{font-size:var(--t-xxs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);line-height:1}
+.tab b{font-family:var(--display);font-weight:800;font-size:var(--t-xl);line-height:1}
+.tab .tb{width:56%;height:3px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+.tab .tb i{display:block;height:100%;background:var(--ember)}
+.tab .hoje{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:var(--t-xxs);font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--fg);color:var(--ink);border-radius:var(--r-pill);padding:var(--pill-sm);line-height:1.5}
+.tab .done{position:absolute;top:-6px;right:-3px}
+.tab[aria-selected="true"]{background:var(--ember);border-color:var(--ember);color:var(--ink);box-shadow:var(--shadow-hot)}
+.tab[aria-selected="true"] .wd{color:var(--ink);opacity:.85}
+.tab[aria-selected="true"] .tb{background:rgba(255,255,255,.35)}
+.tab[aria-selected="true"] .tb i{background:var(--ink)}
+
+/* 12. Dia: checklist (leitura, oração, jejum) e foco ------------------- */
+.foco{font-size:var(--t-md)}
+.leitura{display:flex;flex-direction:column;gap:var(--s3)}
+
+/* checklist do dia */
+.t-link{border:0;background:none;padding:8px 2px;margin:-8px 0;font:inherit;font-size:var(--t-s);font-weight:700;color:var(--ember);cursor:pointer;min-height:32px}
+.tasks{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
+.task{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:var(--s3);align-items:center;background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3);min-height:64px}
+.tick{width:26px;height:26px;border-radius:var(--r-sm);border:2px solid var(--tick);background:var(--surface);position:relative}
+.task.done{background:var(--ok-soft)}
+.task.done .tick{background:var(--ok);border-color:var(--ok)}
+.task.done .tick::after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid var(--white);border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.t-txt{display:flex;flex-direction:column;gap:var(--s0);min-width:0}
+.t-txt b{font-size:var(--t-md)}
+.t-sub{font-size:var(--t-s);color:var(--muted)}
+.t-sub a{color:var(--ember);font-weight:700;text-decoration:none}
+.t-sub b{color:var(--fg)}
+.t-sub.ok{color:var(--ok);font-weight:600}
+.task .add{width:auto;min-width:var(--action-col)}
+
+.ask-name{display:flex;flex-direction:column;gap:var(--s2);font-size:var(--t-sm);font-weight:600}
+.row-in{display:grid;grid-template-columns:minmax(0,1fr) var(--action-col);gap:var(--s2)}
+.row-in .add{height:var(--tap)}
+.foco-box{background:var(--ember-soft);border-radius:var(--r-md);padding:var(--s3);display:flex;flex-direction:column;gap:var(--s0)}
+.foco-box span{font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ember)}
+.foco-box p{font-size:var(--t-ms)}
+.leitura.done{flex-direction:row;align-items:center;gap:var(--s3);font-weight:600;color:var(--ok);background:var(--ok-soft);border-radius:var(--r-md);padding:var(--s3)}
+.input{font:inherit;font-size:var(--t-md);height:var(--tap);padding:0 var(--s4);border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface);color:var(--fg);width:100%}
+.input:focus{border-color:var(--ember);outline:none;box-shadow:0 0 0 3px var(--ember-soft)}
+.complete{display:flex;align-items:center;gap:var(--s2);font-weight:700;color:var(--ember)}
+.guide{border-top:1px solid var(--line);padding-top:var(--s4)}
+.guide summary{font-weight:600;font-size:var(--t-ms);list-style:none;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"+";font-size:var(--t-xl);color:var(--ember);line-height:1}
+.guide[open] summary::after{content:"–"}
+.guide ol{list-style:none;padding:0;margin-top:var(--s3);display:flex;flex-direction:column;gap:var(--s2);font-size:var(--t-ms)}
+.guide li{display:grid;grid-template-columns:84px minmax(0,1fr);gap:var(--s2)}
+.guide li b{color:var(--ember);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.now .guide{border-top:1px solid var(--ember-line)}
+
+/* 13. Horários ----------------------------------------------------------- */
+.lista{scroll-margin-top:110px}
+.periodos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s1);background:var(--surface-2);border-radius:var(--r-md);padding:var(--s1)}
+.per{border:0;background:transparent;border-radius:calc(var(--r-md) - var(--s1));height:60px;padding:0 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s0);min-width:0}
+.per b{font-size:var(--t-sm);font-weight:700}
+.per small{font-size:var(--t-xxs);color:var(--muted);white-space:nowrap}
+.per[aria-selected="true"]{background:var(--fg);color:var(--ink)}
+.per[aria-selected="true"] small{color:var(--ink);opacity:.75}
+.toggle{display:flex;align-items:center;gap:var(--s3);font-size:var(--t-ms);color:var(--muted);cursor:pointer;min-height:36px}
+.toggle input{width:20px;height:20px;margin:0;accent-color:var(--ember)}
+.slots{list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--s2)}
+.slot{grid-template-areas:"t n a";display:grid;grid-template-columns:var(--time-col) minmax(0,1fr) var(--action-col);gap:var(--s3);align-items:center;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-md);padding:10px var(--s2) 10px var(--s3);min-height:64px;column-gap:var(--s2)}
+.slot.mine{border-color:var(--ok);background:var(--ok-soft)}
+.slot.skel{min-height:64px}
+.slot.skel span{display:block;height:14px;border-radius:var(--r-pill);background:var(--line)}
+.slot.skel span:last-child{height:40px;border-radius:var(--r-sm)}
+.slot > .time{grid-area:t}.slot > .names{grid-area:n}.slot > :last-child{grid-area:a}
+.slot.agora{border-color:var(--ember);background:linear-gradient(180deg,var(--ember-soft),var(--surface) 90%);grid-template-columns:var(--time-col) minmax(0,1fr) var(--action-col);grid-template-areas:"t s a" "n n n";row-gap:var(--s3)}
+.slot.agora::before{content:"● Agora";grid-area:s;align-self:center;font-size:var(--t-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ember)}
+.slot.past{opacity:.5}
+.time{font-family:var(--display);font-weight:800;font-size:var(--t-md);font-variant-numeric:tabular-nums;line-height:1}
+.time span{display:block;font-family:var(--body);font-weight:500;font-size:var(--t-xs);color:var(--muted);margin-top:var(--s1);white-space:nowrap}
+.names{display:flex;flex-wrap:wrap;gap:var(--s2);min-width:0}
+.pchip{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-s);font-weight:600;height:28px;padding:0 var(--s3);border-radius:var(--r-pill);background:var(--surface);max-width:100%}
+.pchip.eu{box-shadow:inset 0 0 0 1.5px var(--ok);background:var(--ok-soft);color:var(--ok)}
+.pchip.on{background:var(--ember-soft);color:var(--ember)}
+.pchip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who{display:flex;align-items:center;gap:var(--s2);min-width:0;max-width:100%;min-height:40px;border:0;background:none;padding:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+.who .cnt{flex:none;font-size:var(--t-xs);font-weight:700;font-variant-numeric:tabular-nums;color:var(--fg);background:var(--surface);border-radius:var(--r-pill);padding:var(--pill-sm)}
+.who .flame{width:11px;height:15px}
+.flist{font-size:var(--t-sm);font-weight:600;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.chips-full{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.flist .me{color:var(--ok)}
+.pchip.more{border:0;font:inherit;font-size:var(--t-s);font-weight:700;color:var(--ember);background:var(--ember-soft);cursor:pointer}
+.vazio{font-size:var(--t-sm);color:var(--muted)}
+.add{border:0;background:var(--ember);color:var(--ink);border-radius:var(--r-sm);height:40px;width:100%;font-family:var(--display);font-weight:700;font-size:var(--t-sm);white-space:nowrap;padding:0 var(--s2)}
+.add.join{background:var(--surface);color:var(--ember);box-shadow:inset 0 0 0 1.5px var(--ember)}
+.add[disabled]{opacity:.4}
+.state{font-size:var(--t-xs);font-weight:600;color:var(--muted);text-align:center;line-height:1.3}
+.state.me{color:var(--ok);font-weight:700}
+.notice{font-size:var(--t-ms);color:var(--muted);text-align:center;padding:var(--s3)}
+
+/* 14. Resumo ------------------------------------------------------------- */
+.fechar{border:0;background:var(--surface-2);color:var(--fg);width:36px;height:36px;border-radius:var(--r-sm);font-size:var(--t-xl);flex:none}
+.hero-num b{display:block;font-family:var(--display);font-weight:800;font-size:clamp(48px,14vw,68px);line-height:.95;color:var(--ember);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.hero-num span{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2)}
+.stat{display:flex;flex-direction:column;gap:var(--s0)}
+.stat b{font-family:var(--display);font-weight:800;font-size:var(--t-2xl);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{font-size:var(--t-s);color:var(--muted)}
+.byday{display:flex;flex-direction:column;gap:var(--s3)}
+.drow{display:grid;grid-template-columns:40px minmax(0,1fr) 44px;gap:var(--s3);align-items:center;font-size:var(--t-sm);font-variant-numeric:tabular-nums}
+.drow b{text-transform:uppercase;font-size:var(--t-xs)}
+.drow span{text-align:right}
+.dtrack{height:10px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden;position:relative}
+.dtrack .cov,.dtrack .conf{position:absolute;inset:0 auto 0 0;border-radius:var(--r-pill)}
+.dtrack .cov{background:var(--ember-mid)}
+.dtrack .conf{background:var(--ember)}
+.legend{display:flex;gap:var(--s4);font-size:var(--t-s);color:var(--muted);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .lg-cov{background:var(--ember-mid)} .legend .lg-conf{background:var(--ember)}
+.verse{font-family:var(--display);font-weight:700;font-size:var(--t-lg);line-height:1.35;padding-top:var(--s4);border-top:1px solid var(--line)}
+.verse small{display:block;font-family:var(--body);font-weight:500;font-size:var(--t-s);color:var(--muted);margin-top:6px}
+
+/* 15. Rodapé e botão fixo ------------------------------------------------ */
+footer{display:flex;flex-direction:column;gap:var(--s3);padding-top:var(--s4);border-top:1px solid var(--line);font-size:var(--t-sm);color:var(--muted)}
+.lider{display:flex;flex-wrap:wrap;gap:var(--s1);align-items:center}
+.sign{display:flex;align-items:center;gap:var(--s3)}
+.sign .logo{height:12px;color:var(--muted)}
+.cta{position:fixed;left:0;right:0;bottom:0;z-index:15;padding:var(--s3) max(var(--s4),env(safe-area-inset-right,0px)) calc(var(--s3) + env(safe-area-inset-bottom,0px)) max(var(--s4),env(safe-area-inset-left,0px));background:linear-gradient(rgba(246,245,242,0),var(--bg) 40%)}
+.cta .bigbtn{max-width:528px;margin:0 auto}
+
+/* 16. Janelas ------------------------------------------------------------ */
+.sheet-bg{position:fixed;inset:0;background:rgba(23,23,28,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:var(--s3) max(var(--s4),env(safe-area-inset-right,0px)) calc(var(--s5) + env(safe-area-inset-bottom,0px)) max(var(--s4),env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:var(--s4);box-shadow:0 -10px 40px rgba(23,23,28,.12)}
+.sheet::before{content:"";width:40px;height:4px;border-radius:2px;background:var(--line);align-self:center}
+.sheet h2{font-size:var(--t-xl)}
+.field{font-size:var(--t-sm);font-weight:600;display:flex;flex-direction:column;gap:var(--s2)}
+.opt{font-weight:400;color:var(--muted)}
+.tpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s2)}
+.tpick input{position:absolute;opacity:0;pointer-events:none}
+.tpick label{display:flex;align-items:center;justify-content:center;gap:var(--s2);border:1px solid var(--line);background:var(--surface);border-radius:var(--r-md);height:46px;font-size:var(--t-sm);white-space:nowrap;padding:0 var(--s2);font-weight:600;cursor:pointer}
+.tpick input:checked+label{border-color:var(--fg);box-shadow:inset 0 0 0 1px var(--fg)}
+.tpick input:focus-visible+label{outline:2px solid var(--ember)}
+.row{display:grid;grid-template-columns:1fr 2fr;gap:var(--s2)}
+.stack{display:flex;flex-direction:column;gap:var(--s2)}
+.err{color:var(--danger);font-size:var(--t-sm)}
+.okmark{width:48px;height:48px;border-radius:var(--r-md);background:var(--ember-soft);display:grid;place-items:center}
+.okmark .flame{width:20px;height:27px}
+.thanks .big{font-size:var(--t-2xl);line-height:1.15;text-wrap:balance}
+.thanks p{line-height:1.55}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--ink);padding:var(--s3) var(--s4);border-radius:var(--r-md);font-size:var(--t-ms);font-weight:600;z-index:30;max-width:calc(100% - var(--s6));text-align:center;box-shadow:0 10px 30px rgba(23,23,28,.25)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+
+/* 16b. Abertura: uma frase por vez, com a luz respirando no centro ------ */
+.intro{position:fixed;inset:0;z-index:50;overflow:hidden;cursor:pointer;color:var(--fg);
+  background:radial-gradient(120% 80% at 50% 38%,var(--dawn-1) 0%,var(--dawn-2) 45%,var(--bg) 100%);transition:opacity .5s ease}
+.intro.out{opacity:0;pointer-events:none}
+.intro .lg-top{position:absolute;top:max(var(--s6),calc(env(safe-area-inset-top,0px) + var(--s5)));left:50%;transform:translateX(-50%);height:16px;width:auto;color:var(--fg);opacity:.8}
+.intro .orb{position:absolute;left:50%;top:36%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,var(--orb-1) 0%,var(--orb-2) 35%,var(--orb-3) 62%,rgba(255,138,61,0) 72%);transform:scale(.55);transition:transform 1s cubic-bezier(.45,0,.2,1)}
+.intro .orb::after{content:"";position:absolute;inset:-60px;border-radius:50%;background:radial-gradient(circle,rgba(255,170,90,.35),rgba(255,170,90,0) 65%)}
+.intro .wave{position:absolute;left:50%;top:36%;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;border:1.5px solid rgba(234,88,12,.35);opacity:0}
+.intro .flame-xl{position:absolute;left:50%;top:36%;width:40px;height:56px;margin:-34px 0 0 -20px;opacity:0;transform:scale(0);transition:transform .6s cubic-bezier(.2,.9,.3,1.3),opacity .3s}
+.intro .flame-xl::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32'%3E%3Cdefs%3E %3ClinearGradient id='a' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%23ffe3c8'/%3E%3C/linearGradient%3E %3ClinearGradient id='b' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fff6e8'/%3E%3Cstop offset='1' stop-color='%23ffd8b0'/%3E%3C/linearGradient%3E %3CradialGradient id='c' cx='.5' cy='.6' r='.5'%3E%3Cstop offset='0' stop-color='%23ffffff'/%3E%3Cstop offset='1' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E %3Cpath fill='url(%23a)' d='M12 1c1 5 7.2 9 7.6 16.2C20 24.3 16.6 31 12 31S4 27.4 4.3 20.6C4.6 15.4 7.7 12.8 9 8.6c1 3.2 2.1 4.6 3.6 5.6C12.4 9.8 11.4 5.6 12 1z'/%3E %3Cpath fill='url(%23b)' d='M12 12.5c1.6 3.2 4.3 6 4.3 10.4C16.3 27 14.5 30 12 30s-4.3-2.4-4.3-6c0-3.2 2.1-5.2 2.7-7.8.6 2 1.4 2.9 2.4 3.4.1-2.8-.6-4.7-.8-7.1z'/%3E %3Cellipse fill='url(%23c)' cx='12' cy='25.5' rx='3.4' ry='4.4'/%3E%3C/svg%3E") center bottom/contain no-repeat;transform-origin:50% 100%;filter:drop-shadow(0 0 14px rgba(255,255,255,.95))}
+.intro .burst{position:absolute;inset:0;background:linear-gradient(160deg,var(--sun-1) 0%,var(--sun-2) 40%,var(--ember) 78%);clip-path:circle(0% at 50% 36%);transition:clip-path .7s cubic-bezier(.65,0,.35,1)}
+.intro .lines{position:absolute;left:0;right:0;top:58%;height:120px;padding:0 max(var(--s5),env(safe-area-inset-left,0px))}
+.intro .line{position:absolute;inset:0;display:block;text-align:center;
+  font-family:var(--display);font-weight:800;font-size:clamp(32px,9.5vw,44px);line-height:1.1;letter-spacing:-.02em;text-wrap:balance;
+  opacity:0;transform:translateY(16px);filter:blur(8px);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1),filter .55s ease,color .6s ease}
+.intro .line em{font-style:normal;color:var(--ember);transition:color .6s ease}
+.intro .line.on{opacity:1;transform:none;filter:none}
+.intro .line.off{opacity:0;transform:translateY(-14px);filter:blur(6px)}
+.intro .skip{position:absolute;left:0;right:0;bottom:max(var(--s5),calc(env(safe-area-inset-bottom,0px) + var(--s4)));text-align:center;font-size:var(--t-sm);font-weight:600;color:var(--muted)}
+/* etapas */
+.intro.s2 .orb{transform:scale(1.25)}                      /* inspira */
+.intro.s3 .orb{transform:scale(1);animation:beat .9s ease-in-out 1}  /* coração */
+.intro.s4 .orb{transform:scale(1.1)}
+.intro.s4 .flame-xl{opacity:1;transform:scale(1)}
+.intro.s4 .wave{animation:waveOut 1.8s cubic-bezier(.2,.7,.2,1) infinite}
+.intro.s4 .w2{animation-delay:.6s}.intro.s4 .w3{animation-delay:1.2s}
+.intro.s5 .burst{clip-path:circle(150% at 50% 36%)}
+.intro.s5 .line,.intro.s5 .line em,.intro.s5 .lg-top,.intro.s5 .skip{color:var(--white)}
+@keyframes beat{0%,100%{transform:scale(1)}20%{transform:scale(1.12)}40%{transform:scale(1)}60%{transform:scale(1.08)}}
+@keyframes waveOut{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.intro *{transition:none!important;animation:none!important}}
+
+/* 16c. Comemoração da meia-noite ---------------------------------------- */
+.festa{position:fixed;inset:0;z-index:55;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s4);text-align:center;overflow:hidden;
+  padding:max(var(--s6),env(safe-area-inset-top,0px)) max(var(--s5),env(safe-area-inset-right,0px)) max(var(--s6),env(safe-area-inset-bottom,0px)) max(var(--s5),env(safe-area-inset-left,0px));
+  background:radial-gradient(120% 70% at 50% 30%,var(--dawn-3) 0%,var(--dawn-2) 50%,var(--bg) 100%);transition:opacity .4s ease}
+.festa.out{opacity:0;pointer-events:none}
+.festa .rays{position:absolute;left:50%;top:30%;width:900px;height:900px;margin:-450px 0 0 -450px;z-index:-1;opacity:.55;
+  background:repeating-conic-gradient(from 0deg,rgba(255,170,90,.22) 0deg 7deg,transparent 7deg 18deg);-webkit-mask:radial-gradient(circle,#000 10%,transparent 60%);mask:radial-gradient(circle,#000 10%,transparent 60%);animation:spin 40s linear infinite}
+.festa .glory{font-family:var(--display);font-weight:800;font-size:clamp(40px,12vw,56px);line-height:1;letter-spacing:-.03em;
+  background:linear-gradient(135deg,var(--gold-1),var(--ember) 60%,var(--gold-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.festa .ttl{font-family:var(--display);font-weight:800;font-size:clamp(22px,6.5vw,28px);line-height:1.15;letter-spacing:-.01em;max-width:20ch;text-wrap:balance}
+.festa .txt{font-size:var(--t-lg);color:var(--muted);max-width:30ch;line-height:1.5}
+.festa .trail{display:flex;gap:var(--s2);align-items:center}
+.festa .trail > span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:var(--t-sm);background:var(--surface);border:1.5px solid var(--line);color:var(--muted)}
+.festa .trail > span.ok{background:var(--ember);border-color:var(--ember);color:var(--white)}
+.festa .trail > span.ok.new{animation:popIn .6s cubic-bezier(.2,.8,.2,1) .9s both}
+.festa .nums{display:flex;gap:var(--s2);flex-wrap:wrap;justify-content:center}
+.festa .nums span{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-pill);padding:6px var(--s3);font-size:var(--t-sm);font-weight:600;box-shadow:var(--shadow)}
+.festa .nums b{color:var(--ember)}
+.festa .btn{max-width:320px;margin-top:var(--s2)}
+.festa > *{animation:fadeUp .6s cubic-bezier(.2,.8,.2,1) both}
+.festa > :nth-child(2){animation-delay:.1s}.festa > :nth-child(3){animation-delay:.35s}.festa > :nth-child(4){animation-delay:.55s}
+.festa > :nth-child(5){animation-delay:.75s}.festa > :nth-child(6){animation-delay:.95s}.festa > :nth-child(7){animation-delay:1.15s}
+@keyframes popIn{0%{transform:scale(0);opacity:0}60%{transform:scale(1.2);opacity:1}100%{transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.festa *,.festa > *{animation:none!important}}
+
+/* 16d. Jejum: escolha e instruções ------------------------------------- */
+/* instruções do jejum */
+#guiabg{z-index:25}
+.guia-jejum{max-height:88vh}
+.guia-body{overflow-y:auto;display:flex;flex-direction:column;gap:var(--s4);margin-right:calc(var(--s2) * -1);padding-right:var(--s2);-webkit-overflow-scrolling:touch}
+.guia-lead{font-size:var(--t-ms);line-height:1.55}
+.ref-b{color:var(--muted);white-space:nowrap}
+.guia-steps{list-style:none;padding:0;counter-reset:passo;display:flex;flex-direction:column;gap:var(--s4)}
+.guia-steps > li{counter-increment:passo;display:grid;grid-template-columns:28px minmax(0,1fr);column-gap:var(--s3);row-gap:var(--s1)}
+.guia-steps > li::before{content:counter(passo);grid-row:1 / span 2;width:28px;height:28px;border-radius:var(--r-sm);background:var(--ember-soft);color:var(--ember);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:var(--t-sm)}
+.guia-steps > li > b{font-family:var(--display);font-weight:700;font-size:var(--t-md);align-self:center}
+.guia-steps p,.guia-steps ul{grid-column:2;font-size:var(--t-sm);line-height:1.55;color:var(--fg)}
+.guia-steps ul{padding-left:18px;display:flex;flex-direction:column;gap:var(--s2)}
+.guia-steps ul li::marker{color:var(--ember)}
+
+/* janela do jejum — opções em cartão com marcador; "sem comer" abre a linha do dia */
+.ic-leaf::before{content:"";width:12px;height:12px;background:var(--ember);border-radius:0 70% 0 70%;transform:rotate(45deg)}
+.jej-opts{display:flex;flex-direction:column;gap:var(--s2)}
+.jej-card{border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--surface);overflow:hidden;transition:border-color .15s,background .15s}
+.jej-card.sel{border-color:var(--ember);background:var(--ember-soft)}
+.jej{width:100%;border:0;background:none;padding:var(--s3) var(--s4);min-height:var(--tap);display:flex;align-items:center;gap:var(--s3);text-align:left;cursor:pointer;color:var(--fg)}
+.jej-t{display:flex;flex-direction:column;gap:var(--s0);min-width:0}
+.jej-t b{font-family:var(--display);font-weight:700;font-size:var(--t-md)}
+.jej-t small{font-size:var(--t-s);color:var(--muted)}
+.jej-card.sel .jej-t b{color:var(--ember)}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--tick);flex:none;position:relative;background:var(--surface)}
+.jej-card.sel .radio{border-color:var(--ember)}
+.jej-card.sel .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--ember)}
+.jej-horas{padding:0 var(--s4) var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+.horas-sel{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+select.input{appearance:none;-webkit-appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236c6862' stroke-width='2'/%3E%3C/svg%3E") no-repeat right 14px center;padding-right:36px;font-weight:600}
+.faixa{display:flex;flex-direction:column;gap:var(--s2)}
+.faixa-track{position:relative;height:14px;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--sky),var(--dawn-1) 40%,var(--warm-2) 70%,var(--tick));overflow:hidden}
+.faixa-seg{position:absolute;top:0;bottom:0;border-radius:var(--r-pill);background:linear-gradient(90deg,var(--ember-hi),var(--ember));display:flex;align-items:center;justify-content:center;transition:left .25s,width .25s}
+.faixa-seg .flame{width:8px;height:11px}
+.faixa-lbl{display:flex;justify-content:space-between;font-size:var(--t-xxs);font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.faixa-txt{font-size:var(--t-sm);color:var(--fg)}
+.faixa-txt b{color:var(--ember)}
+.extra{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);border:1.5px dashed var(--line);border-radius:var(--r-md);padding:var(--s3) var(--s4)}
+.jej-nota{display:flex;flex-direction:column;gap:var(--s3);background:var(--surface-2);border-radius:var(--r-md);padding:var(--s3) var(--s4)}
+.jej-nota p{font-size:var(--t-sm);color:var(--muted);line-height:1.5}
+.jej-guia{display:flex;align-items:center;gap:var(--s3);width:100%;min-height:44px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);padding:6px var(--s3) 6px 6px;font-family:var(--display);font-weight:700;font-size:var(--t-ms);color:var(--fg);cursor:pointer;text-align:left}
+.jej-guia .ic{width:30px;height:30px}
+.jej-guia .seta{margin-left:auto;font-size:var(--t-2xl);color:var(--ember);line-height:1}
+.extra:has(input:checked){border-style:solid;border-color:var(--ember);background:var(--ember-soft)}
+.extra-txt{display:flex;flex-direction:column;gap:var(--s0);min-width:0}
+.extra-txt b{font-family:var(--display);font-weight:700;font-size:var(--t-md)}
+.extra-txt span{font-size:var(--t-s);color:var(--muted)}
+.switch{position:relative;width:48px;height:28px;flex:none;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.switch span{position:absolute;inset:0;border-radius:var(--r-pill);background:var(--line);transition:background .2s}
+.switch span::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--white);box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+.switch input:checked+span{background:var(--ember)}
+.switch input:checked+span::after{transform:translateX(20px)}
+.switch input:focus-visible+span{outline:2px solid var(--ember);outline-offset:2px}
+
+/* 17. Movimento ---------------------------------------------------------- */
+@media (prefers-reduced-motion:no-preference){
+  .pulse,.live i{animation:pl 1.6s ease-in-out infinite}
+  .person .flame,.bigbtn .flame,.lit .flame,.okmark .flame,.festa .trail .flame,.chips-full .flame,.intro .flame-xl::before{animation:fl 1.1s ease-in-out infinite alternate}
+  .bigbtn.pulsing{animation:bp 1.6s ease-in-out infinite}
+  .dial #hand{transition:transform 1s linear}
+  .dial .arc{transition:stroke-dashoffset 1s linear}
+  .dial .tip-glow{animation:tg 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  .slot.skel span{animation:pl 1.2s ease-in-out infinite}
+  .add,.tab,.per,.bigbtn,.btn{transition:transform .12s ease}
+  .add:active,.tab:active,.per:active,.bigbtn:active,.btn:active{transform:scale(.97)}
+}
+@keyframes pl{50%{opacity:.3}}
+@keyframes fl{0%{transform:scale(1,1) skewX(-2deg)}35%{transform:scale(.94,1.07) skewX(2deg)}70%{transform:scale(1.03,.97) skewX(-1deg)}100%{transform:scale(.97,1.04) skewX(1.5deg)}}
+@keyframes bp{50%{box-shadow:0 0 0 8px rgba(234,88,12,.18),var(--shadow-hot)}}
+@keyframes tg{50%{transform:scale(1.6);opacity:.4}}
+@keyframes breathe{50%{transform:translateX(-50%) scale(1.05)}}
+
+/* 18. Telas pequenas ----------------------------------------------------- */
+@media (max-width:380px){
+  :root{--time-col:54px;--action-col:88px}
+  .tab b{font-size:var(--t-lg)}
+  .clock-wrap{width:188px;height:188px}
+}
+</style>
+</head>
+<body>
+<div class="intro" id="intro" role="dialog" aria-label="Abertura" aria-live="polite">
+  <div class="burst"></div>
+  <svg class="lg-top" viewBox="181 396 1174 257" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M 183.7 399.7 C 182.8 400.5, 182.8 646.2, 183.6 648.4 C 184.5 650.8, 358 650.8, 380.5 648.4 C 397.5 646.6, 414.4 642, 424.4 636.4 C 426.7 635.1, 430.1 633.2, 432.1 632.1 C 440.2 627.6, 456.5 613.1, 461.3 606 C 468 596.3, 472 589.8, 472 589 C 472 588.1, 474.8 582.1, 477.3 577.5 C 478.4 575.4, 480.2 568.3, 482.5 557 C 483.2 553.4, 484.3 548.5, 484.9 546 C 486.5 539.2, 486.3 509.2, 484.6 501.7 C 483.8 498.3, 482.2 491, 481 485.5 C 479.8 480, 477.7 473.1, 476.4 470.2 C 475 467.2, 473 463, 472 460.7 C 469.8 455.5, 462 443.9, 456 437 C 451.8 432.2, 437.8 420, 436.4 420 C 436.1 420, 433.8 418.6, 431.3 417 C 428.8 415.3, 424.1 412.8, 420.7 411.4 C 417.3 410.1, 413.3 408.3, 411.8 407.5 C 410.4 406.7, 408.5 406, 407.6 406 C 406.8 406, 404 405.3, 401.6 404.5 C 387 399.5, 375.5 399, 276.9 399 C 226 399, 184 399.3, 183.7 399.7 M 503.6 400.6 C 500.9 403.2, 501.2 646, 503.8 648.3 C 506.8 651, 762.9 650.9, 765.3 648.2 C 767.5 645.8, 767.9 588.3, 765.8 586.2 C 764.9 585.3, 743.8 585, 676.9 585 C 598.5 585, 589 584.8, 587.6 583.4 C 584.9 580.8, 585.3 556.7, 588 554 C 590 552, 591.3 552, 676.9 552 C 724.7 552, 764.5 551.7, 765.4 551.4 C 767.6 550.6, 767.8 499.9, 765.7 498.1 C 764.7 497.4, 738.8 497, 676.2 496.8 C 627.8 496.6, 587.8 496.1, 587.3 495.7 C 586.1 494.5, 585.8 467.8, 586.9 466 C 587.8 464.7, 599.3 464.4, 677.2 464 C 726.3 463.7, 766.6 463.4, 766.8 463.2 C 766.9 463.1, 767 449.3, 767 432.6 C 767 406.2, 766.8 401.9, 765.4 400.6 C 763 398.2, 506 398.2, 503.6 400.6 M 777 400 C 774.7 401.4, 774.7 647.6, 777 649 C 777.9 649.6, 828.2 650, 908.2 650 C 1035.4 650, 1037.9 650, 1039 648.1 C 1040.8 644.6, 1040.3 586.3, 1038.4 585.6 C 1037.5 585.3, 997.8 585, 950 585 C 902.2 585, 862.5 584.7, 861.6 584.4 C 859.5 583.6, 859.2 554.6, 861.2 553.3 C 861.9 552.9, 902.3 552.3, 951 552 L 1039.5 551.5 1039.8 526.5 C 1039.9 512.8, 1039.8 500.5, 1039.5 499.2 L 1039 497 952 497 C 898 497, 864.2 496.6, 862.6 496 L 860 495.1 860 480.6 C 860 470.1, 860.3 465.9, 861.2 465.3 C 861.9 464.9, 902.3 464.3, 951 464 L 1039.5 463.5 1039.8 433.2 C 1039.9 413.5, 1039.7 402.2, 1039 401 C 1037.9 399, 1036.1 399, 908.2 399 C 828.2 399, 777.9 399.4, 777 400 M 1062.2 399.7 C 1060.3 400.5, 1060.4 647.3, 1062.4 648.9 C 1064.1 650.3, 1101.3 650.1, 1102.7 648.7 C 1103.1 648.2, 1103.7 632, 1104 612.7 L 1104.5 577.5 1187.5 576.9 C 1253.2 576.4, 1272.5 576, 1280 574.8 C 1289.2 573.4, 1299.4 570.6, 1301.6 568.9 C 1302.2 568.4, 1304.5 567.4, 1306.7 566.6 C 1324.8 560.2, 1346.7 533.8, 1350 514.5 C 1350.6 511.2, 1351.5 506.7, 1352 504.5 C 1353.2 499.3, 1353.2 477.8, 1351.9 472 C 1351.4 469.5, 1350.6 465, 1350.1 462 C 1347.2 443.8, 1327.6 419.3, 1309.5 411.1 C 1306.8 409.9, 1303.7 408.4, 1302.7 407.9 C 1298.5 405.6, 1287.7 402.9, 1275.6 401 C 1263.3 399.1, 1258 399, 1163.1 399.1 C 1108.3 399.1, 1062.9 399.4, 1062.2 399.7 M 1105.2 435.8 C 1104.2 436.5, 1104 447.7, 1104.2 488.6 L 1104.5 540.5 1181.5 540.8 C 1246.1 541, 1259.6 540.8, 1265.5 539.6 C 1269.3 538.8, 1274.5 537.8, 1276.8 537.5 C 1289.1 535.6, 1302.9 523.1, 1307 510.3 C 1310.7 498.9, 1310.7 475.7, 1307.1 466 C 1301.4 450.9, 1289.4 441.2, 1272.5 437.9 C 1269.2 437.3, 1264.5 436.4, 1262 436 C 1256.2 434.9, 1106.9 434.8, 1105.2 435.8 M 240.6 449.2 C 238 452.8, 238.2 597.8, 240.8 600.9 L 242.5 603.1 302.5 602.7 C 369 602.3, 372 602, 390.1 595.7 C 409.1 589, 419.6 577.5, 426.2 556 C 429.6 544.6, 429.6 504.1, 426.1 493.5 C 423.8 486.3, 419.9 476.9, 419 476 C 418.7 475.7, 417.2 473.6, 415.7 471.3 C 412.1 466, 403 458.9, 396.5 456.2 C 375.4 447.7, 375.9 447.7, 303.3 447.3 L 242.2 446.9 240.6 449.2"/></svg>
+  <span class="orb"></span>
+  <span class="wave"></span><span class="wave w2"></span><span class="wave w3"></span>
+  <span class="flame-xl"></span>
+  <div class="lines">
+    <p class="line" id="l1">Ei!</p>
+    <p class="line">Respira fundo.</p>
+    <p class="line">Prepara o coração.</p>
+    <p class="line">É hora de falar com <em>Deus</em>.</p>
+  </div>
+  <p class="skip">Toque para pular</p>
+</div>
+<script>
+/* abertura: uma frase por vez — uma vez por visita */
+(function(){
+  var el=document.getElementById("intro");
+  try{if(sessionStorage.getItem("rel_intro")){el.remove();return}sessionStorage.setItem("rel_intro","1")}catch(e){}
+  var n="";try{n=(localStorage.getItem("rel_nome")||"").trim().split(" ")[0]}catch(e){}
+  document.getElementById("l1").textContent=n?"Ei, "+n+"!":"Que bom te ver aqui!";
+  var L=el.querySelectorAll(".line"), timers=[], done=false;
+  function at(ms,fn){timers.push(setTimeout(fn,ms))}
+  function show(i){L.forEach(function(x,k){x.classList.toggle("on",k===i);x.classList.toggle("off",k<i)})}
+  function fim(){if(done)return;done=true;timers.forEach(clearTimeout);el.classList.add("out");setTimeout(function(){el.remove()},520)}
+  var calm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(calm){show(3);el.className="intro s4";at(2200,fim)}
+  else{
+    at(150,function(){show(0)});
+    at(1000,function(){show(1);el.className="intro s2"});
+    at(2000,function(){show(2);el.className="intro s3"});
+    at(3000,function(){show(3);el.className="intro s4"});
+    at(3900,function(){el.className="intro s4 s5"});
+    at(4600,fim);
+  }
+  el.addEventListener("click",fim);
+})();
+</script>
+<div class="glow" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <svg class="logo" viewBox="181 396 1174 257" role="img" aria-label="DEEP"><path fill="currentColor" fill-rule="evenodd" d="M 183.7 399.7 C 182.8 400.5, 182.8 646.2, 183.6 648.4 C 184.5 650.8, 358 650.8, 380.5 648.4 C 397.5 646.6, 414.4 642, 424.4 636.4 C 426.7 635.1, 430.1 633.2, 432.1 632.1 C 440.2 627.6, 456.5 613.1, 461.3 606 C 468 596.3, 472 589.8, 472 589 C 472 588.1, 474.8 582.1, 477.3 577.5 C 478.4 575.4, 480.2 568.3, 482.5 557 C 483.2 553.4, 484.3 548.5, 484.9 546 C 486.5 539.2, 486.3 509.2, 484.6 501.7 C 483.8 498.3, 482.2 491, 481 485.5 C 479.8 480, 477.7 473.1, 476.4 470.2 C 475 467.2, 473 463, 472 460.7 C 469.8 455.5, 462 443.9, 456 437 C 451.8 432.2, 437.8 420, 436.4 420 C 436.1 420, 433.8 418.6, 431.3 417 C 428.8 415.3, 424.1 412.8, 420.7 411.4 C 417.3 410.1, 413.3 408.3, 411.8 407.5 C 410.4 406.7, 408.5 406, 407.6 406 C 406.8 406, 404 405.3, 401.6 404.5 C 387 399.5, 375.5 399, 276.9 399 C 226 399, 184 399.3, 183.7 399.7 M 503.6 400.6 C 500.9 403.2, 501.2 646, 503.8 648.3 C 506.8 651, 762.9 650.9, 765.3 648.2 C 767.5 645.8, 767.9 588.3, 765.8 586.2 C 764.9 585.3, 743.8 585, 676.9 585 C 598.5 585, 589 584.8, 587.6 583.4 C 584.9 580.8, 585.3 556.7, 588 554 C 590 552, 591.3 552, 676.9 552 C 724.7 552, 764.5 551.7, 765.4 551.4 C 767.6 550.6, 767.8 499.9, 765.7 498.1 C 764.7 497.4, 738.8 497, 676.2 496.8 C 627.8 496.6, 587.8 496.1, 587.3 495.7 C 586.1 494.5, 585.8 467.8, 586.9 466 C 587.8 464.7, 599.3 464.4, 677.2 464 C 726.3 463.7, 766.6 463.4, 766.8 463.2 C 766.9 463.1, 767 449.3, 767 432.6 C 767 406.2, 766.8 401.9, 765.4 400.6 C 763 398.2, 506 398.2, 503.6 400.6 M 777 400 C 774.7 401.4, 774.7 647.6, 777 649 C 777.9 649.6, 828.2 650, 908.2 650 C 1035.4 650, 1037.9 650, 1039 648.1 C 1040.8 644.6, 1040.3 586.3, 1038.4 585.6 C 1037.5 585.3, 997.8 585, 950 585 C 902.2 585, 862.5 584.7, 861.6 584.4 C 859.5 583.6, 859.2 554.6, 861.2 553.3 C 861.9 552.9, 902.3 552.3, 951 552 L 1039.5 551.5 1039.8 526.5 C 1039.9 512.8, 1039.8 500.5, 1039.5 499.2 L 1039 497 952 497 C 898 497, 864.2 496.6, 862.6 496 L 860 495.1 860 480.6 C 860 470.1, 860.3 465.9, 861.2 465.3 C 861.9 464.9, 902.3 464.3, 951 464 L 1039.5 463.5 1039.8 433.2 C 1039.9 413.5, 1039.7 402.2, 1039 401 C 1037.9 399, 1036.1 399, 908.2 399 C 828.2 399, 777.9 399.4, 777 400 M 1062.2 399.7 C 1060.3 400.5, 1060.4 647.3, 1062.4 648.9 C 1064.1 650.3, 1101.3 650.1, 1102.7 648.7 C 1103.1 648.2, 1103.7 632, 1104 612.7 L 1104.5 577.5 1187.5 576.9 C 1253.2 576.4, 1272.5 576, 1280 574.8 C 1289.2 573.4, 1299.4 570.6, 1301.6 568.9 C 1302.2 568.4, 1304.5 567.4, 1306.7 566.6 C 1324.8 560.2, 1346.7 533.8, 1350 514.5 C 1350.6 511.2, 1351.5 506.7, 1352 504.5 C 1353.2 499.3, 1353.2 477.8, 1351.9 472 C 1351.4 469.5, 1350.6 465, 1350.1 462 C 1347.2 443.8, 1327.6 419.3, 1309.5 411.1 C 1306.8 409.9, 1303.7 408.4, 1302.7 407.9 C 1298.5 405.6, 1287.7 402.9, 1275.6 401 C 1263.3 399.1, 1258 399, 1163.1 399.1 C 1108.3 399.1, 1062.9 399.4, 1062.2 399.7 M 1105.2 435.8 C 1104.2 436.5, 1104 447.7, 1104.2 488.6 L 1104.5 540.5 1181.5 540.8 C 1246.1 541, 1259.6 540.8, 1265.5 539.6 C 1269.3 538.8, 1274.5 537.8, 1276.8 537.5 C 1289.1 535.6, 1302.9 523.1, 1307 510.3 C 1310.7 498.9, 1310.7 475.7, 1307.1 466 C 1301.4 450.9, 1289.4 441.2, 1272.5 437.9 C 1269.2 437.3, 1264.5 436.4, 1262 436 C 1256.2 434.9, 1106.9 434.8, 1105.2 435.8 M 240.6 449.2 C 238 452.8, 238.2 597.8, 240.8 600.9 L 242.5 603.1 302.5 602.7 C 369 602.3, 372 602, 390.1 595.7 C 409.1 589, 419.6 577.5, 426.2 556 C 429.6 544.6, 429.6 504.1, 426.1 493.5 C 423.8 486.3, 419.9 476.9, 419 476 C 418.7 475.7, 417.2 473.6, 415.7 471.3 C 412.1 466, 403 458.9, 396.5 456.2 C 375.4 447.7, 375.9 447.7, 303.3 447.3 L 242.2 446.9 240.6 449.2"/></svg>
+    <span class="live" id="live" hidden><i></i>Ao vivo</span>
+  </header>
+
+  <section class="hero">
+    <div class="hero-card">
+      <div class="hc-rings" aria-hidden="true"></div>
+      <span class="hc-tag">#DeDentroParaFora</span>
+      <h1 class="display">Relógio<br>de Oração</h1>
+      <p class="hc-lead">Jejum e oração do DEEP antes do Retiro. Pega seu horário e ora com a gente.</p>
+      <div class="hc-foot">
+        <span class="hc-date"><b>26–30</b>out</span>
+        <span class="hc-status" id="hStatus">Carregando…</span>
+      </div>
+    </div>
+    <div class="bento" aria-live="polite">
+      <div class="tile">
+        <span class="lbl">Turnos cobertos</span>
+        <b class="num" id="mBig">0<small>/240</small></b>
+        <div class="bar"><i id="mBar"></i></div>
+      </div>
+      <div class="tile">
+        <span class="lbl">Jovens no relógio</span>
+        <b class="num" id="mPeople">0</b>
+        <span class="tsub" id="mSide">&nbsp;</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="como" hidden>
+    <div class="sec-row"><h2 class="sec-title"><span class="ic ic-help" aria-hidden="true"></span>Como participar</h2><button class="linkbtn" id="comoOk">Entendi</button></div>
+    <ol class="steps">
+      <li><span class="n">1</span><div><b>Escolha um horário</b><span>Toque em "Quero orar" e coloque seu nome. Pode escolher quantos quiser.</span></div></li>
+      <li><span class="n">2</span><div><b>Na hora, toque em "Comecei a orar"</b><span>Seu nome ganha uma chama para todo mundo ver.</span></div></li>
+      <li><span class="n">3</span><div><b>Leia o capítulo do dia</b><span>Depois toque em "Concluí a leitura".</span></div></li>
+    </ol>
+  </section>
+
+  <section class="card" id="resumo" hidden></section>
+  <section class="card now" id="now" aria-live="polite" hidden></section>
+  <section class="card" id="mine" hidden></section>
+
+  <section class="agenda" aria-label="Dias e horários">
+    <span class="stick-sentinel" id="stickSentinel" aria-hidden="true"></span>
+    <div class="ag-days" id="agDays">
+      <h2 class="sec-title"><span class="ic ic-cal" aria-hidden="true"></span><span id="diaTitulo">Segunda, 26/10</span></h2>
+      <nav class="days" role="tablist" id="tabs" aria-label="Dias"></nav>
+    </div>
+
+    <div class="ag-sec" id="dayhead"></div>
+
+    <div class="ag-sec lista" id="lista">
+      <div class="sec-head">
+        <h2 class="sec-title"><span class="ic ic-clock" aria-hidden="true"></span>Horários de oração</h2>
+        <p class="sub">30 minutos cada, até 5 pessoas</p>
+      </div>
+      <div class="foco-box"><span>Foco de oração</span><p id="focoDia"></p></div>
+      <div class="complete" id="diaCompleto" hidden><span class="flame"></span>Dia completo! Todos os turnos têm alguém orando.</div>
+      <div class="periodos" role="tablist" id="perTabs" aria-label="Período do dia"></div>
+      <label class="toggle"><input type="checkbox" id="soVazios"> Mostrar só horários sem ninguém</label>
+      <p class="notice" id="notice" hidden></p>
+      <ol class="slots" id="slotList"></ol>
+    </div>
+  </section>
+
+  <footer>
+    <button class="linkbtn" id="verResumo">Ver o Resumo do Propósito</button>
+    <div class="lider"><span>Liderança:</span> <button class="linkbtn" id="copiar">Copiar escala do dia para o WhatsApp</button></div>
+    <p>Seus turnos ficam salvos neste celular. Para cancelar, use "Seus turnos".</p>
+    <div class="sign"><svg class="logo" viewBox="181 396 1174 257" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M 183.7 399.7 C 182.8 400.5, 182.8 646.2, 183.6 648.4 C 184.5 650.8, 358 650.8, 380.5 648.4 C 397.5 646.6, 414.4 642, 424.4 636.4 C 426.7 635.1, 430.1 633.2, 432.1 632.1 C 440.2 627.6, 456.5 613.1, 461.3 606 C 468 596.3, 472 589.8, 472 589 C 472 588.1, 474.8 582.1, 477.3 577.5 C 478.4 575.4, 480.2 568.3, 482.5 557 C 483.2 553.4, 484.3 548.5, 484.9 546 C 486.5 539.2, 486.3 509.2, 484.6 501.7 C 483.8 498.3, 482.2 491, 481 485.5 C 479.8 480, 477.7 473.1, 476.4 470.2 C 475 467.2, 473 463, 472 460.7 C 469.8 455.5, 462 443.9, 456 437 C 451.8 432.2, 437.8 420, 436.4 420 C 436.1 420, 433.8 418.6, 431.3 417 C 428.8 415.3, 424.1 412.8, 420.7 411.4 C 417.3 410.1, 413.3 408.3, 411.8 407.5 C 410.4 406.7, 408.5 406, 407.6 406 C 406.8 406, 404 405.3, 401.6 404.5 C 387 399.5, 375.5 399, 276.9 399 C 226 399, 184 399.3, 183.7 399.7 M 503.6 400.6 C 500.9 403.2, 501.2 646, 503.8 648.3 C 506.8 651, 762.9 650.9, 765.3 648.2 C 767.5 645.8, 767.9 588.3, 765.8 586.2 C 764.9 585.3, 743.8 585, 676.9 585 C 598.5 585, 589 584.8, 587.6 583.4 C 584.9 580.8, 585.3 556.7, 588 554 C 590 552, 591.3 552, 676.9 552 C 724.7 552, 764.5 551.7, 765.4 551.4 C 767.6 550.6, 767.8 499.9, 765.7 498.1 C 764.7 497.4, 738.8 497, 676.2 496.8 C 627.8 496.6, 587.8 496.1, 587.3 495.7 C 586.1 494.5, 585.8 467.8, 586.9 466 C 587.8 464.7, 599.3 464.4, 677.2 464 C 726.3 463.7, 766.6 463.4, 766.8 463.2 C 766.9 463.1, 767 449.3, 767 432.6 C 767 406.2, 766.8 401.9, 765.4 400.6 C 763 398.2, 506 398.2, 503.6 400.6 M 777 400 C 774.7 401.4, 774.7 647.6, 777 649 C 777.9 649.6, 828.2 650, 908.2 650 C 1035.4 650, 1037.9 650, 1039 648.1 C 1040.8 644.6, 1040.3 586.3, 1038.4 585.6 C 1037.5 585.3, 997.8 585, 950 585 C 902.2 585, 862.5 584.7, 861.6 584.4 C 859.5 583.6, 859.2 554.6, 861.2 553.3 C 861.9 552.9, 902.3 552.3, 951 552 L 1039.5 551.5 1039.8 526.5 C 1039.9 512.8, 1039.8 500.5, 1039.5 499.2 L 1039 497 952 497 C 898 497, 864.2 496.6, 862.6 496 L 860 495.1 860 480.6 C 860 470.1, 860.3 465.9, 861.2 465.3 C 861.9 464.9, 902.3 464.3, 951 464 L 1039.5 463.5 1039.8 433.2 C 1039.9 413.5, 1039.7 402.2, 1039 401 C 1037.9 399, 1036.1 399, 908.2 399 C 828.2 399, 777.9 399.4, 777 400 M 1062.2 399.7 C 1060.3 400.5, 1060.4 647.3, 1062.4 648.9 C 1064.1 650.3, 1101.3 650.1, 1102.7 648.7 C 1103.1 648.2, 1103.7 632, 1104 612.7 L 1104.5 577.5 1187.5 576.9 C 1253.2 576.4, 1272.5 576, 1280 574.8 C 1289.2 573.4, 1299.4 570.6, 1301.6 568.9 C 1302.2 568.4, 1304.5 567.4, 1306.7 566.6 C 1324.8 560.2, 1346.7 533.8, 1350 514.5 C 1350.6 511.2, 1351.5 506.7, 1352 504.5 C 1353.2 499.3, 1353.2 477.8, 1351.9 472 C 1351.4 469.5, 1350.6 465, 1350.1 462 C 1347.2 443.8, 1327.6 419.3, 1309.5 411.1 C 1306.8 409.9, 1303.7 408.4, 1302.7 407.9 C 1298.5 405.6, 1287.7 402.9, 1275.6 401 C 1263.3 399.1, 1258 399, 1163.1 399.1 C 1108.3 399.1, 1062.9 399.4, 1062.2 399.7 M 1105.2 435.8 C 1104.2 436.5, 1104 447.7, 1104.2 488.6 L 1104.5 540.5 1181.5 540.8 C 1246.1 541, 1259.6 540.8, 1265.5 539.6 C 1269.3 538.8, 1274.5 537.8, 1276.8 537.5 C 1289.1 535.6, 1302.9 523.1, 1307 510.3 C 1310.7 498.9, 1310.7 475.7, 1307.1 466 C 1301.4 450.9, 1289.4 441.2, 1272.5 437.9 C 1269.2 437.3, 1264.5 436.4, 1262 436 C 1256.2 434.9, 1106.9 434.8, 1105.2 435.8 M 240.6 449.2 C 238 452.8, 238.2 597.8, 240.8 600.9 L 242.5 603.1 302.5 602.7 C 369 602.3, 372 602, 390.1 595.7 C 409.1 589, 419.6 577.5, 426.2 556 C 429.6 544.6, 429.6 504.1, 426.1 493.5 C 423.8 486.3, 419.9 476.9, 419 476 C 418.7 475.7, 417.2 473.6, 415.7 471.3 C 412.1 466, 403 458.9, 396.5 456.2 C 375.4 447.7, 375.9 447.7, 303.3 447.3 L 242.2 446.9 240.6 449.2"/></svg><span>Jovens de 18 a 25 anos</span></div>
+  </footer>
+</div>
+
+<div class="cta" id="cta" hidden><button class="bigbtn" id="ctaBtn">Escolher meu horário</button></div>
+
+<div class="sheet-bg" id="sheetbg" hidden>
+  <form class="sheet" id="form" novalidate>
+    <div class="kicker">Reservar turno</div>
+    <h2 class="display" id="sheetTitle">Turno</h2>
+    <label class="field" for="nome">Seu nome
+      <input class="input" type="text" id="nome" maxlength="40" autocomplete="given-name" placeholder="Ex.: Ana Clara">
+    </label>
+    <div class="field" role="radiogroup" aria-label="Sua equipe"><span>Sua equipe <span class="opt">· toque de novo para desmarcar</span></span>
+      <div class="tpick">
+        <input type="radio" name="team" id="t-verde" value="Verde"><label for="t-verde"><span class="dot d-Verde"></span>Verde</label>
+        <input type="radio" name="team" id="t-azul" value="Azul"><label for="t-azul"><span class="dot d-Azul"></span>Azul</label>
+        <input type="radio" name="team" id="t-laranja" value="Laranja"><label for="t-laranja"><span class="dot d-Laranja"></span>Laranja</label>
+        <input type="radio" name="team" id="t-comissao" value="Comissao"><label for="t-comissao"><span class="dot d-Comissao"></span>Comissão do Retiro</label>
+      </div>
+    </div>
+    <p class="err" id="ferr" hidden></p>
+    <div class="row">
+      <button type="button" class="btn" id="voltar">Voltar</button>
+      <button type="submit" class="btn primary" id="salvar">Confirmar</button>
+    </div>
+  </form>
+</div>
+<div class="sheet-bg" id="guiabg" hidden>
+  <div class="sheet guia-jejum" role="dialog" aria-labelledby="guiaTitle">
+    <h2 class="sec-title" id="guiaTitle"><span class="ic ic-leaf" aria-hidden="true"></span>Instruções para o jejum</h2>
+    <div class="guia-body">
+      <p class="guia-lead">Jejum é abrir mão de algo por um tempo para buscar mais a Deus. Não é dieta nem algo para mostrar: é entre você e Ele <span class="ref-b">(Mateus 6:16-18)</span>.</p>
+      <ol class="guia-steps">
+        <li><b>Escolha o seu jejum</b>
+          <ul>
+            <li><b>Sem comer:</b> fica sem comida de um horário até outro, entre 6h e meia-noite. Água pode e deve.</li>
+            <li><b>Sem algo que você gosta:</b> durante o dia, deixa de lado uma comida ou bebida (doce, refri, café…).</li>
+            <li><b>Renúncia extra (opcional):</b> além do jejum, abre mão de redes sociais, séries, jogos ou do que mais prende o seu tempo.</li>
+          </ul></li>
+        <li><b>Troque o tempo por Deus</b>
+          <p>Bateu a fome ou a vontade? Use esse momento para orar. Aproveite para ler o capítulo do dia.</p></li>
+        <li><b>Cuide de você</b>
+          <ul>
+            <li>Beba água ao longo do dia.</li>
+            <li>Quebre o jejum com algo leve.</li>
+            <li>Sentiu tontura, fraqueza ou mal-estar? Pare e coma. Isso não é falhar.</li>
+            <li>Tem diabetes, gastrite, usa remédio todo dia ou já teve dificuldade com alimentação? Fale com a liderança antes e prefira o "sem algo que você gosta" ou a renúncia.</li>
+          </ul></li>
+        <li><b>Comece pelo possível</b>
+          <p>Nunca jejuou? Comece com poucas horas. Deus olha o coração, não o relógio.</p></li>
+        <li><b>Marque no app</b>
+          <p>No fim, toque em <b>"Concluí"</b>. Só você vê o que escolheu.</p></li>
+      </ol>
+    </div>
+    <button type="button" class="btn primary" id="guiaOk">Entendi</button>
+  </div>
+</div>
+<div class="sheet-bg" id="jejbg" hidden>
+  <div class="sheet" role="dialog" aria-labelledby="jejTitle">
+    <h2 class="sec-title" id="jejTitle"><span class="ic ic-leaf" aria-hidden="true"></span>Qual vai ser o seu jejum?</h2>
+    <div class="jej-opts" role="radiogroup" aria-label="Tipo de jejum">
+      <div class="jej-card" id="jejComerCard">
+        <button class="jej" id="jejComer" role="radio" aria-checked="false"><span class="radio" aria-hidden="true"></span><span class="jej-t"><b>Sem comer</b><small>de um horário até outro</small></span></button>
+        <div class="jej-horas" id="jejHoras" hidden>
+          <div class="horas-sel">
+            <label class="field" for="jejDe">Das<select class="input" id="jejDe"></select></label>
+            <label class="field" for="jejAte">Até<select class="input" id="jejAte"></select></label>
+          </div>
+          <div class="faixa" aria-hidden="true">
+            <div class="faixa-track"><span class="faixa-seg" id="faixaSeg"><span class="flame w"></span></span></div>
+            <div class="faixa-lbl"><span>6h</span><span>12h</span><span>18h</span><span>0h</span></div>
+          </div>
+          <p class="faixa-txt" id="faixaTxt" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="jej-card">
+        <button class="jej" data-jejum="gosto" role="radio" aria-checked="false"><span class="radio" aria-hidden="true"></span><span class="jej-t"><b>Sem algo que eu gosto</b><small>doce, refri, café… durante o dia</small></span></button>
+      </div>
+    </div>
+    <div class="extra">
+      <div class="extra-txt"><b>Renúncia extra</b><span>Além do jejum, abrir mão de redes sociais, séries, jogos ou do que mais prende o seu tempo.</span></div>
+      <label class="switch"><input type="checkbox" id="renOn" aria-label="Renúncia extra: abrir mão de redes sociais, séries, jogos ou do que mais prende o seu tempo"><span></span></label>
+    </div>
+    <div class="jej-nota">
+      <p>Beba bastante água e respeite o seu corpo. Tem alguma condição de saúde? Converse com a liderança antes de começar.</p>
+      <button type="button" class="jej-guia" data-guia><span class="ic ic-help" aria-hidden="true"></span><span>Instruções para o jejum</span><span class="seta" aria-hidden="true">›</span></button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="jejFechar">Voltar</button>
+      <button type="button" class="btn primary" id="jejSalvar">Salvar</button>
+    </div>
+  </div>
+</div>
+<div class="sheet-bg" id="calbg" hidden>
+  <div class="sheet" role="dialog" aria-labelledby="calTitle">
+    <div class="okmark"><span class="flame"></span></div>
+    <h2 class="display" id="calTitle">Turno reservado!</h2>
+    <p class="hint" id="calInfo"></p>
+    <div class="stack">
+      <a class="btn primary" id="calIcs" href="#">Colocar na agenda do celular</a>
+      <a class="btn" id="calGoogle" href="#" target="_blank" rel="noopener">Colocar no Google Agenda</a>
+    </div>
+    <div class="inset howto"><span class="flame"></span><p><b>Na hora do turno,</b> abra este link e toque em <b>"Comecei a orar"</b>. Seu nome ganha uma chama para todos verem que você está orando.</p></div>
+    <p class="hint">O lembrete da agenda toca 10 minutos antes.</p>
+    <button type="button" class="linkbtn center" id="calFechar">Agora não</button>
+  </div>
+</div>
+<div class="sheet-bg" id="thxbg" hidden>
+  <div class="sheet thanks" role="dialog" aria-labelledby="thxTitle">
+    <div class="okmark"><span class="flame"></span></div>
+    <p class="big display" id="thxTitle"></p>
+    <p>Que Deus te abençoe sempre. Obrigado por fazer parte deste propósito de jejum e oração. Cremos que o Senhor fará grandes coisas no Retiro DEEP 2026!</p>
+    <div class="stack">
+      <button type="button" class="btn outline" id="thxLer" hidden></button>
+      <button type="button" class="btn primary" id="thxFechar">Amém!</button>
+    </div>
+  </div>
+</div>
+<div class="festa" id="festa" role="dialog" aria-labelledby="fTitle" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<script>
+/* ---------- configuração ---------- */
+const SB="https://pplhwupjbrtzqdwzlcem.supabase.co";
+const KEY="sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
+const ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbGh3dXBqYnJ0enFkd3psY2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODczODYsImV4cCI6MjEwNjU2MzM4Nn0.wOm9lQH2gN4Y01BrpUeQ09elDOASsd0gELs-yDwmf20";
+const H={apikey:KEY,"Content-Type":"application/json"};
+const SITE="https://eltongterci-cell.github.io/meus-apps/relogio-oracao-deep";
+const MAX=5, TURNO_MIN=30, TOLERANCIA_MIN=5;
+const DAYS=[
+  {k:"seg",short:"Seg",dia:"Segunda",date:"26/10",iso:"2026-10-26",full:"Segunda, 26 de outubro",ref:"Tiago 1",foco:"O que tem dentro de mim? Ore por um coração sincero diante de Deus."},
+  {k:"ter",short:"Ter",dia:"Terça",date:"27/10",iso:"2026-10-27",full:"Terça, 27 de outubro",ref:"Tiago 2",foco:"Fé que se vê. Ore para que a sua fé vire atitude."},
+  {k:"qua",short:"Qua",dia:"Quarta",date:"28/10",iso:"2026-10-28",full:"Quarta, 28 de outubro",ref:"Tiago 3",foco:"A língua revela o coração. Ore por palavras que edificam. À noite, célula de oração."},
+  {k:"qui",short:"Qui",dia:"Quinta",date:"29/10",iso:"2026-10-29",full:"Quinta, 29 de outubro",ref:"Tiago 4",foco:"Chegai-vos a Deus. Ore por humildade e rendição."},
+  {k:"sex",short:"Sex",dia:"Sexta",date:"30/10",iso:"2026-10-30",full:"Sexta, 30 de outubro",ref:"Tiago 5",foco:"A oração do justo pode muito. Ore uns pelos outros e pelo Retiro."}
+];
+const PERIODOS=[["Madrugada",0,6],["Manhã",6,12],["Tarde",12,18],["Noite",18,24]];
+
+/* ---------- utilidades ---------- */
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(2,"0");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SLOTS=Array.from({length:48},(_,i)=>pad(Math.floor(i/2))+":"+(i%2?"30":"00"));
+const TOTAL=SLOTS.length*DAYS.length;
+const endOf=t=>{let [h,m]=t.split(":").map(Number);m+=30;if(m>=60){h++;m-=60}return pad(h%24)+":"+pad(m)};
+const slotStart=(d,t)=>new Date(`${d.iso}T${t}:00-03:00`).getTime();
+const dayOf=k=>DAYS.find(d=>d.k===k);
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+
+/* ---------- estado ---------- */
+let periodo=null, diaManual=false;
+let reservas=[], loaded=false, current=DAYS[0].k, soVazios=false, pending=null, canal=null;
+let mine={}; try{mine=JSON.parse(ls("rel_mine")||"{}")||{}}catch(e){mine={}}
+const saveMine=()=>ls("rel_mine",JSON.stringify(mine));
+let leituras=[];
+let lido={}; try{lido=JSON.parse(ls("rel_lido")||"{}")||{}}catch(e){lido={}}
+let completos=null; // dias completos, para comemorar só na virada
+
+function nowSP(){
+  const p=Object.fromEntries(new Intl.DateTimeFormat("en-CA",{timeZone:"America/Sao_Paulo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date()).map(x=>[x.type,x.value]));
+  return {iso:`${p.year}-${p.month}-${p.day}`,h:Number(p.hour)%24,m:Number(p.minute)};
+}
+function currentSlot(){
+  const n=nowSP(), d=DAYS.find(x=>x.iso===n.iso);
+  return d?{d,t:pad(n.h)+":"+(n.m<30?"00":"30")}:null;
+}
+function nextSlot(cs){
+  const i=SLOTS.indexOf(cs.t);
+  if(i<SLOTS.length-1) return {d:cs.d,t:SLOTS[i+1]};
+  const di=DAYS.indexOf(cs.d); return di<DAYS.length-1?{d:DAYS[di+1],t:SLOTS[0]}:null;
+}
+{const cs=currentSlot(), saved=ls("rel_day"); current=cs?cs.d.k:(dayOf(saved)?saved:DAYS[0].k);}
+
+/* leitura do dia: uma vez por pessoa por dia */
+const capitulo=d=>d.ref.split(" ")[1];
+const bibliaUrl=d=>`https://www.bibliaonline.com.br/nvi/tg/${capitulo(d)}`;
+const diaAberto=d=>Date.now()>=slotStart(d,"00:00");
+function leuHoje(dia){
+  if(lido[dia]) return true;
+  const n=(ls("rel_nome")||"").trim().toLowerCase();
+  return !!n&&leituras.some(l=>l.dia===dia&&l.nome.trim().toLowerCase()===n);
+}
+async function marcarLeitura(dia,nome,el){
+  nome=(nome||"").trim(); if(!nome){toast("Escreva seu nome para marcar a leitura.");return false}
+  try{
+    await rpc("relogio_ler",{p_dia:dia,p_nome:nome});
+    ls("rel_nome",nome); lido[dia]=1; ls("rel_lido",JSON.stringify(lido));
+    leituras.push({dia,nome}); render(); burst(null); toast(`Leitura de ${dayOf(dia).ref} concluída!`); avisar(); carregar(); return true;
+  }catch(err){toast(err.message);return false}
+}
+/* checklist do dia: 1) ler o capítulo  2) orar 30 minutos */
+/* jejum: uma escolha simples, salva neste celular; no banco vão só dia e tipo (os nomes não aparecem para ninguém) */
+/* tipos: "comer:06-15" = sem comer das 6h às 15h · "gosto" = sem uma comida ou bebida de que gosta */
+const JEJUM_MIN=6, JEJUM_MAX=24;   // jejum entre 6h e meia-noite
+function jejumNome(t){
+  if(!t) return "";
+  const m=/^comer:(\d\d)-(\d\d)$/.exec(t);
+  if(m) return `sem comer ${faixaTxt(+m[1],+m[2])}`;
+  return t==="gosto"?"sem uma comida ou bebida de que gosto":"";
+}
+let jejuns=[];
+let jejumTipo=ls("rel_jejum_tipo")||"";
+let renOn=ls("rel_renuncia")==="1";
+if(jejumTipo==="redes"){renOn=true;ls("rel_renuncia","1")}           // quem tinha escolhido redes como jejum vira renúncia
+if(jejumTipo&&!jejumNome(jejumTipo)) jejumTipo="";
+let renFeito={}; try{renFeito=JSON.parse(ls("rel_renuncia_feito")||"{}")||{}}catch(e){renFeito={}}
+let renuncias=[];
+function renunciaTask(d){
+  if(!renOn&&!renFeito[d.k]) return "";
+  const feito=renFeito[d.k];
+  const acao=feito||!diaAberto(d)?"":`<button class="add" data-ren-ok="${d.k}">Concluí</button>`;
+  return `<li class="task extra-task${feito?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Renúncia: redes, séries, jogos…</b>${feito?`<span class="t-sub ok">Concluída · Deus vê em secreto</span>`:`<span class="t-sub">extra · <button class="t-link" data-jejum-escolher>mudar</button></span>`}</div>${acao}</li>`;
+}
+let jejumFeito={}; try{jejumFeito=JSON.parse(ls("rel_jejum_feito")||"{}")||{}}catch(e){jejumFeito={}}
+function jejumTask(d){
+  const feito=jejumFeito[d.k], tipo=feito||jejumTipo, aberto=diaAberto(d);
+  const hm=/^comer:(\d\d)-(\d\d)$/.exec(tipo||"");
+  const titulo=!tipo?"Jejum":hm?`Jejum ${faixaTxt(+hm[1],+hm[2])}`:"Jejum de algo que gosto";
+  const sub=feito?`<span class="t-sub ok">Concluído · Deus vê em secreto</span>`
+    :tipo?`<span class="t-sub"><button class="t-link" data-jejum-escolher>trocar</button> · <button class="t-link" data-guia>instruções</button></span>`
+    :`<span class="t-sub"><button class="t-link" data-guia>Ver instruções</button></span>`;
+  const acao=feito?"":!tipo?`<button class="add join" data-jejum-escolher>Escolher</button>`:aberto?`<button class="add" data-jejum-ok="${d.k}">Concluí</button>`:"";
+  return `<li class="task${feito?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>${titulo}</b>${sub}</div>${acao}</li>`;
+}
+let jejumRasc="";   // escolha em andamento dentro da janela; só vale ao tocar em Salvar
+function marcarOpcao(){
+  document.querySelectorAll("[data-jejum]").forEach(b=>{const on=b.dataset.jejum===jejumRasc;b.closest(".jej-card").classList.toggle("sel",on);b.setAttribute("aria-checked",String(on))});
+  mostrarHoras(jejumRasc==="comer");
+}
+/* linha do dia: mostra a faixa do jejum entre 6h e meia-noite e quantas horas dá */
+function desenharFaixa(){
+  const de=+$("jejDe").value, ate=+$("jejAte").value, tot=JEJUM_MAX-JEJUM_MIN;
+  $("faixaSeg").style.left=`${(de-JEJUM_MIN)/tot*100}%`; $("faixaSeg").style.width=`${(ate-de)/tot*100}%`;
+  const h=ate-de; $("faixaTxt").innerHTML=`<b>${h} ${h===1?"hora":"horas"}</b> de jejum · ${faixaTxt(de,ate)}`;
+}
+function salvarJejum(){
+  let t=jejumRasc;
+  if(t==="comer"){const de=+$("jejDe").value, ate=+$("jejAte").value;
+    if(!(ate>de&&de>=JEJUM_MIN&&ate<=JEJUM_MAX)){toast("Escolha um horário final depois do inicial.");return}
+    t=`comer:${pad(de)}-${pad(ate)}`}
+  if(t){jejumTipo=t;ls("rel_jejum_tipo",t)}
+  renOn=$("renOn").checked; ls("rel_renuncia",renOn?"1":"0");
+  $("jejbg").hidden=true; renderDay(byKey());
+  if(t) toast(`Salvo: ${jejumNome(t)}${renOn?" + renúncia":""}`); else if(renOn) toast("Renúncia extra salva");
+}
+const faixaTxt=(de,ate)=>`das ${de}h ${ate===24?"à meia-noite":`às ${ate}h`}`;
+function opcoesHoras(sel,de,ate,val){sel.innerHTML="";for(let h=de;h<=ate;h++){const o=document.createElement("option");o.value=h;o.textContent=h===24?"meia-noite":h+"h";sel.appendChild(o)}sel.value=val}
+function ajustarAte(){const de=+$("jejDe").value, atual=+$("jejAte").value;opcoesHoras($("jejAte"),de+1,JEJUM_MAX,Math.min(JEJUM_MAX,Math.max(atual,de+1)));desenharFaixa()}
+function mostrarHoras(on){$("jejHoras").hidden=!on;$("jejComerCard").classList.toggle("sel",on);$("jejComer").setAttribute("aria-checked",String(on));if(on)desenharFaixa()}
+function abrirJejum(){
+  $("renOn").checked=renOn;
+  const m=/^comer:(\d\d)-(\d\d)$/.exec(jejumTipo);
+  const de=m?Math.max(JEJUM_MIN,+m[1]):6, ate=m?+m[2]:12;
+  opcoesHoras($("jejDe"),JEJUM_MIN,JEJUM_MAX-1,de); opcoesHoras($("jejAte"),de+1,JEJUM_MAX,Math.max(ate,de+1));
+  jejumRasc=m?"comer":jejumTipo; marcarOpcao(); $("jejbg").hidden=false;
+}
+let pedirNome=false;
+function tarefasHtml(d,m){
+  const leu=leuHoje(d.k), aberto=diaAberto(d);
+  const meus=reservas.filter(r=>mine[r.id]&&r.dia===d.k).sort((a,b)=>a.hora.localeCompare(b.hora));
+  const orou=meus.some(r=>r.orando_em&&passou(d,r.hora));
+  const prox=meus.find(r=>!passou(d,r.hora));
+  const nome=ls("rel_nome")||"";
+  const ler=leu
+    ? `<span class="t-sub ok">Concluída · Glória a Deus!</span>`
+    : `<span class="t-sub"><a href="${bibliaUrl(d)}" target="_blank" rel="noopener">Abrir na Bíblia</a></span>`;
+  const lerAcao=leu||!aberto?"":`<button class="add" ${nome?`data-ler="${d.k}"`:"data-pedir-nome"}>Concluí</button>`;
+  const orarSub=orou?`<span class="t-sub ok">Concluída · seu turno foi às ${meus.find(r=>r.orando_em&&passou(d,r.hora)).hora}</span>`
+    : prox?`<span class="t-sub">Seu turno: <b>${prox.hora}–${endOf(prox.hora)}</b>${meus.length>1?` · ${meus.length} turnos`:""}</span>`
+    : `<span class="t-sub">Escolha um horário abaixo</span>`;
+  const orarAcao=orou||prox?"":`<button class="add join" data-ir-lista>Escolher</button>`;
+  return `<ul class="tasks">
+    <li class="task${leu?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Ler ${d.ref}</b>${ler}</div>${lerAcao}</li>
+    <li class="task${orou?" done":""}"><span class="tick" aria-hidden="true"></span><div class="t-txt"><b>Orar 30 minutos</b>${orarSub}</div>${orarAcao}</li>
+    ${jejumTask(d)}
+    ${renunciaTask(d)}
+  </ul>
+  ${!leu&&aberto&&!nome&&pedirNome?`<div class="ask-name"><label for="nomeLeitura">Qual é o seu nome?</label><div class="row-in"><input class="input" type="text" id="nomeLeitura" maxlength="40" placeholder="Ex.: Ana Clara" autocomplete="given-name"><button class="add" data-ler="${d.k}">Marcar</button></div></div>`:""}
+  ${!aberto&&!leu?`<p class="hint">A leitura deste dia é marcada no dia ${d.date}.</p>`:""}`;
+}
+
+function byKey(){const m={};for(const r of reservas)(m[r.dia+"_"+r.hora] ||= []).push(r);return m}
+function coverage(m,d){return SLOTS.filter(t=>m[d.k+"_"+t]).length}
+
+/* ---------- dados ---------- */
+let cargaSeq=0;
+async function carregar(){
+  const seq=++cargaSeq;
+  try{
+    const [r,rl,rj,rr]=await Promise.all([
+      fetch(`${SB}/rest/v1/relogio_oracao?select=id,dia,hora,nome,equipe,orando_em&order=created_at.asc`,{headers:H}),
+      fetch(`${SB}/rest/v1/relogio_leitura?select=dia,nome`,{headers:H}),
+      fetch(`${SB}/rest/v1/relogio_jejum?select=dia,tipo`,{headers:H}),
+      fetch(`${SB}/rest/v1/relogio_renuncia?select=dia`,{headers:H})]);
+    if(!r.ok) throw new Error();
+    const novas=await r.json(), lidas=rl.ok?await rl.json():null, jej=rj&&rj.ok?await rj.json():null;
+    if(seq!==cargaSeq) return;               // chegou uma resposta mais nova; ignora esta
+    if(jej) jejuns=jej;
+    if(rr&&rr.ok){try{renuncias=await rr.json()}catch(e){}}
+    reservas=novas; if(lidas) leituras=lidas; loaded=true; showNotice("");
+    const ids=new Set(reservas.map(x=>x.id)); let ch=false;
+    if(reservas.length<1000) for(const id of Object.keys(mine)) if(!ids.has(id)){delete mine[id];ch=true}
+    if(ch) saveMine();
+  }catch(e){ if(!loaded) showNotice("Não foi possível carregar o relógio. Verifique a internet e recarregue a página."); }
+  render();
+}
+async function rpc(nome,body){
+  const r=await fetch(`${SB}/rest/v1/rpc/${nome}`,{method:"POST",headers:H,body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>null);
+  if(!r.ok) throw new Error(j&&j.message?j.message:"Não foi possível concluir. Tente de novo.");
+  return j;
+}
+function avisar(){try{canal&&canal.send({type:"broadcast",event:"mudou",payload:{}})}catch(e){}}
+
+/* ---------- render ---------- */
+const FIM=new Date("2026-10-31T00:00:00-03:00").getTime();
+let resumoAberto=location.hash==="#resumo";
+function render(){
+  const m=byKey();
+  renderTopo(m); renderResumo(m); renderNow(m); renderMine(); renderTabs(m); renderDay(m); renderSlots(m);
+}
+function renderTopo(m){
+  const covered=DAYS.reduce((s,d)=>s+coverage(m,d),0);
+  const people=new Set(reservas.map(r=>r.nome.trim().toLowerCase())).size;
+  const cs=currentSlot(), orando=cs?(m[cs.d.k+"_"+cs.t]||[]).filter(r=>r.orando_em).length:0;
+  $("mBig").innerHTML=`${covered}<small>/${TOTAL}</small>`;
+  $("mPeople").textContent=people;
+  $("mSide").innerHTML=cs?`<span class="flame"></span><b>${orando}</b> orando agora`:"vamos juntos!";
+  const ini=slotStart(DAYS[0],"00:00");
+  $("hStatus").innerHTML=Date.now()>=FIM?"Propósito concluído":cs?`<i class="pulse"></i>Acontecendo agora`:antesDoInicio(ini);
+  $("mBar").style.width=`${(covered/TOTAL*100).toFixed(1)}%`;
+  // comemoração quando um dia fecha
+  const agora=new Set(DAYS.filter(d=>coverage(m,d)===SLOTS.length).map(d=>d.k));
+  if(completos&&loaded){for(const k of agora) if(!completos.has(k)){burst(null);toast(`${dayOf(k).dia} completa! Todos os turnos têm alguém orando.`)}}
+  if(loaded) completos=agora;
+}
+
+function renderResumo(m){
+  const show=loaded&&(resumoAberto||Date.now()>=FIM);
+  $("resumo").hidden=!show; $("verResumo").hidden=Date.now()>=FIM;
+  if(!show) return;
+  const terminou=Date.now()>=FIM;
+  const covered=DAYS.reduce((s,d)=>s+coverage(m,d),0);
+  const conf=reservas.filter(r=>r.orando_em);
+  const horasConf=conf.length/2, horasRes=reservas.length/2;
+  const jovens=new Set(reservas.map(r=>r.nome.trim().toLowerCase())).size;
+  const acesos=new Set(conf.map(r=>r.nome.trim().toLowerCase())).size;
+  const madrugada=DAYS.reduce((s,d)=>s+SLOTS.slice(0,12).filter(t=>m[d.k+"_"+t]).length,0);
+  const fmtH=h=>Number.isInteger(h)?String(h):h.toFixed(1).replace(".",",");
+  const rows=DAYS.map(d=>{const c=coverage(m,d), cf=SLOTS.filter(t=>(m[d.k+"_"+t]||[]).some(r=>r.orando_em)).length;
+    return `<div class="drow"><b>${d.short}</b><div class="dtrack" role="img" aria-label="${d.dia}: ${c} turnos cobertos, ${cf} com chama acesa"><span class="cov" style="width:${(c/SLOTS.length*100).toFixed(1)}%"></span><span class="conf" style="width:${(cf/SLOTS.length*100).toFixed(1)}%"></span></div><span>${Math.round(c/SLOTS.length*100)}%</span></div>`}).join("");
+  $("resumo").innerHTML=`
+    <div class="sec-row"><div class="sec-head"><div class="kicker">${terminou?"Propósito concluído":"Até agora"}</div><h2 class="h2">Resumo do Propósito</h2></div>${terminou?"":`<button class="fechar" id="fecharResumo" aria-label="Fechar resumo">×</button>`}</div>
+    <div class="hero-num"><b>${fmtH(horasConf)}h</b><span>de oração com a chama acesa<br>de ${fmtH(horasRes)}h reservadas</span></div>
+    <div class="stats">
+      <div class="stat inset"><b>${covered}/${TOTAL}</b><span>turnos cobertos</span></div>
+      <div class="stat inset"><b>${jovens}</b><span>jovens no relógio</span></div>
+      <div class="stat inset"><b>${acesos}</b><span>jovens acenderam a chama</span></div>
+      <div class="stat inset"><b>${madrugada}</b><span>turnos de madrugada</span></div>
+      <div class="stat inset"><b>${leituras.length}</b><span>leituras de Tiago</span></div>
+      <div class="stat inset"><b>${new Set(leituras.map(l=>l.nome.trim().toLowerCase())).size}</b><span>jovens leram</span></div>
+      <div class="stat inset"><b>${jejuns.length}</b><span>dias de jejum</span></div>
+      <div class="stat inset"><b>${renuncias.length}</b><span>dias de renúncia</span></div>
+    </div>
+    <div class="byday"><h3>Cada dia</h3>${rows}
+      <div class="legend"><span><i class="lg-cov"></i>turnos reservados</span><span><i class="lg-conf"></i>com chama acesa</span></div>
+    </div>
+    <p class="verse">“A oração feita por um justo pode muito em seus efeitos.”<small>Tiago 5:16</small></p>`;
+}
+
+let nowKey="";
+function statusOf(r,cs){
+  if(r.orando_em) return "on";
+  return Date.now()-slotStart(cs.d,cs.t) > TOLERANCIA_MIN*60000 ? "off" : "wait";
+}
+function renderNow(m){
+  const cs=currentSlot();
+  if(!(cs&&loaded)){$("now").hidden=true;nowKey="";return}
+  const key=cs.d.k+cs.t;
+  const meuAgora=(m[cs.d.k+"_"+cs.t]||[]).some(r=>mine[r.id]);
+  const modo=(meuAgora||nowAberto)?"cheio":"compacto";
+  if(modo==="compacto"){renderNowCompacto(m,cs,key);return}
+  if(key!==nowKey||nowModo!=="cheio"||!$("nowBody")){
+    // relógio de 30 min: uma marca por minuto, maiores a cada 5
+    const ticks=Array.from({length:30},(_,i)=>{const a=i*12*Math.PI/180, major=i%5===0, r1=major?39:41.5, r2=45;
+      return `<line class="tk${major?" major":""}" data-m="${i}" x1="${(60+r1*Math.sin(a)).toFixed(2)}" y1="${(60-r1*Math.cos(a)).toFixed(2)}" x2="${(60+r2*Math.sin(a)).toFixed(2)}" y2="${(60-r2*Math.cos(a)).toFixed(2)}"/>`}).join("");
+    $("now").innerHTML=`
+    <div class="now-top"><h2 class="sec-title"><span class="ic"><span class="pulse"></span></span>Orando agora</h2><span class="when">${cs.t}–${endOf(cs.t)}</span>${meuAgora?"":`<button class="mini" data-now-close aria-label="Recolher o relógio">Recolher</button>`}</div>
+    <div class="clock-wrap">
+      <svg class="dial" viewBox="0 0 120 120" role="img" aria-label="Tempo que falta para o turno acabar">
+        <defs><linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#ea580c"/></linearGradient></defs>
+        <circle class="track" cx="60" cy="60" r="52"/>
+        <circle class="arc" id="arc" cx="60" cy="60" r="52" transform="rotate(-90 60 60)" stroke-dasharray="326.73" stroke-dashoffset="${(326.73*(1-fracTurno(cs))).toFixed(2)}"/>
+        ${ticks}
+        <g id="hand" style="transform:rotate(${(fracTurno(cs)*360).toFixed(1)}deg)"><circle class="tip-glow" cx="60" cy="8" r="7"/><circle class="tip" cx="60" cy="8" r="4"/></g>
+        <text class="tl" id="clock" x="60" y="64" text-anchor="middle">--:--</text>
+        <text class="tls" x="60" y="75" text-anchor="middle">PARA ACABAR</text>
+      </svg>
+    </div>
+    <div id="nowBody" class="stack"></div>
+    ${guiaHtml(cs.d,meuAgora)}`;
+    nowKey=key; nowModo="cheio";
+  }
+  const list=m[cs.d.k+"_"+cs.t]||[], nx=nextSlot(cs), nl=nx?(m[nx.d.k+"_"+nx.t]||[]):[];
+  const meu=list.find(r=>mine[r.id]);
+  const on=list.filter(r=>r.orando_em).length;
+  const rows=list.map(r=>{const st=statusOf(r,cs);
+    const icon=st==="on"?'<span class="flame"></span>':st==="off"?'<span class="xdot"></span>':'<span class="ghostdot"></span>';
+    const txt=st==="on"?"orando":st==="off"?"não está orando":"ainda não começou";
+    const eu=!!mine[r.id];
+    return `<li class="person ${st}${eu?" eu":""}">${icon}<span class="nm">${esc(r.nome)}</span>${eu?'<span class="voce">você</span>':""}<span class="st">${txt}</span></li>`}).join("");
+  let acao="";
+  if(meu&&!meu.orando_em) acao=`<div class="stack"><button class="bigbtn pulsing" data-confirm="${meu.id}"><span class="flame w"></span>Comecei a orar</button><p class="hint center">Toque quando começar. Seu nome ganha uma chama para todos verem que você está orando.</p></div>`;
+  else if(meu) acao=`<p class="lit"><span class="flame"></span>Sua chama está acesa. O turno termina sozinho no fim dos 30 minutos.</p>`;
+  else if(list.length<MAX) acao=`<button class="bigbtn${list.length?" ghost":""}" data-slot-now>${list.length?"Entrar neste turno":"Orar agora"}</button>`;
+  const html=`${list.length?`<ul class="people">${rows}</ul>`:`<p class="empty-now">Ninguém orando agora.<br>Que tal você?</p>`}
+    <div class="now-meta">
+      <div class="inset"><span>Chama acesa</span><b>${list.length?`${on} de ${list.length}`:"Ninguém ainda"}</b></div>
+      <div class="inset"><span>${nx?`Próximo · ${nx.t}`:"Próximo"}</span><b>${nx?(nl.length?nl.map(r=>esc(r.nome)).join(", "):"Turno vazio"):"Fim do propósito"}</b></div>
+    </div>
+    ${acao}`;
+  if($("nowBody").dataset.h!==html){$("nowBody").innerHTML=html;$("nowBody").dataset.h=html}   // só troca se mudou
+  $("now").hidden=false; tick();
+}
+let nowAberto=false, nowModo="";
+function renderNowCompacto(m,cs,key){
+  const list=m[cs.d.k+"_"+cs.t]||[];
+  if(key!==nowKey||nowModo!=="compacto"||!$("nowBody")){
+    $("now").innerHTML=`
+    <div class="now-top"><h2 class="sec-title"><span class="ic"><span class="pulse"></span></span>Orando agora</h2><span class="when">${cs.t}–${endOf(cs.t)}</span></div>
+    <div class="now-mini">
+      <div class="mini-time"><b id="clock">--:--</b><span>para acabar</span></div>
+      <div id="nowBody" class="mini-names"></div>
+    </div>
+    <div class="row2" id="nowActs"></div>`;
+    nowKey=key; nowModo="compacto";
+  }
+  const names=list.length?list.map(r=>`<span class="pchip${r.orando_em?" on":""}">${r.orando_em?'<span class="flame"></span>':'<span class="dot"></span>'}<span class="nm">${esc(r.nome)}</span></span>`).join(""):`<span class="vazio">Ninguém orando agora. Que tal você?</span>`;
+  if($("nowBody").dataset.h!==names){$("nowBody").innerHTML=names;$("nowBody").dataset.h=names}
+  const acts=`<button class="btn" data-now-open>Ver relógio</button>${list.length<MAX?`<button class="btn primary" data-slot-now>${list.length?"Entrar":"Orar agora"}</button>`:""}`;
+  if($("nowActs").dataset.h!==acts){$("nowActs").innerHTML=acts;$("nowActs").dataset.h=acts;$("nowActs").classList.toggle("one",list.length>=MAX)}
+  $("now").hidden=false; tick();
+}
+const fracTurno=cs=>Math.min(1,Math.max(0,(Date.now()-slotStart(cs.d,cs.t))/(TURNO_MIN*60000)));
+function tick(){
+  if(!loaded) return;
+  checarConcluidos(); checarFesta();
+  const cs=currentSlot();
+  if((cs?cs.d.k+cs.t:"")!==nowKey){if(cs&&!diaManual&&current!==cs.d.k){current=cs.d.k;periodo=null}render();return}
+  if(!cs) return;
+  const ini=slotStart(cs.d,cs.t), el=Date.now()-ini, left=Math.max(0,TURNO_MIN*60000-el), frac=Math.min(1,el/(TURNO_MIN*60000));
+  const c=$("clock"); if(c) c.textContent=`${pad(Math.floor(left/60000))}:${pad(Math.floor(left/1000)%60)}`;
+  const a=$("arc"); if(a) a.setAttribute("stroke-dashoffset",(326.73*(1-frac)).toFixed(2));
+  const min=Math.floor(el/60000); document.querySelectorAll(".dial .tk").forEach(t=>t.classList.toggle("past",Number(t.dataset.m)<=min));
+  const h=$("hand"); if(h) h.style.transform=`rotate(${(frac*360).toFixed(1)}deg)`;
+  // vira "não está orando" quando passa a tolerância
+  if(document.querySelector(".person.wait")&&el>TOLERANCIA_MIN*60000) renderNow(byKey());
+}
+function antesDoInicio(ini){
+  const dias=Math.ceil((ini-Date.now())/86400000);
+  return dias>1?`Começa em ${dias} dias`:quandoComeca(ini);
+}
+function quandoComeca(ini){
+  const min=Math.round((ini-Date.now())/60000);
+  if(min<=60) return `Começa em ${min} min`;
+  if(min<24*60){const h=Math.floor(min/60),mm=min%60;return `Começa em ${h} h${mm?` ${mm} min`:""}`;}
+  const dias=Math.round(min/1440); return dias===1?"Amanhã":`Daqui a ${dias} dias`;
+}
+let mineTodos=false;
+function renderMine(){
+  $("como").hidden=!loaded||Object.keys(mine).length>0||ls("rel_como_ok")==="1";
+  const ini=r=>slotStart(dayOf(r.dia),r.hora), acabou=r=>passou(dayOf(r.dia),r.hora);
+  const meus=reservas.filter(r=>mine[r.id]).sort((a,b)=>(acabou(a)-acabou(b))||(ini(a)-ini(b)));
+  if(!meus.length){$("mine").hidden=true;return}
+  const mostra=mineTodos?meus:meus.slice(0,3), resto=meus.length-mostra.length;
+  $("mine").innerHTML=`<h2 class="sec-title"><span class="ic ic-clock" aria-hidden="true"></span>Seus turnos</h2><ul class="mine-list">${mostra.map(r=>{const d=dayOf(r.dia), fim=passou(d,r.hora);
+    const sub=fim?(r.orando_em?`<span class="sub ok"><span class="check sm"></span>Concluído</span>`:`<span class="sub">Encerrado</span>`):(r.orando_em?`<span class="sub"><span class="flame"></span>Orando agora</span>`:(Date.now()>=slotStart(d,r.hora)?`<span class="sub hot"><span class="pulse"></span>É agora!</span>`:`<span class="sub">${quandoComeca(slotStart(d,r.hora))}</span>`));
+    return `<li class="ticket"><span class="day">${d.short}<b>${d.date.slice(0,2)}</b></span><div><div class="hr">${r.hora}–${endOf(r.hora)}</div>${sub}</div>${fim?"":`<span class="acts"><button class="mini" data-agenda="${r.id}">Lembrete</button><button class="mini danger" data-cancel="${r.id}">Cancelar</button></span>`}</li>`}).join("")}</ul>
+    ${meus.length>3?`<button class="btn" data-mine-all>${mineTodos?"Mostrar menos":`Ver todos os seus turnos (${meus.length})`}</button>`:""}`;
+  $("mine").hidden=false;
+}
+function renderTabs(m){
+  $("tabs").innerHTML=DAYS.map(d=>{const c=coverage(m,d), full=c===SLOTS.length;
+    const hoje=nowSP().iso===d.iso;
+    return `<button class="tab" role="tab" aria-selected="${d.k===current}" data-day="${d.k}" aria-label="${d.dia}, ${d.date}: ${c} de ${SLOTS.length} turnos">${hoje?'<span class="hoje">Hoje</span>':""}<span class="wd">${d.short}</span><b>${d.date.slice(0,2)}</b><span class="tb"><i style="width:${Math.round(c/SLOTS.length*100)}%"></i></span>${full?'<span class="flame done" aria-label="Dia completo"></span>':""}</button>`}).join("");
+}
+function guiaHtml(d,aberto){
+  return `<details class="guide" id="guia"${aberto?" open":""}><summary>Roteiro para os 30 minutos</summary><ol>
+      <li><b>0–5 min</b><span>Agradeça antes de pedir.</span></li>
+      <li><b>5–15 min</b><span>Leia ${d.ref} e anote o versículo que falou com você.</span></li>
+      <li><b>15–25 min</b><span>Ore pelo foco do dia: primeiro por você, depois pela família, amigos e o DEEP.</span></li>
+      <li><b>25–30 min</b><span>Ore pelo Retiro DEEP 2026 e por quem vem no próximo turno.</span></li>
+    </ol></details>`;
+}
+function renderDay(m){
+  const d=dayOf(current), full=coverage(m,d)===SLOTS.length;
+  $("diaTitulo").textContent=`${d.dia}, ${d.date}`;
+  $("dayhead").innerHTML=`<h2 class="sec-title"><span class="ic ic-check" aria-hidden="true"></span>Suas tarefas do dia</h2>${tarefasHtml(d,m)}`;
+  $("focoDia").textContent=d.foco;
+  $("diaCompleto").hidden=!full;
+}
+/* nomes numa linha de horário: você e quem está orando primeiro; com mais de 3, mostra 2 e "+N" */
+const abertos=new Set();
+function chipHtml(r){return `<span class="pchip${mine[r.id]?" eu":""}${r.orando_em?" on":""}">${r.orando_em?'<span class="flame"></span>':`<span class="dot d-${esc(r.equipe)}"></span>`}<span class="nm">${esc(r.nome)}</span></span>`}
+function nomesHtml(key,list,agora){
+  const ord=[...list].sort((a,b)=>(!!mine[b.id]-!!mine[a.id])||(!!b.orando_em-!!a.orando_em));
+  // turno que está acontecendo agora (ou aberto com um toque): todos os nomes, com a chama de quem está orando
+  if(agora||abertos.has(key)) return `<div class="chips-full">${ord.map(chipHtml).join("")}${!agora?`<button class="pchip more" data-more="${key}">fechar</button>`:""}</div>`;
+  // demais turnos: uma linha limpa com a contagem e os primeiros nomes
+  const nomes=ord.map(r=>mine[r.id]?'<b class="me">Você</b>':esc(r.nome.trim().split(/\s+/)[0])).join(", ");
+  const acesos=ord.filter(r=>r.orando_em).length;
+  return `<button class="who" data-more="${key}" aria-label="Ver nomes: ${esc(ord.map(r=>r.nome).join(", "))}"><span class="cnt">${ord.length}/${MAX}</span>${acesos?'<span class="flame"></span>':""}<span class="flist">${nomes}</span></button>`;
+}
+const passou=(d,t)=>Date.now()>=slotStart(d,t)+TURNO_MIN*60000;
+function periodoAtual(){const h=nowSP().h;return PERIODOS.findIndex(([,a,b])=>h>=a&&h<b)}
+function renderSlots(m){
+  const d=dayOf(current), cs=currentSlot(), live=cs&&cs.d.k===d.k?cs.t:null;
+  if(periodo===null) periodo=periodoAtual();
+  // abas de período com quantos horários ainda estão livres
+  $("perTabs").innerHTML=PERIODOS.map(([nome,a,b],i)=>{
+    const livres=SLOTS.slice(a*2,b*2).filter(t=>!passou(d,t)&&(m[d.k+"_"+t]||[]).length<MAX).length;
+    const vazios=SLOTS.slice(a*2,b*2).filter(t=>!passou(d,t)&&!m[d.k+"_"+t]).length;
+    return `<button class="per" role="tab" aria-selected="${i===periodo}" data-per="${i}"><b>${nome}</b><small>${pad(a)}h–${pad(b%24)}h</small><small>${livres?(vazios?`${vazios} livres`:"tem vaga"):"encerrado"}</small></button>`}).join("");
+  const [,a,b]=PERIODOS[periodo];
+  const ts=SLOTS.slice(a*2,b*2).filter(t=>!soVazios||(!m[d.k+"_"+t]&&!passou(d,t)));
+  if(!loaded){$("slotList").innerHTML=Array.from({length:4},()=>`<li class="slot skel"><span></span><span></span><span></span></li>`).join("");renderCta();return}
+  $("slotList").innerHTML=ts.length?ts.map(t=>{
+    const list=m[d.k+"_"+t]||[], acabou=passou(d,t);
+    const chips=list.length?nomesHtml(d.k+"_"+t,list,t===live):`<span class="vazio">${acabou?"Ninguém orou":"Ninguém ainda"}</span>`;
+    const btn=acabou?`<span class="state">Encerrado</span>`:list.some(r=>mine[r.id])?`<span class="state me">Você está<br>aqui</span>`:list.length>=MAX?`<span class="state">Completo</span>`:`<button class="add${list.length?" join":""}" data-slot="${t}"${loaded?"":" disabled"}>${list.length?"Entrar":"Quero orar"}</button>`;
+    return `<li class="slot${list.length?"":" empty"}${t===live?" agora":""}${acabou?" past":""}${!acabou&&list.some(r=>mine[r.id])?" mine":""}"><div class="time">${t}<span>até ${endOf(t)}</span></div><div class="names">${chips}</div>${btn}</li>`}).join("")
+    :`<li class="notice">Nenhum horário vazio neste período. Tente outro período ou entre num turno que ainda tem vaga.</li>`;
+  renderCta();
+}
+
+/* ---------- ações ---------- */
+document.addEventListener("click",async e=>{
+  const t=e.target;
+  const tab=t.closest("[data-day]"); if(tab){current=tab.dataset.day;diaManual=true;ls("rel_day",current);render();return}
+  const mo=t.closest("[data-more]"); if(mo){const k=mo.dataset.more;abertos.has(k)?abertos.delete(k):abertos.add(k);renderSlots(byKey());return}
+  if(t.closest("[data-guia]")){$("guiabg").hidden=false;$("guiabg").querySelector(".guia-body").scrollTop=0;return}
+  if(t.closest("#guiaOk")||t.id==="guiabg"){$("guiabg").hidden=true;return}
+  if(t.closest("[data-jejum-escolher]")){abrirJejum();return}
+  if(t.closest("#jejComer")){jejumRasc="comer";marcarOpcao();return}
+  const jb=t.closest("[data-jejum]");
+  if(jb){jejumRasc=jb.dataset.jejum;marcarOpcao();return}
+  if(t.closest("#jejSalvar")){salvarJejum();return}
+  if(t.closest("#jejFechar")||t.id==="jejbg"){$("jejbg").hidden=true;return}
+  const jo=t.closest("[data-jejum-ok]");
+  if(jo){
+    const dia=jo.dataset.jejumOk, nome=ls("rel_nome")||"";
+    if(!nome){pedirNome=true;renderDay(byKey());toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+    jo.disabled=true;
+    try{await rpc("relogio_jejuar",{p_dia:dia,p_nome:nome,p_tipo:jejumTipo});
+      jejumFeito[dia]=jejumTipo; ls("rel_jejum_feito",JSON.stringify(jejumFeito)); jejuns.push({dia,tipo:jejumTipo});
+      render(); burst(null); toast("Jejum concluído. Deus vê em secreto!"); avisar(); carregar()}
+    catch(err){toast(err.message);jo.disabled=false}
+    return}
+  const ro=t.closest("[data-ren-ok]");
+  if(ro){
+    const dia=ro.dataset.renOk, nome=ls("rel_nome")||"";
+    if(!nome){pedirNome=true;renderDay(byKey());toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+    ro.disabled=true;
+    try{await rpc("relogio_renunciar",{p_dia:dia,p_nome:nome});
+      renFeito[dia]=1; ls("rel_renuncia_feito",JSON.stringify(renFeito)); renuncias.push({dia});
+      render(); burst(null); toast("Renúncia concluída. Deus vê em secreto!"); avisar(); carregar()}
+    catch(err){toast(err.message);ro.disabled=false}
+    return}
+  if(t.closest("[data-pedir-nome]")){pedirNome=true;renderDay(byKey());setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
+  if(t.closest("[data-ir-lista]")){$("lista").scrollIntoView({behavior:"smooth",block:"start"});return}
+  const per=t.closest("[data-per]"); if(per){periodo=Number(per.dataset.per);render();return}
+  const add=t.closest("[data-slot]"); if(add){openSheet(current,add.dataset.slot);return}
+  if(t.closest("[data-mine-all]")){mineTodos=!mineTodos;renderMine();return}
+  if(t.closest("[data-now-open]")){nowAberto=true;renderNow(byKey());return}
+  if(t.closest("[data-now-close]")){nowAberto=false;renderNow(byKey());return}
+  if(t.closest("[data-slot-now]")){const cs=currentSlot();if(cs)openSheet(cs.d.k,cs.t);return}
+  const lr=t.closest("[data-ler]");
+  if(lr){lr.disabled=true;const dia=lr.dataset.ler;const nome=$("nomeLeitura")?$("nomeLeitura").value:(ls("rel_nome")||"");
+    if(!(await marcarLeitura(dia,nome,lr))) lr.disabled=false;
+    if(!$("thxbg").hidden&&thxDia===dia) atualizarThx();
+    return}
+  const cf=t.closest("[data-confirm]");
+  if(cf){cf.disabled=true;const id=cf.dataset.confirm;
+    cf.lastChild.textContent="Acendendo…";
+    try{await rpc("relogio_confirmar",{p_id:id,p_token:mine[id]});
+      const r=reservas.find(x=>x.id===id); if(r) r.orando_em=new Date().toISOString();
+      render(); burst(null); toast("Chama acesa! Deus está ouvindo."); avisar()}
+    catch(err){toast(err.message);cf.disabled=false;cf.lastChild.textContent="Comecei a orar"}
+    carregar();return}
+  const ag=t.closest("[data-agenda]"); if(ag){const r=reservas.find(x=>x.id===ag.dataset.agenda);if(r){abrirAgenda(r.dia,r.hora,r.id);$("calTitle").textContent="Lembrete do turno"}return}
+  const cc=t.closest("[data-cancel]");
+  if(cc){
+    if(cc.dataset.sure!=="1"){cc.dataset.sure="1";cc.classList.add("sure");cc.textContent="Confirmar";setTimeout(()=>{if(cc.isConnected){cc.dataset.sure="";cc.classList.remove("sure");cc.textContent="Cancelar"}},4000);return}
+    cc.disabled=true;const id=cc.dataset.cancel;
+    try{await rpc("relogio_cancelar",{p_id:id,p_token:mine[id]});delete mine[id];saveMine();reservas=reservas.filter(x=>x.id!==id);render();toast("Turno cancelado");avisar()}
+    catch(err){toast(err.message)}
+    carregar();
+  }
+});
+$("comoOk").onclick=()=>{ls("rel_como_ok","1");$("como").hidden=true};
+$("jejDe").addEventListener("change",ajustarAte);
+$("jejAte").addEventListener("change",desenharFaixa);
+
+$("verResumo").onclick=()=>{resumoAberto=true;render();$("resumo").scrollIntoView({behavior:"smooth",block:"start"})};
+$("resumo").addEventListener("click",e=>{if(e.target.closest("#fecharResumo")){resumoAberto=false;render()}});
+$("soVazios").onchange=e=>{soVazios=e.target.checked;render()};
+$("copiar").onclick=()=>{
+  const d=dayOf(current), m=byKey();
+  const linhas=SLOTS.map(t=>{const l=m[d.k+"_"+t]||[];return `${t} · ${l.length?l.map(r=>r.nome).join(", "):"(vago)"}`});
+  const vagos=SLOTS.filter(t=>!m[d.k+"_"+t]).length;
+  copiar(`🔥 *Relógio de Oração DEEP*\n*${d.full}* · ${d.ref}\n${d.foco}\n\n${linhas.join("\n")}\n\n${vagos?`Ainda ${vagos===1?"falta 1 turno":`faltam ${vagos} turnos`}! Reserve o seu: `:"Dia completo! Glória a Deus! "}${SITE}`,"Escala copiada. É só colar no grupo.");
+};
+async function copiar(txt,ok){
+  try{await navigator.clipboard.writeText(txt);toast(ok)}
+  catch(e){const ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();
+    try{document.execCommand("copy");toast(ok)}catch(e2){toast("Não foi possível copiar.")}ta.remove()}
+}
+
+/* ---------- formulário ---------- */
+function openSheet(dia,t){
+  const d=dayOf(dia); pending={dia,hora:t};
+  $("sheetTitle").textContent=`${d.short} ${d.date} · ${t}–${endOf(t)}`;
+  $("nome").value=ls("rel_nome")||"";
+  const tm=ls("rel_team")||""; document.querySelectorAll("input[name=team]").forEach(i=>i.checked=!!tm&&i.value===tm);
+  $("ferr").hidden=true; $("sheetbg").hidden=false; renderCta(); if(!$("nome").value) setTimeout(()=>$("nome").focus(),50);
+}
+function closeSheet(){$("sheetbg").hidden=true;pending=null;renderCta()}
+$("voltar").onclick=closeSheet;
+/* equipe: tocar na opção já marcada desmarca (quem não tem equipe deixa sem nada) */
+document.querySelectorAll("input[name=team]").forEach(i=>{
+  i.addEventListener("pointerdown",()=>{i.dataset.era=i.checked?"1":""});
+  i.addEventListener("click",()=>{if(i.dataset.era==="1"){i.checked=false;i.dataset.era=""}});
+});
+document.querySelectorAll(".tpick label").forEach(l=>l.addEventListener("pointerdown",()=>{const i=$(l.htmlFor);i.dataset.era=i.checked?"1":""}));
+$("sheetbg").addEventListener("click",e=>{if(e.target.id==="sheetbg")closeSheet()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("guiabg").hidden){$("guiabg").hidden=true;return}$("jejbg").hidden=true;if(!$("sheetbg").hidden)closeSheet();$("calbg").hidden=true;$("thxbg").hidden=true});
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const nome=$("nome").value.trim(), equipe=(document.querySelector("input[name=team]:checked")||{}).value||"";
+  if(!nome){ferr("Escreva seu nome.");return}
+  if(!pending) return;
+  ls("rel_nome",nome); ls("rel_team",equipe);
+  $("salvar").disabled=true; $("salvar").textContent="Reservando…";
+  try{
+    const {dia,hora}=pending;
+    const j=await rpc("relogio_reservar",{p_dia:dia,p_hora:hora,p_nome:nome,p_equipe:equipe});
+    const row=Array.isArray(j)?j[0]:j;
+    if(row&&row.id){mine[row.id]=row.token;saveMine();reservas.push({id:row.id,dia,hora,nome,equipe,orando_em:null})}
+    closeSheet(); render(); burst(null); avisar(); abrirAgenda(dia,hora,row&&row.id);
+    carregar();                                   // confirma com o banco sem segurar a tela
+  }catch(err){ferr(err.message.endsWith(".")?err.message:err.message+".")}
+  finally{$("salvar").disabled=false;$("salvar").textContent="Confirmar"}
+});
+/* conclusão automática: depois dos 30 min, agradece quem acendeu a chama (uma vez por turno) */
+let thanked={}; try{thanked=JSON.parse(ls("rel_thanked")||"{}")||{}}catch(e){thanked={}}
+function checarConcluidos(){
+  if(!loaded||!$("thxbg").hidden) return;
+  const r=reservas.find(x=>mine[x.id]&&x.orando_em&&!thanked[x.id]&&Date.now()>=slotStart(dayOf(x.dia),x.hora)+TURNO_MIN*60000);
+  if(!r) return;
+  thanked[r.id]=1; ls("rel_thanked",JSON.stringify(thanked));
+  thxNome=r.nome.split(" ")[0]; thxDia=r.dia; atualizarThx();
+  $("thxbg").hidden=false; burst(null); renderMine();
+}
+let thxNome="", thxDia="";
+function atualizarThx(){
+  const d=dayOf(thxDia), leu=leuHoje(thxDia);
+  $("thxTitle").textContent=leu?`${thxNome}, oração e leitura concluídas!`:`${thxNome}, oração concluída!`;
+  const b=$("thxLer"); b.hidden=leu; b.dataset.ler=thxDia; b.textContent=`Também li ${d.ref}`; b.disabled=false;
+}
+$("thxFechar").onclick=()=>{$("thxbg").hidden=true;checarConcluidos()};
+
+/* agenda: .ics do próprio site (alarme 10 min antes) + link do Google Agenda */
+const icsDate=ms=>new Date(ms).toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+function abrirAgenda(dia,hora,id){
+  const d=dayOf(dia), ini=slotStart(d,hora), fim=ini+TURNO_MIN*60000;
+  const titulo="Relógio de Oração DEEP";
+  const desc=`${d.ref}. ${d.foco}\nNa hora, abra o relógio e toque em "Comecei a orar": ${SITE}`;
+  // arquivo .ics servido pelo próprio site (funciona no iPhone, Android e no navegador do WhatsApp/Instagram)
+  $("calIcs").href=`${SITE}/agenda/${dia}-${hora.replace(":","")}.ics`;
+  $("calGoogle").href=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titulo)}&dates=${icsDate(ini)}/${icsDate(fim)}&details=${encodeURIComponent(desc)}`;
+  $("calInfo").textContent=`${d.dia}, ${d.date}, das ${hora} às ${endOf(hora)}. Coloque na agenda para não esquecer.`;
+  $("calTitle").textContent="Turno reservado!"; $("calbg").hidden=false;
+}
+$("calFechar").onclick=()=>{$("calbg").hidden=true};
+$("calbg").addEventListener("click",e=>{if(e.target.id==="calbg")$("calbg").hidden=true});
+
+function ferr(msg){$("ferr").textContent=msg;$("ferr").hidden=false}
+function showNotice(msg){$("notice").textContent=msg;$("notice").hidden=!msg}
+let tt; function toast(msg){$("toast").textContent=msg;$("toast").hidden=false;clearTimeout(tt);tt=setTimeout(()=>{$("toast").hidden=true},3000)}
+
+/* ---------- brasas ---------- */
+const fx=$("fx"), cx=fx.getContext("2d"); let parts=[], raf=0;
+const FXD=Math.min(2,devicePixelRatio||1);
+function sizeFx(){fx.width=innerWidth*FXD;fx.height=innerHeight*FXD}
+addEventListener("resize",sizeFx); sizeFx();
+function vibrar(){try{navigator.vibrate&&navigator.vibrate(18)}catch(e){}}
+function burst(el){
+  vibrar();
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const r=el&&el.isConnected&&el.getBoundingClientRect().width?el.getBoundingClientRect():{left:innerWidth/2-40,top:innerHeight*0.7,width:80,height:20};
+  const dpr=FXD, ox=(r.left+r.width/2)*dpr, oy=(r.top+r.height/2)*dpr, cols=["#ffe08a","#ff8a2a","#e2401a","#ffb347"];
+  for(let i=0;i<50;i++){const a=-Math.PI/2+(Math.random()-.5)*2.2, v=(2+Math.random()*6)*dpr;
+    parts.push({x:ox,y:oy,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,s:(2+Math.random()*3)*dpr,c:cols[i%4]})}
+  if(!raf) raf=requestAnimationFrame(step);
+}
+function step(){
+  cx.clearRect(0,0,fx.width,fx.height); parts=parts.filter(p=>p.l>0);
+  for(const p of parts){p.x+=p.vx;p.y+=p.vy;p.vy+=.05*FXD;p.vx*=.98;p.l-=.012;
+    cx.globalAlpha=Math.max(0,p.l);cx.fillStyle=p.c;cx.beginPath();cx.arc(p.x,p.y,p.s,0,7);cx.fill()}
+  cx.globalAlpha=1; raf=parts.length?requestAnimationFrame(step):0;
+}
+
+/* botão fixo "Escolher meu horário": aparece para quem ainda não reservou, some quando a lista está na tela */
+let listaVisivel=false;
+function renderCta(){ $("cta").hidden=!loaded||Object.keys(mine).length>0||listaVisivel||!$("sheetbg").hidden; }
+try{new IntersectionObserver(es=>{listaVisivel=es[0].isIntersecting;renderCta()},{threshold:0.05}).observe($("lista"))}catch(e){}
+$("ctaBtn").onclick=()=>$("lista").scrollIntoView({behavior:"smooth",block:"start"});
+
+
+/* ---------- comemoração da meia-noite: um dia de propósito concluído ---------- */
+const FESTAS=[
+  {t:"1º dia do propósito concluído!",x:"Tiago 1 nos levou para dentro do coração. Amanhã tem mais, e a fé vai começar a aparecer por fora."},
+  {t:"2º dia do propósito concluído!",x:"A fé saiu do papel e virou atitude. Faltam três dias. Continue firme, você não está sozinho."},
+  {t:"3º dia do propósito concluído!",x:"Passamos da metade do caminho! Que as nossas palavras sigam edificando quem está perto."},
+  {t:"4º dia do propósito concluído!",x:"Falta só um dia. Chegue perto de Deus, e Ele chegará perto de você."},
+  {t:"Propósito concluído!",x:"Parabéns! Você venceu barreiras e desafios, não desistiu e viveu grandes experiências com Deus. Agora é Retiro DEEP 2026!"}
+];
+let festaAtual=-1;
+let celebrado={}; try{celebrado=JSON.parse(ls("rel_celebrado")||"{}")||{}}catch(e){celebrado={}}
+function mostrarFesta(i){
+  const d=DAYS[i], f=FESTAS[i], m=byKey(), ult=i===DAYS.length-1;
+  const base=ult?reservas:reservas.filter(r=>r.dia===d.k);   // no último dia, conta a semana toda
+  const horas=base.filter(r=>r.orando_em).length/2;
+  const jovens=new Set(base.map(r=>r.nome.trim().toLowerCase())).size;
+  const fmt=h=>Number.isInteger(h)?String(h):h.toFixed(1).replace(".",",");
+  const eu=reservas.some(r=>mine[r.id]&&r.dia===d.k&&r.orando_em)||lido[d.k];
+  $("festa").innerHTML=`
+    <div class="rays" aria-hidden="true"></div>
+    <p class="glory">Glória a Deus!</p>
+    <h2 class="ttl" id="fTitle">${f.t}</h2>
+    <div class="trail" aria-label="${i+1} de ${DAYS.length} dias concluídos">${DAYS.map((x,k)=>`<span class="${k<=i?"ok":""}${k===i?" new":""}">${k<=i?'<span class="flame"></span>':x.short[0]}</span>`).join("")}</div>
+    <p class="txt">${f.x}${eu&&!ult?" Você fez parte disso!":""}</p>
+    ${loaded&&(horas||jovens)?`<div class="nums">${horas?`<span><b>${fmt(horas)}h</b> de oração${ult?" na semana":""}</span>`:""}${jovens?`<span><b>${jovens}</b> ${jovens===1?"jovem":"jovens"} no relógio</span>`:""}</div>`:""}
+    <button class="btn primary" id="fOk">${ult?"Glória a Deus!":"Amém! Bora pro próximo dia"}</button>`;
+  $("festa").hidden=false; $("festa").classList.remove("out"); festaAtual=i;
+  setTimeout(()=>{burst(null);setTimeout(()=>burst(null),450)},500);
+}
+function fecharFesta(){
+  if(festaAtual>=0){for(let k=0;k<=festaAtual;k++) celebrado[DAYS[k].k]=1; ls("rel_celebrado",JSON.stringify(celebrado));}
+  $("festa").classList.add("out"); setTimeout(()=>{$("festa").hidden=true},400); festaAtual=-1;
+}
+$("festa").addEventListener("click",e=>{if(e.target.closest("#fOk"))fecharFesta()});
+window.mostrarFesta=mostrarFesta;
+let festaChecada=false;
+function checarFesta(){
+  if(festaChecada||!loaded||$("intro")||!$("festa").hidden||!$("thxbg").hidden) return;
+  festaChecada=true;   // confere uma vez só, logo que a pessoa entra
+  let ultimo=-1; DAYS.forEach((d,i)=>{if(Date.now()>=slotStart(d,"00:00")+86400000) ultimo=i});
+  if(ultimo>=0&&!celebrado[DAYS[ultimo].k]) mostrarFesta(ultimo);
+}
+
+/* abas dos dias: quando grudam no topo ao rolar, ganham sombra */
+try{new IntersectionObserver(es=>$("agDays").classList.toggle("stuck",!es[0].isIntersecting&&es[0].boundingClientRect.top<0),{threshold:0}).observe($("stickSentinel"))}catch(e){}
+
+/* ---------- início ---------- */
+render(); carregar();
+setInterval(tick,1000);
+setInterval(()=>{if(!document.hidden&&$("sheetbg").hidden&&$("calbg").hidden&&$("thxbg").hidden) carregar()},20000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden) carregar()});
+/* tempo real: canal de avisos do Supabase via WebSocket direto (sem biblioteca de 100 KB).
+   Se cair, a página continua atualizando a cada 20 s e tenta reconectar. */
+const RT_TOPIC="realtime:relogio-oracao-deep";
+let ws=null, wsRef=0, hb=null, rtDeb=null;
+function rtSend(m){try{ws&&ws.readyState===1&&ws.send(JSON.stringify({...m,ref:String(++wsRef)}))}catch(e){}}
+function rtConnect(){
+  try{ws=new WebSocket(`${SB.replace("https","wss")}/realtime/v1/websocket?apikey=${ANON}&vsn=1.0.0`)}catch(e){return}
+  ws.onopen=()=>{
+    rtSend({topic:RT_TOPIC,event:"phx_join",payload:{config:{broadcast:{ack:false,self:false},presence:{key:""},postgres_changes:[],private:false},access_token:ANON}});
+    clearInterval(hb); hb=setInterval(()=>rtSend({topic:"phoenix",event:"heartbeat",payload:{}}),25000);
+  };
+  ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(x){return}
+    if(m.topic!==RT_TOPIC) return;
+    if(m.event==="phx_reply"&&m.payload&&m.payload.status==="ok") $("live").hidden=false;
+    if(m.event==="broadcast"&&m.payload&&m.payload.event==="mudou"){clearTimeout(rtDeb);rtDeb=setTimeout(carregar,250)}
+  };
+  ws.onclose=()=>{$("live").hidden=true;clearInterval(hb);setTimeout(rtConnect,5000)};
+}
+canal={send:({event,payload})=>rtSend({topic:RT_TOPIC,event:"broadcast",payload:{type:"broadcast",event,payload}})};
+rtConnect();
+</script>
+</body>
+</html>
