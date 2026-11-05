@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Fogo na Vila//Relogio de Oracao//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-11-10-2330@relogio-oracao-fnv
+DTSTAMP:20261105T165312Z
+DTSTART:20261111T023000Z
+DTEND:20261111T030000Z
+SUMMARY:Relógio de Oração do FNV
+DESCRIPTION:Dia 4 de 21 · Daniel 4. Humildade. Ore reconhecendo que tudo vem de Deus e entregue o orgulho.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://eltongterci-cell.github.io/meus-apps/fnv
+URL:https://eltongterci-cell.github.io/meus-apps/fnv
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Seu horário de oração começa em 10 minutos
+END:VALARM
+END:VEVENT
+END:VCALENDAR
