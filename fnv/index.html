@@ -587,15 +587,15 @@ select.input{appearance:none;-webkit-appearance:none;background:var(--surface) u
 .days-hint{display:flex;align-items:center;justify-content:space-between;font-size:var(--t-xs);color:var(--muted)}
 .days-hint b{color:var(--fg)}
 .days-hint .linkbtn{min-height:30px;padding:0;font-size:var(--t-xs)}
-.logo-img{height:43px;width:auto;border-radius:9px;display:block;box-shadow:0 4px 12px rgba(0,0,0,.18)}
-.sign .logo-img{height:22px;border-radius:5px;box-shadow:none}
-.intro .lg-top.logo-img{height:70px;width:auto;border-radius:12px}
+.logo-img{height:46px;width:auto;display:block}
+.sign .logo-img{height:22px}
+.intro .lg-top.logo-img{height:72px;width:auto;opacity:1}
 </style>
 </head>
 <body>
 <div class="intro" id="intro" role="dialog" aria-label="Abertura" aria-live="polite">
   <div class="burst"></div>
-  <img class="lg-top logo-img" src="logo-fnv.png" alt="" width="92" height="70">
+  <img class="lg-top logo-img" src="logo-fnv.png" alt="" width="91" height="72">
   <span class="orb"></span>
   <span class="wave"></span><span class="wave w2"></span><span class="wave w3"></span>
   <span class="flame-xl"></span>
@@ -642,7 +642,7 @@ window.addEventListener("load",function(){setTimeout(function(){if(!window.__rel
 <div class="wrap">
   <div class="velho" id="velho" role="alert" hidden><b>O app não abriu neste navegador.</b> Atualize o celular ou o navegador (Chrome ou Safari) e abra o link de novo. Se não der, abra o link no Google Chrome.<small id="velhoErro"></small></div>
   <header class="top">
-    <img class="logo-img" src="logo-fnv.png" alt="Fogo na Vila" width="56" height="43">
+    <img class="logo-img" src="logo-fnv.png" alt="Fogo na Vila" width="58" height="46">
     <span class="live" id="live" hidden><i></i>Ao vivo</span>
   </header>
 
@@ -718,7 +718,7 @@ window.addEventListener("load",function(){setTimeout(function(){if(!window.__rel
     <button class="linkbtn" id="verResumo">Ver o Resumo do Propósito</button>
     <button class="linkbtn" id="abrirRec">Trocou de celular? Recuperar meus horários</button>
     <div class="lider"><span>Liderança:</span> <button class="linkbtn" id="copiar">Copiar escala do dia</button><span aria-hidden="true">·</span><button class="linkbtn" id="abrirLider">Modo líder</button></div>
-    <div class="sign"><img class="logo-img" src="logo-fnv.png" alt="" width="29" height="22"><span>Fogo na Vila · Posicionamento</span></div>
+    <div class="sign"><img class="logo-img" src="logo-fnv.png" alt="" width="28" height="22"><span>Fogo na Vila · Posicionamento</span></div>
   </footer>
 </div>
 
