@@ -1051,7 +1051,7 @@ function salvarJejum(){
   $("jejbg").hidden=true; renderMeuDia();
   if(t) toast(`Salvo: ${jejumNome(t)}${renOn?" + renúncia":""}`); else if(renOn) toast("Renúncia extra salva");
 }
-const faixaTxt=(de,ate)=>`das ${de}h ${ate===24?"à meia-noite":`às ${ate}h`}`;
+function faixaTxt(de,ate){return `das ${de}h ${ate===24?"à meia-noite":`às ${ate}h`}`}   // função (não const): é usada antes desta linha ao abrir o app
 function opcoesHoras(sel,de,ate,val){sel.innerHTML="";for(let h=de;h<=ate;h++){const o=document.createElement("option");o.value=h;o.textContent=h===24?"meia-noite":h+"h";sel.appendChild(o)}sel.value=val}
 function ajustarAte(){const de=+$("jejDe").value, atual=+$("jejAte").value;opcoesHoras($("jejAte"),de+1,JEJUM_MAX,Math.min(JEJUM_MAX,Math.max(atual,de+1)));desenharFaixa()}
 function mostrarHoras(on){$("jejHoras").hidden=!on;$("jejComerCard").classList.toggle("sel",on);$("jejComer").setAttribute("aria-checked",String(on));if(on)desenharFaixa()}
