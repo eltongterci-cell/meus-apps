@@ -78,25 +78,59 @@ main.wrap{margin-top:-46px;padding-bottom:40px}
 /* ============ 9. DATAS ============ */
 .est-title{display:flex;align-items:center;gap:8px;margin:20px 0 10px;font-size:12.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--green)}
 .est-title::after{content:"";flex:1;height:1px;background:var(--line)}
-.ucards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-.ucard{border:1.5px solid var(--line);border-radius:var(--r-md);padding:14px;background:#fff}
-.ucard.ok{border-color:#bfdcca}
-.ucard header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
-.ucard header b{font-size:15.5px}
-.ucard .flag{font-size:12px;font-weight:700;color:var(--faint)}
-.ucard.ok .flag{color:var(--green)}
-.grp+.grp{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
-.grp .gl{font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:6px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 6px 0 11px;border-radius:999px;background:var(--mint);color:var(--green);font-size:13.5px;font-weight:700}
-.chip.we{background:var(--amber-soft);color:#7a5200}
-.chip button{display:grid;place-items:center;width:22px;height:22px;border:0;border-radius:50%;background:rgba(0,0,0,.06);cursor:pointer;color:inherit;font-size:14px;line-height:1}
-.chip small{font-weight:600;opacity:.75}
-.add{position:relative;display:inline-flex;align-items:center;height:32px;padding:0 12px;border:1.5px dashed #b9cdbf;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--green);cursor:pointer;background:#fff}
-.add input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
-.saving{font-size:12px;color:var(--faint)}
-.progressline{height:8px;border-radius:999px;background:var(--mint);overflow:hidden;margin-top:8px}
-.progressline i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--lime))}
+.progressline{height:10px;border-radius:999px;background:var(--mint);overflow:hidden;margin-top:10px}
+.progressline i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--lime));transition:width .3s}
+.steps-help{display:grid;gap:8px;margin:12px 0 0;padding:0;list-style:none;counter-reset:p}
+.steps-help li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--ink)}
+.steps-help li::before{counter-increment:p;content:counter(p);flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:13px;font-weight:800}
+.big-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+@media(max-width:560px){.big-actions{grid-template-columns:1fr}}
+.btn-lg{height:52px;font-size:16px}
+.unav{display:flex;align-items:center;gap:8px}
+.unav select{flex:1;min-width:0}
+.unav .arrow{flex:none;width:46px;height:46px;border:1.5px solid var(--line);border-radius:var(--r-md);background:#fff;font-size:20px;font-weight:800;color:var(--green);cursor:pointer}
+.unit-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin:16px 0 4px}
+.unit-head h2{margin:0;font-size:22px;font-weight:800;line-height:1.2}
+.unit-head small{display:block;color:var(--muted);font-size:13px;font-weight:600}
+.savestate{flex:none;font-size:12.5px;font-weight:700;color:var(--faint);padding-top:4px;white-space:nowrap}
+.savestate.ok{color:var(--green)}.savestate.busy{color:var(--amber)}
+.gbox{margin-top:16px;padding:14px;border:1.5px solid var(--line);border-radius:var(--r-md)}
+.gbox.done{border-color:#bfdcca;background:#fbfdfb}
+.gbox h4{margin:0;font-size:15.5px;font-weight:800}
+.gbox p{margin:2px 0 10px;font-size:13px;color:var(--muted)}
+.gbox .sel{margin-top:10px;font-size:13.5px;font-weight:700;color:var(--green)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal .wd{font-size:11.5px;font-weight:800;text-align:center;color:var(--faint);padding-bottom:2px}
+.cal button{position:relative;height:44px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:15px;font-weight:700;cursor:pointer;color:var(--ink);font-variant-numeric:tabular-nums}
+.cal button:hover{border-color:var(--green)}
+.cal button.we{background:#f6f7f6;color:var(--faint)}
+.cal button.on{background:var(--green);border-color:var(--green);color:#fff}
+.cal button.on.we{background:#c19c00;border-color:#c19c00}
+.cal button[data-n]::after{content:attr(data-n);position:absolute;top:2px;right:4px;font-size:9.5px;font-weight:800;opacity:.85}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-2px;margin-right:4px;background:var(--green)}
+.legend i.we{background:#c19c00}.legend i.n{background:#fff;border:1.5px solid var(--line)}
+.nextbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.ulist{display:flex;flex-direction:column}
+.ulist .est{margin:16px 0 4px;font-size:12px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--green)}
+.ulist button{display:flex;align-items:center;gap:10px;width:100%;padding:11px 4px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.ulist button:hover{background:var(--mint-2)}
+.ulist .st{flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;font-size:13px;font-weight:800;background:#eef1ef;color:var(--faint)}
+.ulist .st.ok{background:var(--green);color:#fff}.ulist .st.half{background:var(--amber-soft);color:#7a5200}
+.ulist .nm{flex:1;min-width:0;font-weight:700}
+.ulist .ds{font-size:12.5px;color:var(--muted);text-align:right;max-width:50%}
+.ulist button.cur{background:var(--mint)}
+textarea.input{height:auto;min-height:180px;padding:12px;resize:vertical;line-height:1.4}
+.imp-row{padding:12px;border:1.5px solid var(--line);border-radius:var(--r-md);margin-bottom:8px}
+.imp-row.warn{border-color:#f2d79a;background:var(--amber-soft)}
+.imp-row label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.imp-row input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--green)}
+.imp-row b{display:block}
+.imp-row small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.imp-row .orig{font-size:12px;color:var(--faint);margin-top:4px}
+.chipline{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chipline span{padding:3px 9px;border-radius:999px;background:var(--mint);color:var(--green);font-size:12.5px;font-weight:700}
+.modal .box.wide{max-width:560px;max-height:90vh;overflow:auto}
 /* ============ 10. AGENDA ============ */
 .day{margin-top:18px}
 .day h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--green)}
@@ -193,12 +227,21 @@ td.nw{white-space:nowrap}
     <!-- DATAS -->
     <section id="t-datas" hidden>
       <div class="card">
-        <h3>Datas de atendimento do mês</h3>
-        <p class="muted" style="margin:0">Cadastre as datas que os gestores definiram para cada unidade. Toque em <b>+ Data</b> para adicionar e no <b>×</b> para remover. Tudo é salvo na hora.</p>
+        <h3 id="datasTitulo">Datas do mês</h3>
+        <ol class="steps-help">
+          <li><span>Escolha a unidade (ou toque em <b>Próxima pendente</b>). Se recebeu a mensagem dos gestores, use <b>Colar mensagem</b>: o sistema preenche quase tudo sozinho.</span></li>
+          <li><span>No calendário, toque nos dias de atendimento. Toque de novo para desmarcar.</span></li>
+          <li><span>Tudo é salvo sozinho. Quando todas as unidades estiverem com ✓, toque em <b>Abrir inscrições</b> lá em cima.</span></li>
+        </ol>
         <div class="progressline"><i id="datasProg" style="width:0"></i></div>
         <div class="muted" id="datasResumo" style="margin-top:6px"></div>
+        <div class="big-actions">
+          <button class="btn btn-primary btn-lg" id="btnPendente" type="button">Próxima pendente →</button>
+          <button class="btn btn-ghost btn-lg" id="btnColar" type="button">Colar mensagem dos gestores</button>
+        </div>
       </div>
       <div class="card" id="datasBox"></div>
+      <div class="card"><h3>Todas as unidades</h3><p class="muted" style="margin:0">Toque numa unidade para abrir o calendário dela.</p><div class="ulist" id="ulist"></div></div>
     </section>
 
     <!-- AGENDA -->
@@ -256,6 +299,19 @@ td.nw{white-space:nowrap}
   <label class="label" for="sNova2" style="margin-top:10px">Repita a nova senha</label><input class="input" type="password" id="sNova2" autocomplete="new-password">
   <div class="err" id="sErr"></div>
   <div class="row"><button class="btn btn-primary" id="sSalvar">Salvar nova senha</button><button class="btn btn-ghost" id="sNao">Cancelar</button></div></div></div>
+<div class="modal" id="mColar"><div class="box wide">
+  <h3>Colar mensagem dos gestores</h3>
+  <div id="colarPasso1">
+    <p>Copie a mensagem com as datas (do e-mail, WhatsApp ou NetSênior) e cole abaixo. O sistema reconhece as unidades e as datas sozinho, e você confere antes de salvar.</p>
+    <textarea class="input" id="colarTexto" placeholder="Exemplo:&#10;Brasília&#10;Ambulatório Asa Sul – 23/12 – 13h às 17h&#10;PS Brasília SIG – 20/12 e 21/12 – 13h às 21h"></textarea>
+    <div class="row" style="margin-top:12px"><button class="btn btn-primary" id="colarLer">Ler mensagem</button><button class="btn btn-ghost" id="colarFechar">Cancelar</button></div>
+  </div>
+  <div id="colarPasso2" hidden>
+    <p id="colarInfo"></p>
+    <div id="colarLista"></div>
+    <div class="row" style="margin-top:12px"><button class="btn btn-primary" id="colarSalvar">Salvar datas marcadas</button><button class="btn btn-ghost" id="colarVoltar">Voltar</button></div>
+  </div>
+</div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -318,7 +374,7 @@ $("senha").addEventListener("keydown",e=>{if(e.key==="Enter")$("entrar").click()
 try{const s=sessionStorage.getItem("bv_s");if(s){$("senha").value=s;$("entrar").click()}}catch(e){}
 
 let ocupado=false;
-async function silencioso(){if(!senha||ocupado||document.hidden||document.querySelector(".modal.on")||document.activeElement?.type==="date")return;ocupado=true;try{await carregarTudo()}catch(e){}ocupado=false}
+async function silencioso(){if(!senha||ocupado||document.hidden||document.querySelector(".modal.on")||aba==="datas"||timers.size||salvando)return;ocupado=true;try{await carregarTudo()}catch(e){}ocupado=false}
 setInterval(silencioso,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)silencioso()});
 
 /* ---------- mês ---------- */
@@ -390,46 +446,178 @@ $("kpis").onclick=e=>{const k=e.target.closest(".kpi");if(!k)return;
   document.querySelector(".tabs").scrollIntoView({behavior:"smooth"})};
 
 /* ---------- DATAS ---------- */
+let datasUnidade="";                         /* unidade aberta no calendário */
+const selLocal=new Map();                    /* "unidade|grupo" -> Set de datas (o que está na tela) */
+const timers=new Map();let salvando=0;
+const AJUDA_G={"Par":"Dias em que o plantão PAR recebe a massagem.","Ímpar":"Dias em que o plantão ÍMPAR recebe a massagem.","ADM":"Dias de atendimento para quem trabalha no administrativo.",
+  "Extra":"Dias dos horários extras.","Segundo andar":"Dias de atendimento do segundo andar.","Terceiro andar":"Dias de atendimento do terceiro andar.","Geral":"Toque nos dias em que haverá massagem nesta unidade."};
+const unidadesOrdenadas=()=>ESTADOS.flatMap(e=>unidades().filter(u=>estadoDe(u)===e));
+const datasServidor=(u,g)=>datas.filter(d=>d.unidade===u&&d.grupo===g).map(d=>d.data);
+function datasDe(u,g){const k=u+"|"+g;if(!selLocal.has(k)||!timers.has(k))selLocal.set(k,new Set(datasServidor(u,g)));return selLocal.get(k)}
+function statusUnidade(u){const gs=gruposDe(u),c=gs.filter(g=>datasDe(u,g).size).length;return c===gs.length?"ok":c?"half":"none"}
+function iso(y,m,d){return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`}
+function proximaPendente(depois){
+  const us=unidadesOrdenadas(),i=us.indexOf(depois);
+  for(let k=1;k<=us.length;k++){const u=us[(i+k+us.length)%us.length];if(statusUnidade(u)!=="ok")return u}
+  return null;
+}
+function setSave(t,cls){const e=$("saveState");if(e){e.textContent=t;e.className="savestate "+(cls||"")}}
+
 function renderDatas(){
   const m=mesAtual();
-  if(!m){$("datasBox").innerHTML='<div class="empty">Crie um mês para começar a cadastrar as datas.</div>';$("datasResumo").textContent="";return}
-  const us=unidades(),comData=us.filter(u=>gruposDe(u).every(g=>datas.some(d=>d.unidade===u&&d.grupo===g)));
-  $("datasProg").style.width=(us.length?comData.length/us.length*100:0)+"%";
-  $("datasResumo").textContent=`${comData.length} de ${us.length} unidades com todas as datas de ${nomeMes(m)}.`;
-  const min=`${m.ano}-${String(m.mes).padStart(2,"0")}-01`,ult=new Date(m.ano,m.mes,0).getDate(),max=`${m.ano}-${String(m.mes).padStart(2,"0")}-${ult}`;
-  $("datasBox").innerHTML=ESTADOS.map(est=>{
-    const lista=us.filter(u=>estadoDe(u)===est);if(!lista.length)return"";
-    return `<div class="est-title">${esc(est)}</div><div class="ucards">`+lista.map(u=>{
-      const gs=gruposDe(u),ok=comData.includes(u);
-      return `<div class="ucard${ok?" ok":""}" data-u="${esc(u)}"><header><b>${esc(u)}</b><span class="flag">${ok?"✓ completo":"pendente"}</span></header>`+
-        gs.map(g=>{const ds=datas.filter(d=>d.unidade===u&&d.grupo===g).map(d=>d.data).sort();
-          return `<div class="grp" data-g="${esc(g)}"><div class="gl">${esc(gs.length===1?"Datas de atendimento":ROTULO_G[g]||g)}</div><div class="chips">`+
-            ds.map(d=>{const n=(datas.find(x=>x.unidade===u&&x.grupo===g&&x.data===d)||{}).n_inscritos||0;
-              return `<span class="chip${fimDeSemana(d)?" we":""}" title="${fimDeSemana(d)?"Fim de semana":""}">${esc(dataCurta(d))}${n?` <small>· ${n}</small>`:""}<button type="button" data-rm="${d}" aria-label="Remover ${d}">×</button></span>`}).join("")+
-            `<label class="add">+ Data<input type="date" min="${min}" max="${max}" data-add></label></div></div>`}).join("")+`</div>`}).join("")+`</div>`;
-  }).join("");
+  if(!m){$("datasBox").innerHTML='<div class="empty">Toque em <b>+ Novo mês</b> lá em cima para começar.</div>';$("ulist").innerHTML="";$("datasResumo").textContent="";$("datasTitulo").textContent="Datas do mês";return}
+  const us=unidadesOrdenadas(),ok=us.filter(u=>statusUnidade(u)==="ok").length;
+  $("datasTitulo").textContent=`Datas de ${nomeMes(m)}`;
+  $("datasProg").style.width=(us.length?ok/us.length*100:0)+"%";
+  $("datasResumo").textContent=ok===us.length?`Todas as ${us.length} unidades estão com datas. Agora é só abrir as inscrições.`:`${ok} de ${us.length} unidades prontas. Faltam ${us.length-ok}.`;
+  $("btnPendente").disabled=ok===us.length;
+  if(!datasUnidade||!us.includes(datasUnidade)) datasUnidade=proximaPendente(us[us.length-1])||us[0];
+  renderCalendarioUnidade();renderListaUnidades();
 }
-$("datasBox").addEventListener("change",async e=>{
-  const inp=e.target.closest("input[data-add]");if(!inp||!inp.value)return;
-  const card=inp.closest(".ucard"),u=card.dataset.u,g=inp.closest(".grp").dataset.g;
-  const atuais=datas.filter(d=>d.unidade===u&&d.grupo===g).map(d=>d.data);
-  if(atuais.includes(inp.value)){toast("Essa data já está cadastrada.");inp.value="";return}
-  await salvarDatas(u,g,[...atuais,inp.value].sort(),card);
-});
+function renderCalendarioUnidade(){
+  const m=mesAtual(),u=datasUnidade,us=unidadesOrdenadas();
+  const gs=gruposDe(u);
+  const prim=new Date(m.ano,m.mes-1,1).getDay(),ult=new Date(m.ano,m.mes,0).getDate();
+  const cal=g=>{
+    const set=datasDe(u,g);let h=["D","S","T","Q","Q","S","S"].map(x=>`<div class="wd">${x}</div>`).join("")+"<div></div>".repeat(prim);
+    for(let d=1;d<=ult;d++){const dt=iso(m.ano,m.mes,d),w=(prim+d-1)%7,n=(datas.find(x=>x.unidade===u&&x.grupo===g&&x.data===dt)||{}).n_inscritos||0;
+      h+=`<button type="button" class="${set.has(dt)?"on":""}${w===0||w===6?" we":""}" data-day="${dt}" data-g="${esc(g)}"${n?` data-n="${n}"`:""} aria-pressed="${set.has(dt)}" aria-label="${esc(dataLonga(dt))}">${d}</button>`}
+    return `<div class="cal">${h}</div>`;
+  };
+  const resumoSel=g=>{const a=[...datasDe(u,g)].sort();return a.length?`Marcado: ${a.map(dataCurta).join(" · ")}`:"Nenhum dia marcado ainda."};
+  $("datasBox").innerHTML=`<div class="unav"><button class="arrow" type="button" data-nav="-1" aria-label="Unidade anterior">‹</button>
+      <select class="input" id="uSel">${us.map(x=>`<option value="${esc(x)}"${x===u?" selected":""}>${statusUnidade(x)==="ok"?"✓ ":"• "}${esc(x)}</option>`).join("")}</select>
+      <button class="arrow" type="button" data-nav="1" aria-label="Próxima unidade">›</button></div>
+    <div class="unit-head"><div><small>${esc(estadoDe(u))}</small><h2>${esc(u)}</h2></div><span class="savestate ok" id="saveState">${salvando?"Salvando…":"Tudo salvo ✓"}</span></div>`+
+    gs.map(g=>`<div class="gbox${datasDe(u,g).size?" done":""}" data-g="${esc(g)}"><h4>${esc(gs.length===1?"Dias de atendimento":ROTULO_G[g]||g)}</h4><p>${esc(AJUDA_G[g]||"")}</p>${cal(g)}<div class="sel">${esc(resumoSel(g))}</div></div>`).join("")+
+    `<div class="legend"><span><i></i>Dia marcado</span><span><i class="we"></i>Fim de semana marcado</span><span><i class="n"></i>Número no canto = pessoas já agendadas</span></div>
+    <div class="nextbar"><button class="btn btn-ghost" type="button" data-nav="-1">‹ Anterior</button><button class="btn btn-primary" type="button" data-nav="pend">${statusUnidade(u)==="ok"?"Próxima pendente →":"Próxima unidade →"}</button></div>`;
+}
+function renderListaUnidades(){
+  let est="",h="";
+  for(const u of unidadesOrdenadas()){
+    const e=estadoDe(u);if(e!==est){est=e;h+=`<div class="est">${esc(e)}</div>`}
+    const st=statusUnidade(u),todas=[...new Set(gruposDe(u).flatMap(g=>[...datasDe(u,g)]))].sort();
+    h+=`<button type="button" data-ir="${esc(u)}" class="${u===datasUnidade?"cur":""}"><span class="st ${st}">${st==="ok"?"✓":st==="half"?"½":"•"}</span><span class="nm">${esc(u)}</span><span class="ds">${todas.length?todas.map(d=>d.slice(8)+"/"+d.slice(5,7)).join(", "):"sem data"}</span></button>`;
+  }
+  $("ulist").innerHTML=h;
+}
+function irUnidade(u){datasUnidade=u;renderCalendarioUnidade();renderListaUnidades();$("datasBox").scrollIntoView({behavior:"smooth",block:"start"})}
+$("btnPendente").onclick=()=>{const u=proximaPendente(datasUnidade);if(u)irUnidade(u);else toast("Todas as unidades já têm datas.")};
+$("ulist").addEventListener("click",e=>{const b=e.target.closest("[data-ir]");if(b)irUnidade(b.dataset.ir)});
+$("datasBox").addEventListener("change",e=>{if(e.target.id==="uSel")irUnidade(e.target.value)});
 $("datasBox").addEventListener("click",e=>{
-  const b=e.target.closest("[data-rm]");if(!b)return;
-  const card=b.closest(".ucard"),u=card.dataset.u,g=b.closest(".grp").dataset.g,dt=b.dataset.rm;
-  const n=(datas.find(x=>x.unidade===u&&x.grupo===g&&x.data===dt)||{}).n_inscritos||0;
-  if(n){toast(`Há ${n} pessoa(s) agendada(s) em ${dataCurta(dt)}. Exclua as inscrições antes de remover a data.`);return}
-  salvarDatas(u,g,datas.filter(d=>d.unidade===u&&d.grupo===g&&d.data!==dt).map(d=>d.data),card);
+  const nav=e.target.closest("[data-nav]");
+  if(nav){const us=unidadesOrdenadas(),i=us.indexOf(datasUnidade);
+    if(nav.dataset.nav==="pend"){const u=statusUnidade(datasUnidade)==="ok"?proximaPendente(datasUnidade):us[(i+1)%us.length];if(u)irUnidade(u);else toast("Todas as unidades já têm datas. Agora é só abrir as inscrições.")}
+    else irUnidade(us[(i+Number(nav.dataset.nav)+us.length)%us.length]);return}
+  const b=e.target.closest("[data-day]");if(!b)return;
+  const u=datasUnidade,g=b.dataset.g,dt=b.dataset.day,set=datasDe(u,g);
+  if(set.has(dt)){
+    if(b.dataset.n){toast(`Há ${b.dataset.n} pessoa(s) agendada(s) em ${dataCurta(dt)}. Para tirar este dia, exclua as inscrições na Agenda.`);return}
+    set.delete(dt);b.classList.remove("on");b.setAttribute("aria-pressed","false");
+  }else{set.add(dt);b.classList.add("on");b.setAttribute("aria-pressed","true")}
+  const box=b.closest(".gbox"),a=[...set].sort();
+  box.classList.toggle("done",a.length>0);box.querySelector(".sel").textContent=a.length?`Marcado: ${a.map(dataCurta).join(" · ")}`:"Nenhum dia marcado ainda.";
+  agendarSalvar(u,g);
 });
-async function salvarDatas(u,g,lista,card){
-  card.style.opacity=.6;
-  try{await rpc("bemviver_admin_salvar_datas",{senha,p_mes_id:mesId,p_unidade:u,p_grupo:g,p_datas:lista});
-    const[ds,m,d]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha}),rpc("bemviver_listar",{senha})]);
-    datas=ds;meses=m;dados=d;montar();}
-  catch(e){const msg=e.message||"";toast(msg.startsWith("data_com_inscritos")?"Essa data já tem pessoas agendadas.":msg==="data_fora_do_mes"?"A data precisa ser do mês selecionado.":"Não foi possível salvar. Verifique a internet.");card.style.opacity=1}
+function agendarSalvar(u,g){
+  const k=u+"|"+g;clearTimeout(timers.get(k));setSave("Salvando…","busy");
+  timers.set(k,setTimeout(()=>salvarGrupo(u,g),700));
 }
+async function salvarGrupo(u,g){
+  const k=u+"|"+g,lista=[...(selLocal.get(k)||[])].sort();
+  salvando++;
+  try{await rpc("bemviver_admin_salvar_datas",{senha,p_mes_id:mesId,p_unidade:u,p_grupo:g,p_datas:lista});timers.delete(k)}
+  catch(e){timers.delete(k);selLocal.delete(k);const msg=e.message||"";
+    toast(msg.startsWith("data_com_inscritos")?"Um dos dias já tem pessoas agendadas e não pode ser tirado.":"Não foi possível salvar. Verifique a internet e tente de novo.")}
+  salvando--;
+  if(!salvando&&!timers.size){
+    try{const[ds,m]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
+    montar();setSave("Tudo salvo ✓","ok");
+  }
+}
+async function salvarDatas(u,g,lista){selLocal.set(u+"|"+g,new Set(lista));await salvarGrupo(u,g)}
+
+/* ---------- COLAR MENSAGEM DOS GESTORES ---------- */
+const norm=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").replace(/\s+/g," ").trim();
+const APELIDOS={
+  "Ambulatório Asa Sul":["asa sul"],"PS- SIG Brasília":["sig"],"Taguatinga Norte - Ambulatório":["taguatinga norte"],"Comercial DF":["comercial bsb","comercial df","comercial brasilia"],
+  "PS- Taguatinga Sul":["taguatinga sul"],"Unidade Águas Claras":["aguas claras"],
+  "PS Botafogo":["ps botafogo","pronto socorro botafogo"],"Unidade Botafogo":["unidade botafogo","ambulatorio botafogo"],"PS Barra da Tijuca":["barra da tijuca","ps barra"],
+  "PS Campo Grande":["campo grande"],"Unidade Tijuca":["tijuca"],"Unidade Niterói":["niteroi"],"Comercial RJ":["comercial rio de janeiro","comercial rio","comercial rj"],
+  "Unidade Campinas":["campinas"],"Unidade Tatuapé":["tatuape"],"Unidade Av. Brasil":["av brasil","avenida brasil"],"Unidade Santana":["santana"],
+  "Unidade Av. Paulista":["paulista"],"Unidade Sumarézinho":["sumarezinho"],"Recife":["recife"],"Ambulatório Porto Alegre":["porto alegre"],"Ambulatório Curitiba":["curitiba"],
+  "PS Glória- CDM - Oftalmo":["gloria","vila velha"],"Matriz":["matriz"],"Unidade Serra":["serra"],"Unidade Jerônimo":["jeronimo"],"Bressan":["bressan"],
+  "Centro - ES":["centro vitoria","centro es","centro"],"Hospital Vitória":["hospital vitoria"],
+  "PS Gutierrez":["gutierrez"],"Hospital Pampulha":["pampulha"],"Comercial MG":["comercial mg","comercial bh","comercial minas"],"Amb. Contagem":["contagem"],
+  "Funcionários":["funcionarios"],"Savassi":["savassi"]
+};
+function acharUnidade(texto){
+  const t=" "+norm(texto)+" ";let melhor=null,tam=0;
+  for(const[u,als] of Object.entries(APELIDOS)) for(const a of als) if(t.includes(" "+a+" ")&&a.length>tam&&unidades().includes(u)){melhor=u;tam=a.length}
+  return melhor;
+}
+function lerDatas(linha,m){
+  const out=[],fora=[];const t=linha.replace(/(\d{1,2})\s*(?:e|,|&)\s*(\d{1,2})\s*\/\s*(\d{1,2})/g,"$1/$3 e $2/$3");
+  for(const x of t.matchAll(/(\d{1,2})\s*\/\s*(\d{1,2})(?:\s*\/\s*(\d{2,4}))?/g)){
+    const d=+x[1],mm=+x[2];if(d<1||d>31||mm<1||mm>12)continue;
+    if(mm!==m.mes){fora.push(`${String(d).padStart(2,"0")}/${String(mm).padStart(2,"0")}`);continue}
+    if(d>new Date(m.ano,m.mes,0).getDate())continue;
+    out.push(iso(m.ano,mm,d));
+  }
+  return{datas:[...new Set(out)].sort(),fora};
+}
+function distribuir(u,ds){
+  const gs=gruposDe(u),r={};
+  if(gs.includes("Par")||gs.includes("Ímpar")){
+    if(gs.includes("Par"))r["Par"]=ds.filter(d=>+d.slice(8)%2===0);
+    if(gs.includes("Ímpar"))r["Ímpar"]=ds.filter(d=>+d.slice(8)%2===1);
+    for(const g of gs) if(!["Par","Ímpar"].includes(g)) r[g]=ds.slice();
+  }else for(const g of gs) r[g]=ds.slice();
+  return r;
+}
+let leitura=[];
+$("btnColar").onclick=()=>{if(!mesAtual()){toast("Crie o mês primeiro.");return}$("colarPasso1").hidden=false;$("colarPasso2").hidden=true;$("mColar").classList.add("on");setTimeout(()=>$("colarTexto").focus(),100)};
+$("colarFechar").onclick=()=>$("mColar").classList.remove("on");
+$("colarVoltar").onclick=()=>{$("colarPasso1").hidden=false;$("colarPasso2").hidden=true};
+$("colarLer").onclick=()=>{
+  const m=mesAtual(),linhas=$("colarTexto").value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  let titulo="",foraMes=new Set();const porUnidade=new Map(),naoAchei=[];
+  for(const l of linhas){
+    if(!/\d{1,2}\s*\/\s*\d{1,2}/.test(l)){titulo=l;continue}
+    const u=acharUnidade(l)||acharUnidade(l+" "+titulo);
+    const {datas:ds,fora}=lerDatas(l,m);fora.forEach(f=>foraMes.add(f));
+    if(!u){naoAchei.push(l);continue}
+    if(!ds.length)continue;
+    const atual=porUnidade.get(u)||{u,ds:[],orig:[]};atual.ds=[...new Set([...atual.ds,...ds])].sort();atual.orig.push(l);porUnidade.set(u,atual);
+  }
+  leitura=[...porUnidade.values()].map(x=>({...x,grupos:distribuir(x.u,x.ds)}));
+  if(!leitura.length&&!naoAchei.length){toast("Não encontrei datas na mensagem. Confira se as datas estão no formato 23/12.");return}
+  let info=`Encontrei ${leitura.length} unidade(s) com datas de ${nomeMes(m)}. Desmarque o que não quiser salvar.`;
+  if(foraMes.size) info+=` Atenção: ignorei ${foraMes.size} data(s) de outro mês (${[...foraMes].slice(0,4).join(", ")}${foraMes.size>4?"…":""}). Confira se o mês selecionado lá em cima está certo.`;
+  $("colarInfo").textContent=info;
+  const temPar=leitura.some(x=>x.grupos["Par"]);
+  $("colarLista").innerHTML=(temPar?`<div class="imp-row warn"><small>Nos PS e hospitais, dia <b>par</b> foi para o Plantão Par e dia <b>ímpar</b> para o Plantão Ímpar. Os dias também entram para o ADM, onde houver. Confira abaixo.</small></div>`:"")+
+    leitura.map((x,i)=>`<div class="imp-row"><label><input type="checkbox" data-i="${i}" checked><span><b>${esc(x.u)}</b>
+      ${Object.entries(x.grupos).map(([g,ds])=>`<small>${esc(gruposDe(x.u).length===1?"Dias":ROTULO_G[g]||g)}:</small><div class="chipline">${ds.length?ds.map(d=>`<span>${esc(dataCurta(d))}</span>`).join(""):'<span style="background:#eef1ef;color:#93a198">nenhum</span>'}</div>`).join("")}
+      <div class="orig">“${esc(x.orig.join(" / "))}”</div></span></label></div>`).join("")+
+    (naoAchei.length?`<div class="imp-row warn"><b>Não reconheci estas linhas</b><small>Cadastre essas unidades pelo calendário.</small>${naoAchei.map(l=>`<div class="orig">“${esc(l)}”</div>`).join("")}</div>`:"");
+  $("colarPasso1").hidden=true;$("colarPasso2").hidden=false;
+};
+$("colarSalvar").onclick=async()=>{
+  const marcados=[...document.querySelectorAll("#colarLista input[data-i]:checked")].map(c=>leitura[+c.dataset.i]);
+  if(!marcados.length){toast("Nenhuma unidade marcada.");return}
+  const b=$("colarSalvar");b.disabled=true;b.textContent="Salvando…";let ok=0,erro=0;
+  for(const x of marcados) for(const[g,ds] of Object.entries(x.grupos)){
+    const lista=[...new Set([...datasServidor(x.u,g),...ds])].sort();     /* soma com o que já existe, sem apagar nada */
+    try{await rpc("bemviver_admin_salvar_datas",{senha,p_mes_id:mesId,p_unidade:x.u,p_grupo:g,p_datas:lista});selLocal.delete(x.u+"|"+g);ok++}catch(e){erro++}
+  }
+  try{const[ds,m]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
+  b.disabled=false;b.textContent="Salvar datas marcadas";$("mColar").classList.remove("on");$("colarTexto").value="";
+  datasUnidade="";montar();
+  toast(erro?`Salvo com ${erro} erro(s). Confira as unidades pendentes.`:`Pronto! Datas de ${marcados.length} unidade(s) salvas.`);
+};
 
 /* ---------- AGENDA ---------- */
 let planUnidade="";
