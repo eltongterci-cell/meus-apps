@@ -3,107 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>📝 Inscreva-se Quick-Massage | Programa Bem+VIVER</title>
+<meta name="theme-color" content="#006633">
+<title>Quick Massage · Programa Bem+VIVER | MedSênior</title>
+<link rel="icon" href="logo-medsenior.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --primary:#03787c;      /* tema padrão do Microsoft Forms */
-    --primary-dark:#025c5f;
-    --text:#242424;
-    --muted:#605e5c;
-    --border:#c8c6c4;
-    --req:#a4262c;
-    --bg:#f3f2f1;
+    --green:#006633;        /* verde escuro MedSênior */
+    --green-700:#00552a;
+    --lime:#80a517;         /* verde-folha MedSênior */
+    --lime-50:#f3f8e6;
+    --mint:#e8f3ec;
+    --ink:#1d2b22;
+    --muted:#5f6f64;
+    --line:#dfe7e1;
+    --bg:#f4f7f2;
+    --red:#b42318;
+    --amber:#b7791f;
+    --radius:14px;
   }
-  *{box-sizing:border-box}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
-  body{
-    font-family:"Segoe UI","Segoe UI Web (West European)",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
-    background:var(--bg);color:var(--text);font-size:15px;line-height:1.45;
-  }
-  .banner{height:10px;background:var(--primary)}
-  .wrap{max-width:780px;margin:0 auto;padding:24px 16px 48px}
-  .card{background:#fff;border-radius:4px;box-shadow:0 1.6px 3.6px rgba(0,0,0,.13),0 .3px .9px rgba(0,0,0,.11);padding:36px 40px 40px}
-  @media (max-width:600px){.wrap{padding:0 0 32px}.card{border-radius:0;padding:24px 18px 32px;box-shadow:none}}
-  h1{font-size:26px;font-weight:600;margin:0 0 14px;line-height:1.3}
-  .desc ul{margin:0 0 18px;padding-left:20px;font-size:14px;color:var(--text)}
-  .desc b{font-weight:600}
-  .reqnote{color:var(--req);font-size:13px;margin:8px 0 6px}
-  .namenote{font-size:13px;margin:18px 0 6px}
-  .namenote span,.q-title .ast{color:var(--req)}
-  input[type=text],input[type=tel],textarea{
-    width:100%;max-width:420px;border:1px solid var(--border);border-radius:2px;
-    padding:8px 10px;font:inherit;color:var(--text);background:#fff;outline:none
-  }
-  textarea{max-width:100%;min-height:72px;resize:vertical}
-  input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
-  .section-title{font-size:18px;font-weight:600;margin:34px 0 10px;letter-spacing:.2px}
-  .section-body{font-size:14px;margin:0 0 6px}
-  .section-body b{font-weight:600}
-  .q{margin-top:34px}
+  body{font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5}
+
+  /* topo */
+  .topbar{background:#fff;border-bottom:1px solid var(--line)}
+  .topbar .in{max-width:720px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .topbar img{height:34px;width:auto;display:block}
+  .topbar .tag{font-size:12px;font-weight:600;color:var(--green);background:var(--mint);padding:5px 10px;border-radius:999px;white-space:nowrap}
+
+  .hero{position:relative;overflow:hidden;color:#fff;
+    background:radial-gradient(120% 140% at 100% 0%,#0f7a45 0%,var(--green) 45%,#004d26 100%)}
+  .hero .in{position:relative;max-width:720px;margin:0 auto;padding:36px 20px 86px}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#d6eaa0}
+  .hero .eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(128,165,23,.25)}
+  .hero h1{font-size:40px;line-height:1.05;font-weight:800;margin:12px 0 10px;letter-spacing:-.5px}
+  .hero p{margin:0;max-width:470px;font-size:17px;color:#e3efe7}
+  .hero .leaf{position:absolute;right:-40px;bottom:-30px;width:300px;opacity:.16;pointer-events:none}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .chips span{font-size:13px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 12px;border-radius:999px}
+  @media (max-width:560px){.hero h1{font-size:32px}.hero .in{padding:28px 20px 76px}.hero p{font-size:16px}}
+
+  /* cartão */
+  .wrap{max-width:720px;margin:-56px auto 0;padding:0 14px 40px;position:relative}
+  .card{background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,60,30,.08),0 1px 3px rgba(0,60,30,.06);padding:30px 28px 32px}
+  @media (max-width:560px){.card{padding:22px 18px 26px;border-radius:18px}}
+
+  .notice{display:flex;gap:12px;background:var(--lime-50);border:1px solid #dbe8b5;border-radius:12px;padding:14px 16px;font-size:14.5px;color:#3d4a12}
+  .notice svg{flex:none;margin-top:2px}
+  .notice b{font-weight:700}
+  .reqnote{font-size:13px;color:var(--muted);margin:18px 0 0}
+  .reqnote span,.q-title .ast{color:var(--red)}
+
+  .q{margin-top:26px;animation:in .25s ease}
   .q.hidden{display:none}
-  .q-title{font-size:16px;margin:0 0 12px;display:flex;gap:6px}
-  .q-num{flex:none}
-  .opts{display:flex;flex-direction:column;gap:4px;padding-left:2px}
-  .opt{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:4px;cursor:pointer;font-size:14px;user-select:none}
-  .opt:hover{background:#f3f2f1}
+  @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .q-title{font-size:17px;font-weight:700;margin:0 0 12px;display:flex;gap:8px;align-items:baseline;color:var(--ink)}
+  .q-num{flex:none;display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:8px;background:var(--mint);color:var(--green);font-size:13px;font-weight:800}
+  .q-num:empty{display:none}
+
+  input[type=text],input[type=tel]{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font:inherit;font-size:16px;color:var(--ink);background:#fbfcfa;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+  input::placeholder{color:#9aa79e}
+  input:focus{border-color:var(--green);background:#fff;box-shadow:0 0 0 4px rgba(0,102,51,.10)}
+
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media (max-width:560px){.opts{grid-template-columns:1fr}}
+  .opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;font-size:15.5px;font-weight:500;user-select:none;background:#fff;transition:border-color .15s,background .15s}
+  .opt:hover{border-color:#b9cdbf}
   .opt input{position:absolute;opacity:0;pointer-events:none}
-  .radio{width:20px;height:20px;border:1px solid #323130;border-radius:50%;flex:none;display:grid;place-items:center;background:#fff}
-  .opt input:checked + .radio{border-color:var(--primary)}
-  .opt input:checked + .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--primary)}
-  .opt input:focus-visible + .radio{outline:2px solid var(--primary);outline-offset:2px}
-  .err{color:var(--req);font-size:13px;margin-top:6px;display:none}
+  .radio{width:20px;height:20px;border:2px solid #9fb2a5;border-radius:50%;flex:none;display:grid;place-items:center;background:#fff;transition:border-color .15s}
+  .opt:has(input:checked){border-color:var(--green);background:var(--mint)}
+  .opt input:checked + .radio{border-color:var(--green)}
+  .opt input:checked + .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--green)}
+  .opt input:focus-visible + .radio{outline:3px solid rgba(0,102,51,.3);outline-offset:2px}
+
+  .err{color:var(--red);font-size:13.5px;font-weight:500;margin-top:8px;display:none}
   .q.invalid .err{display:block}
-  .q.invalid input[type=text],.q.invalid input[type=tel],.q.invalid textarea{border-color:var(--req)}
-  .actions{margin-top:40px}
-  .btn{background:var(--primary);color:#fff;border:0;border-radius:4px;padding:10px 28px;font:inherit;font-weight:600;cursor:pointer;min-width:120px}
-  .btn:hover{background:var(--primary-dark)}
-  .btn:disabled{opacity:.6;cursor:default}
-  .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:22px;padding:0 12px}
-  .done{text-align:center;padding:30px 10px}
-  .done .check{width:64px;height:64px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;margin:0 auto 18px;font-size:34px}
-  .done h2{font-size:20px;font-weight:600;margin:0 0 8px}
-  .done p{color:var(--muted);margin:0 0 20px}
-  .link{color:var(--primary);background:none;border:0;font:inherit;cursor:pointer;text-decoration:underline}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#323130;color:#fff;padding:10px 16px;border-radius:4px;font-size:14px;display:none;max-width:90%}
-  .slots-note{font-size:13px;color:var(--muted);margin:-6px 0 12px}
-  .slot-group{margin:6px 0 14px}
-  .slot-group h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px}
-  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
-  .slot{border:1px solid var(--border);border-radius:4px;background:#fff;padding:9px 6px;font:inherit;font-size:14px;cursor:pointer;color:var(--text);text-align:center;line-height:1.2}
-  .slot small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
-  .slot:hover{border-color:var(--primary)}
-  .slot.sel{background:var(--primary);border-color:var(--primary);color:#fff}
-  .slot.sel small{color:#e6f4f4}
-  .loading{font-size:14px;color:var(--muted);padding:6px 0}
-  .reserva-box{border:1px solid #f1c21b;background:#fff8e1;border-radius:4px;padding:12px 14px;font-size:14px}
+  .q.invalid input[type=text],.q.invalid input[type=tel]{border-color:var(--red);background:#fff}
+
+  /* horários */
+  .slots-note{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin:-4px 0 14px}
+  .slot-group{margin:4px 0 16px}
+  .slot-group h4{font-size:12px;font-weight:700;color:var(--green);margin:0 0 8px;text-transform:uppercase;letter-spacing:.7px}
+  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+  .slot{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:11px 6px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;color:var(--ink);text-align:center;line-height:1.15;font-variant-numeric:tabular-nums;transition:all .15s}
+  .slot small{display:block;font-size:11.5px;font-weight:500;color:var(--lime);margin-top:3px}
+  .slot:hover{border-color:var(--green)}
+  .slot.sel{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 6px 14px rgba(0,102,51,.25)}
+  .slot.sel small{color:#d6eaa0}
+  .loading{font-size:14.5px;color:var(--muted);padding:6px 0}
+  .reserva-box{border:1.5px solid #f0d58a;background:#fffaeb;border-radius:12px;padding:14px 16px;font-size:15px;color:#5c4206}
   .reserva-box b{display:block;margin-bottom:4px}
-  .done .check.res{background:#c19c00}
-  .done .resumo{display:inline-block;text-align:left;background:#f3f2f1;border-radius:4px;padding:12px 16px;margin:0 0 20px;color:var(--text);font-size:14px;line-height:1.6}
+
+  .actions{margin-top:34px}
+  .btn{width:100%;background:var(--green);color:#fff;border:0;border-radius:14px;padding:16px 24px;font:inherit;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.2px;box-shadow:0 8px 18px rgba(0,102,51,.22);transition:background .15s,transform .05s}
+  .btn:hover{background:var(--green-700)}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .privacy{font-size:12.5px;color:var(--muted);text-align:center;margin:12px 0 0}
+
+  /* confirmação */
+  .done{text-align:center;padding:40px 22px}
+  .done .check{width:76px;height:76px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin:0 auto 18px;font-size:38px;font-weight:700;box-shadow:0 0 0 10px var(--mint)}
+  .done .check.res{background:var(--amber);box-shadow:0 0 0 10px #fdf1d8}
+  .done h2{font-size:26px;font-weight:800;margin:0 0 6px;color:var(--ink)}
+  .done p{color:var(--muted);margin:0 auto 20px;max-width:440px}
+  .done .resumo{display:inline-block;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 22px;color:var(--ink);font-size:15.5px;line-height:1.7}
+  .link{color:var(--green);background:none;border:0;font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
+  .footer{text-align:center;margin-top:26px;font-size:12.5px;color:var(--muted)}
+  .footer img{height:22px;opacity:.85;display:block;margin:0 auto 6px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14.5px;display:none;max-width:90%;box-shadow:0 10px 24px rgba(0,0,0,.2);z-index:5}
 </style>
 </head>
 <body>
-<div class="banner"></div>
+<header class="topbar"><div class="in">
+  <img src="logo-medsenior.png" alt="MedSênior">
+  <span class="tag">Inscrições abertas</span>
+</div></header>
+
+<section class="hero"><div class="in">
+  <div class="eyebrow"><i></i>Programa Bem+VIVER</div>
+  <h1>Quick Massage</h1>
+  <p>Massagem rápida e localizada que ajuda a aliviar tensões musculares, reduzir o estresse e promover relaxamento.</p>
+  <div class="chips"><span>15 minutos</span><span>Segunda a sexta-feira</span><span>Na sua unidade</span></div>
+  <svg class="leaf" viewBox="0 0 200 200" aria-hidden="true"><path fill="#fff" d="M188 20C120 18 60 40 34 92c-18 36-10 78 18 96 6-40 26-78 64-104-30 30-46 64-50 104 52-6 96-46 116-104 8-24 8-48 6-64z"/></svg>
+</div></section>
+
 <div class="wrap">
   <div class="card" id="formCard">
-    <h1>📝 Inscreva-se Quick-Massage | Programa Bem+VIVER</h1>
-    <div class="desc">
-      <ul><li><b>Quick Massage:</b> massagem rápida e localizada que ajuda a aliviar tensões musculares, reduzir o estresse e promover relaxamento.</li></ul>
+    <div class="notice">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b8a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+      <div><b>Importante:</b> Caso o número de inscritos ultrapasse a quantidade de vagas disponíveis, será realizado um sorteio entre os colaboradores inscritos para definir os participantes da ação.</div>
     </div>
-    <div class="reqnote">* Obrigatória</div>
+    <div class="reqnote"><span>*</span> Obrigatória</div>
 
     <form id="form" novalidate>
       <div class="q" data-id="nome">
-        <div class="namenote"><span>*</span> Este formulário registrará seu nome. Preencha-o.</div>
-        <input type="text" name="nome" autocomplete="name" maxlength="120">
+        <div class="q-title"><span class="q-num"></span><span>Nome completo <span class="ast">*</span></span></div>
+        <input type="text" name="nome" autocomplete="name" maxlength="120" placeholder="Digite seu nome completo">
         <div class="err">Esta pergunta é obrigatória.</div>
       </div>
-
-      <div class="section-title">INSTRUÇÕES</div>
-      <p class="section-body"><b>Importante:</b> Caso o número de inscritos ultrapasse a quantidade de vagas disponíveis, será realizado um sorteio entre os colaboradores inscritos para definir os participantes da ação.</p>
 
       <div id="questions"></div>
 
       <div class="actions"><button class="btn" type="submit" id="send">Enviar</button></div>
+      <p class="privacy">Seus dados são usados apenas para organizar os atendimentos do Programa Bem+VIVER.</p>
     </form>
   </div>
 
@@ -112,10 +160,10 @@
     <h2 id="doneTitle">Inscrição confirmada!</h2>
     <p id="doneText"></p>
     <div class="resumo" id="doneResumo"></div><br>
-    <button class="link" id="again">Enviar outra resposta</button>
+    <button class="link" id="again">Fazer outra inscrição</button>
   </div>
 
-  <div class="footer">Os dados que você enviar serão enviados ao proprietário do formulário.</div>
+  <div class="footer"><img src="logo-medsenior.png" alt="">Programa Bem+VIVER</div>
 </div>
 <div class="toast" id="toast"></div>
 
