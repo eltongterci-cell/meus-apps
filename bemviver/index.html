@@ -65,6 +65,20 @@
   .done p{color:var(--muted);margin:0 0 20px}
   .link{color:var(--primary);background:none;border:0;font:inherit;cursor:pointer;text-decoration:underline}
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#323130;color:#fff;padding:10px 16px;border-radius:4px;font-size:14px;display:none;max-width:90%}
+  .slots-note{font-size:13px;color:var(--muted);margin:-6px 0 12px}
+  .slot-group{margin:6px 0 14px}
+  .slot-group h4{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px;text-transform:uppercase;letter-spacing:.3px}
+  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+  .slot{border:1px solid var(--border);border-radius:4px;background:#fff;padding:9px 6px;font:inherit;font-size:14px;cursor:pointer;color:var(--text);text-align:center;line-height:1.2}
+  .slot small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+  .slot:hover{border-color:var(--primary)}
+  .slot.sel{background:var(--primary);border-color:var(--primary);color:#fff}
+  .slot.sel small{color:#e6f4f4}
+  .loading{font-size:14px;color:var(--muted);padding:6px 0}
+  .reserva-box{border:1px solid #f1c21b;background:#fff8e1;border-radius:4px;padding:12px 14px;font-size:14px}
+  .reserva-box b{display:block;margin-bottom:4px}
+  .done .check.res{background:#c19c00}
+  .done .resumo{display:inline-block;text-align:left;background:#f3f2f1;border-radius:4px;padding:12px 16px;margin:0 0 20px;color:var(--text);font-size:14px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -94,9 +108,10 @@
   </div>
 
   <div class="card done" id="doneCard" style="display:none">
-    <div class="check">✓</div>
-    <h2>Obrigado!</h2>
-    <p>Suas respostas foram enviadas com sucesso.</p>
+    <div class="check" id="doneIcon">✓</div>
+    <h2 id="doneTitle">Inscrição confirmada!</h2>
+    <p id="doneText"></p>
+    <div class="resumo" id="doneResumo"></div><br>
     <button class="link" id="again">Enviar outra resposta</button>
   </div>
 
@@ -105,169 +120,207 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ============ CONFIGURAÇÃO ============
-   Preencher com os dados do projeto Supabase. Enquanto estiver vazio,
-   o formulário funciona em modo de teste (não salva nada). */
 const SUPABASE_URL = "https://pplhwupjbrtzqdwzlcem.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
 
-/* Unidades onde existe plantão (perguntam o turno). Ajuste aqui se precisar. */
-const UNIDADES_COM_PLANTAO = [
-  "Hospital Vitória","PS Glória- CDM - Oftalmo","Centro - ES",
-  "PS- Taguatinga Sul","PS- SIG Brasília",
-  "PS Gutierrez","Hospital Pampulha",
-  "PS Botafogo","PS Barra da Tijuca","PS Campo Grande"
-];
-/* Unidade que pergunta o andar */
-const UNIDADES_COM_ANDAR = ["Centro - ES"];
+/* Unidades com plantão Par/Ímpar e unidade com andar */
+const UNIDADES_PLANTAO = ["Hospital Vitória","PS Glória- CDM - Oftalmo","PS- Taguatinga Sul","PS- SIG Brasília",
+  "PS Gutierrez","Hospital Pampulha","PS Botafogo","PS Barra da Tijuca","PS Campo Grande"];
+const UNIDADES_ANDAR = ["Centro - ES"];
+const EXTRAS = {"ADM":"Horários ADM","Extra":"Horários extras"};
 
-/* ============ PERGUNTAS (iguais ao Microsoft Forms) ============ */
 const Q = [
-  {n:1, id:"estado", t:"Selecione o estado em que você trabalha", type:"radio", req:true,
+  {id:"estado", t:"Selecione o estado em que você trabalha", type:"radio",
    o:["Distrito Federal","Espírito Santo","Minas Gerais","Rio de Janeiro","São Paulo","Sul","Pernambuco"]},
-  {n:2, id:"unidade_es", t:"Selecione sua unidade do Espirito Santo", type:"radio", req:true,
+  {id:"unidade_es", t:"Selecione sua unidade do Espirito Santo", type:"radio",
    o:["Hospital Vitória","PS Glória- CDM - Oftalmo","Matriz","Centro - ES","Bressan","Unidade Jerônimo","Unidade Serra"],
    show:a=>a.estado==="Espírito Santo"},
-  {n:3, id:"unidade_df", t:"Selecione sua unidade do Distrito Federal", type:"radio", req:true,
+  {id:"unidade_df", t:"Selecione sua unidade do Distrito Federal", type:"radio",
    o:["PS- Taguatinga Sul","PS- SIG Brasília","Ambulatório Asa Sul","Unidade Águas Claras","Taguatinga Norte - Ambulatório","Comercial DF"],
    show:a=>a.estado==="Distrito Federal"},
-  {n:4, id:"unidade_mg", t:"Selecione sua unidade de Minas Gerais", type:"radio", req:true,
+  {id:"unidade_mg", t:"Selecione sua unidade de Minas Gerais", type:"radio",
    o:["PS Gutierrez","Hospital Pampulha","Funcionários","Amb. Contagem","Comercial MG","Savassi"],
    show:a=>a.estado==="Minas Gerais"},
-  {n:5, id:"unidade_rj", t:"Selecione sua Unidade do Rio de Janeiro", type:"radio", req:true,
+  {id:"unidade_rj", t:"Selecione sua Unidade do Rio de Janeiro", type:"radio",
    o:["PS Botafogo","PS Barra da Tijuca","PS Campo Grande","Unidade Botafogo","Unidade Tijuca","Unidade Niterói","Comercial RJ"],
    show:a=>a.estado==="Rio de Janeiro"},
-  {n:6, id:"unidade_sp", t:"Selecione sua Unidade de São Paulo", type:"radio", req:true,
+  {id:"unidade_sp", t:"Selecione sua Unidade de São Paulo", type:"radio",
    o:["Unidade Av. Brasil","Unidade Av. Paulista","Unidade Tatuapé","Unidade Santana","Unidade Sumarézinho","Unidade Campinas"],
    show:a=>a.estado==="São Paulo"},
-  {n:7, id:"unidade_sul", t:"Selecione sua unidade do Sul", type:"radio", req:true,
-   o:["Ambulatório Curitiba","Ambulatório Porto Alegre"],
-   show:a=>a.estado==="Sul"},
-  {n:8, id:"andar", t:"Você trabalha em qual andar?", type:"radio", req:true,
-   o:["Segundo","Terceiro"], show:a=>UNIDADES_COM_ANDAR.includes(unidade(a))},
-  {n:9, id:"turno", t:"Qual é o seu turno?", type:"radio", req:true,
-   o:["ADM","Matutino (plantão)","Noturno (plantão)"], show:a=>UNIDADES_COM_PLANTAO.includes(unidade(a))},
-  {n:10, id:"periodo_adm", t:"Qual período você atua no administrativo?", type:"radio", req:true,
-   o:["Manhã","Tarde","Ambos"], show:a=>visivel("turno",a) && a.turno==="ADM"},
-  {n:11, id:"plantao", t:"Quando você estará de plantão no mês de NOVEMBRO?", type:"radio", req:true,
-   o:["Par","Ímpar"], show:a=>visivel("turno",a) && (a.turno==="Matutino (plantão)"||a.turno==="Noturno (plantão)")},
-  {n:12, id:"setor", t:"Qual é o seu setor?", type:"text", req:true},
-  {n:13, id:"celular", t:"Informe o número do seu celular com DDD", type:"tel", req:true},
-  {n:14, id:"observacao", t:"Alguma observação?", type:"textarea", req:false},
+  {id:"unidade_sul", t:"Selecione sua unidade do Sul", type:"radio",
+   o:["Ambulatório Curitiba","Ambulatório Porto Alegre"], show:a=>a.estado==="Sul"},
+  {id:"andar", t:"Você trabalha em qual andar?", type:"radio", o:["Segundo","Terceiro"],
+   show:a=>UNIDADES_ANDAR.includes(unidade(a))},
+  {id:"plantao", t:"Quando você estará de plantão no mês de NOVEMBRO?", type:"radio", o:["Par","Ímpar"],
+   show:a=>UNIDADES_PLANTAO.includes(unidade(a))},
+  {id:"horario", t:"Escolha o seu horário", type:"horario", show:a=>prontoParaHorario(a)},
+  {id:"setor", t:"Qual é o seu setor?", type:"text"},
+  {id:"celular", t:"Informe o número do seu celular com DDD", type:"tel"},
 ];
-
 const byId = Object.fromEntries(Q.map(q=>[q.id,q]));
 function unidade(a){
+  if(a.estado==="Pernambuco") return "Recife";
   const m={"Espírito Santo":"unidade_es","Distrito Federal":"unidade_df","Minas Gerais":"unidade_mg",
            "Rio de Janeiro":"unidade_rj","São Paulo":"unidade_sp","Sul":"unidade_sul"}[a.estado];
   return m ? a[m]||"" : "";
 }
+function grupoBase(a){
+  const u=unidade(a);
+  if(UNIDADES_PLANTAO.includes(u)) return a.plantao||"";
+  if(UNIDADES_ANDAR.includes(u)) return a.andar ? a.andar+" andar" : "";
+  return u ? "Geral" : "";
+}
+function prontoParaHorario(a){return !!unidade(a) && !!grupoBase(a)}
 function visivel(id,a){const q=byId[id];return !q.show || q.show(a)}
 
-/* ============ MONTAGEM DA TELA ============ */
+/* ============ TELA ============ */
 const box=document.getElementById("questions");
-const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 for(const q of Q){
   const d=document.createElement("div");
   d.className="q";d.dataset.id=q.id;
-  let h=`<div class="q-title"><span class="q-num">${q.n}.</span><span>${esc(q.t)}${q.req?' <span class="ast">*</span>':''}</span></div>`;
+  let h=`<div class="q-title"><span class="q-num"></span><span>${esc(q.t)} <span class="ast">*</span></span></div>`;
   if(q.type==="radio"){
     h+='<div class="opts" role="radiogroup">'+q.o.map(o=>
       `<label class="opt"><input type="radio" name="${q.id}" value="${esc(o)}"><span class="radio"></span><span>${esc(o)}</span></label>`).join("")+'</div>';
-  }else if(q.type==="textarea"){
-    h+=`<textarea name="${q.id}" placeholder="Insira sua resposta" maxlength="1000"></textarea>`;
+  }else if(q.type==="horario"){
+    h+=`<div class="slots-note">Atendimentos de segunda a sexta-feira. Cada sessão dura 15 minutos.</div><div id="slotBox"></div>`;
   }else{
     h+=`<input type="${q.type==='tel'?'tel':'text'}" name="${q.id}" placeholder="Insira sua resposta" maxlength="${q.type==='tel'?20:120}" ${q.type==='tel'?'inputmode="tel" autocomplete="tel"':''}>`;
   }
-  h+=`<div class="err">${q.type==='tel'?'Informe um celular válido com DDD.':'Esta pergunta é obrigatória.'}</div>`;
+  const msg={tel:"Informe um celular válido com DDD.",horario:"Escolha um horário."}[q.type]||"Esta pergunta é obrigatória.";
+  h+=`<div class="err">${msg}</div>`;
   d.innerHTML=h;box.appendChild(d);
 }
 
 const form=document.getElementById("form");
+let horarioSel=null, modoReserva=false, chaveSlots="", slotsCache=[];
 function answers(){
   const a={};const fd=new FormData(form);
   for(const [k,v] of fd.entries()) a[k]=String(v).trim();
   return a;
 }
 function refresh(){
-  const a=answers();
+  const a=answers();let n=0;
   for(const q of Q){
     const el=box.querySelector(`.q[data-id="${q.id}"]`);
     const on=visivel(q.id,a);
     el.classList.toggle("hidden",!on);
-    if(!on){ el.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false); el.classList.remove("invalid"); }
+    if(on){n++;el.querySelector(".q-num").textContent=n+"."}
+    else{ el.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false); el.classList.remove("invalid"); }
   }
+  const chave=prontoParaHorario(a)?unidade(a)+"|"+grupoBase(a):"";
+  if(chave!==chaveSlots){chaveSlots=chave;horarioSel=null;modoReserva=false;if(chave)carregarSlots();}
+  atualizarBotao();
 }
+function atualizarBotao(){document.getElementById("send").textContent=modoReserva?"Entrar na lista de reserva":"Enviar"}
 form.addEventListener("change",e=>{refresh();const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
 form.addEventListener("input",e=>{const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
 
-/* máscara do celular: (27) 99999-9999 */
+async function rpc(fn,body){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",
+    headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const t=await r.text();
+  if(!r.ok){let m="erro";try{m=JSON.parse(t).message||m}catch(e){}throw new Error(m)}
+  return t?JSON.parse(t):null;
+}
+const fim=h=>{const[H,M]=h.split(":").map(Number);const t=H*60+M+15;return `${String(Math.floor(t/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")}`};
+
+async function carregarSlots(){
+  const sb=document.getElementById("slotBox");const a=answers();const chave=chaveSlots;
+  sb.innerHTML='<div class="loading">Carregando horários disponíveis...</div>';
+  try{
+    const lista=await rpc("bemviver_vagas",{p_unidade:unidade(a)});
+    if(chave!==chaveSlots) return;
+    const base=grupoBase(a);
+    slotsCache=lista.filter(s=>(s.grupo===base||EXTRAS[s.grupo])&&s.livres>0);
+    desenharSlots(base);
+  }catch(e){
+    sb.innerHTML='<div class="loading">Não foi possível carregar os horários. <button type="button" class="link" id="retry">Tentar de novo</button></div>';
+    document.getElementById("retry").onclick=carregarSlots;
+  }
+}
+function desenharSlots(base){
+  const sb=document.getElementById("slotBox");
+  if(!slotsCache.length){
+    modoReserva=true;horarioSel=null;atualizarBotao();
+    sb.innerHTML=`<div class="reserva-box"><b>Os horários estão preenchidos.</b>Você entrará na <b style="display:inline">LISTA DE RESERVA</b>. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo celular informado.</div>`;
+    return;
+  }
+  modoReserva=false;atualizarBotao();
+  const grupos={};slotsCache.forEach(s=>(grupos[s.grupo]=grupos[s.grupo]||[]).push(s));
+  const ordem=Object.keys(grupos).sort((x,y)=>(EXTRAS[x]?1:0)-(EXTRAS[y]?1:0));
+  const titulo=g=>EXTRAS[g]||(g==="Par"||g==="Ímpar"?"Plantão "+g:g==="Geral"?"":g);
+  sb.innerHTML=ordem.map(g=>`<div class="slot-group">${titulo(g)&&(ordem.length>1||g!=="Geral")?`<h4>${esc(titulo(g))}</h4>`:""}<div class="slots">`+
+    grupos[g].map(s=>`<button type="button" class="slot${horarioSel===s.horario_id?" sel":""}" data-id="${s.horario_id}">${s.hora} – ${fim(s.hora)}${s.livres>1?`<small>${s.livres} vagas</small>`:""}</button>`).join("")+
+    `</div></div>`).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".slot");if(!b)return;
+  horarioSel=+b.dataset.id;
+  document.querySelectorAll(".slot").forEach(x=>x.classList.toggle("sel",x===b));
+  b.closest(".q").classList.remove("invalid");
+});
+
+/* máscara do celular */
 const tel=form.querySelector('input[name="celular"]');
 tel.addEventListener("input",()=>{
-  let d=tel.value.replace(/\D/g,"").slice(0,11);
-  let s=d;
+  let d=tel.value.replace(/\D/g,"").slice(0,11);let s=d;
   if(d.length>2) s=`(${d.slice(0,2)}) `+d.slice(2);
   if(d.length>7) s=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;
   tel.value=s;
 });
-
 refresh();
 
 /* ============ ENVIO ============ */
 function validar(){
   const a=answers();let first=null;
-  const nomeBox=form.querySelector('.q[data-id="nome"]');
-  const okNome=(a.nome||"").length>=3;
-  nomeBox.classList.toggle("invalid",!okNome); if(!okNome) first=nomeBox;
+  const mark=(el,ok)=>{el.classList.toggle("invalid",!ok);if(!ok&&!first)first=el};
+  mark(form.querySelector('.q[data-id="nome"]'),(a.nome||"").length>=3);
   for(const q of Q){
     const el=box.querySelector(`.q[data-id="${q.id}"]`);
-    if(!visivel(q.id,a)||!q.req){el.classList.remove("invalid");continue}
+    if(!visivel(q.id,a)){el.classList.remove("invalid");continue}
     let ok=!!a[q.id];
     if(q.type==="tel"){const d=(a[q.id]||"").replace(/\D/g,"");ok=d.length===11&&d[2]==="9"}
-    el.classList.toggle("invalid",!ok);
-    if(!ok&&!first) first=el;
+    if(q.type==="horario") ok=modoReserva||!!horarioSel;
+    mark(el,ok);
   }
   if(first){first.scrollIntoView({behavior:"smooth",block:"center"});return null}
-  const tud = d=>d||null;
-  return {
-    nome:a.nome, estado:a.estado, unidade:tud(unidade(a)),
-    andar:visivel("andar",a)?tud(a.andar):null,
-    turno:visivel("turno",a)?tud(a.turno):null,
-    periodo_adm:visivel("periodo_adm",a)?tud(a.periodo_adm):null,
-    plantao:visivel("plantao",a)?tud(a.plantao):null,
-    setor:a.setor, celular:a.celular.replace(/\D/g,""),
-    observacao:tud(a.observacao)
-  };
+  return {nome:a.nome,estado:a.estado,unidade:unidade(a),plantao:a.plantao||null,
+    andar:a.andar||null,horario_id:modoReserva?null:horarioSel,setor:a.setor,celular:a.celular};
 }
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",4000)}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",5000)}
 
 form.addEventListener("submit",async e=>{
   e.preventDefault();
-  const row=validar(); if(!row) return;
+  const d=validar(); if(!d) return;
   const btn=document.getElementById("send");btn.disabled=true;btn.textContent="Enviando...";
   try{
-    if(SUPABASE_URL){
-      const r=await fetch(`${SUPABASE_URL}/rest/v1/bemviver_inscricoes`,{
-        method:"POST",
-        headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
-        body:JSON.stringify(row)
-      });
-      if(!r.ok){
-        const txt=await r.text();
-        if(r.status===409||txt.includes("23505")||txt.includes("duplicate")) throw new Error("dup");
-        throw new Error(txt);
-      }
+    const r=await rpc("bemviver_inscrever",{d});
+    const grp=r.grupo==="Par"||r.grupo==="Ímpar"?"Plantão "+r.grupo:(r.grupo==="Geral"?"":r.grupo);
+    if(r.status==="agendado"){
+      document.getElementById("doneIcon").className="check";document.getElementById("doneIcon").textContent="✓";
+      document.getElementById("doneTitle").textContent="Inscrição confirmada!";
+      document.getElementById("doneText").textContent="Guarde as informações do seu atendimento:";
+      document.getElementById("doneResumo").innerHTML=`<b>${esc(d.nome)}</b><br>${esc(d.unidade)}${d.andar?" · "+esc(d.andar)+" andar":""}<br>Horário: <b>${r.hora} – ${fim(r.hora)}</b>${grp?" · "+esc(grp):""}<br>Atendimentos de segunda a sexta-feira.`;
     }else{
-      console.log("Modo de teste – resposta:",row);
+      document.getElementById("doneIcon").className="check res";document.getElementById("doneIcon").textContent="!";
+      document.getElementById("doneTitle").textContent="Você está na lista de reserva";
+      document.getElementById("doneText").textContent="Todos os horários da sua unidade estavam preenchidos. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo seu celular.";
+      document.getElementById("doneResumo").innerHTML=`<b>${esc(d.nome)}</b><br>${esc(d.unidade)}${d.plantao?" · Plantão "+esc(d.plantao):""}${d.andar?" · "+esc(d.andar)+" andar":""}<br>Situação: <b>LISTA DE RESERVA</b>`;
     }
     document.getElementById("formCard").style.display="none";
     document.getElementById("doneCard").style.display="block";
     window.scrollTo(0,0);
   }catch(err){
-    toast(err.message==="dup"?"Este celular já está inscrito.":"Não foi possível enviar. Verifique a internet e tente novamente.");
-  }finally{btn.disabled=false;btn.textContent="Enviar"}
+    const m=err.message;
+    if(m==="horario_ocupado"){toast("Esse horário acabou de ser preenchido por outra pessoa. Escolha outro.");chaveSlots="";refresh();}
+    else if(m==="ha_vagas"){toast("Abriu uma vaga! Escolha um horário.");chaveSlots="";refresh();}
+    else if(m==="duplicado") toast("Este celular já está inscrito.");
+    else toast("Não foi possível enviar. Verifique a internet e tente novamente.");
+  }finally{btn.disabled=false;atualizarBotao()}
 });
-document.getElementById("again").onclick=()=>{form.reset();refresh();
+document.getElementById("again").onclick=()=>{form.reset();chaveSlots="";refresh();
   document.getElementById("doneCard").style.display="none";document.getElementById("formCard").style.display="block";window.scrollTo(0,0)};
 </script>
 </body>
