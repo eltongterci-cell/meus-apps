@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📝 Inscreva-se Quick-Massage | Programa Bem+VIVER</title>
+<style>
+  :root{
+    --primary:#03787c;      /* tema padrão do Microsoft Forms */
+    --primary-dark:#025c5f;
+    --text:#242424;
+    --muted:#605e5c;
+    --border:#c8c6c4;
+    --req:#a4262c;
+    --bg:#f3f2f1;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:"Segoe UI","Segoe UI Web (West European)",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:var(--bg);color:var(--text);font-size:15px;line-height:1.45;
+  }
+  .banner{height:10px;background:var(--primary)}
+  .wrap{max-width:780px;margin:0 auto;padding:24px 16px 48px}
+  .card{background:#fff;border-radius:4px;box-shadow:0 1.6px 3.6px rgba(0,0,0,.13),0 .3px .9px rgba(0,0,0,.11);padding:36px 40px 40px}
+  @media (max-width:600px){.wrap{padding:0 0 32px}.card{border-radius:0;padding:24px 18px 32px;box-shadow:none}}
+  h1{font-size:26px;font-weight:600;margin:0 0 14px;line-height:1.3}
+  .desc ul{margin:0 0 18px;padding-left:20px;font-size:14px;color:var(--text)}
+  .desc b{font-weight:600}
+  .reqnote{color:var(--req);font-size:13px;margin:8px 0 6px}
+  .namenote{font-size:13px;margin:18px 0 6px}
+  .namenote span,.q-title .ast{color:var(--req)}
+  input[type=text],input[type=tel],textarea{
+    width:100%;max-width:420px;border:1px solid var(--border);border-radius:2px;
+    padding:8px 10px;font:inherit;color:var(--text);background:#fff;outline:none
+  }
+  textarea{max-width:100%;min-height:72px;resize:vertical}
+  input:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+  .section-title{font-size:18px;font-weight:600;margin:34px 0 10px;letter-spacing:.2px}
+  .section-body{font-size:14px;margin:0 0 6px}
+  .section-body b{font-weight:600}
+  .q{margin-top:34px}
+  .q.hidden{display:none}
+  .q-title{font-size:16px;margin:0 0 12px;display:flex;gap:6px}
+  .q-num{flex:none}
+  .opts{display:flex;flex-direction:column;gap:4px;padding-left:2px}
+  .opt{display:flex;align-items:center;gap:12px;padding:7px 8px;border-radius:4px;cursor:pointer;font-size:14px;user-select:none}
+  .opt:hover{background:#f3f2f1}
+  .opt input{position:absolute;opacity:0;pointer-events:none}
+  .radio{width:20px;height:20px;border:1px solid #323130;border-radius:50%;flex:none;display:grid;place-items:center;background:#fff}
+  .opt input:checked + .radio{border-color:var(--primary)}
+  .opt input:checked + .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--primary)}
+  .opt input:focus-visible + .radio{outline:2px solid var(--primary);outline-offset:2px}
+  .err{color:var(--req);font-size:13px;margin-top:6px;display:none}
+  .q.invalid .err{display:block}
+  .q.invalid input[type=text],.q.invalid input[type=tel],.q.invalid textarea{border-color:var(--req)}
+  .actions{margin-top:40px}
+  .btn{background:var(--primary);color:#fff;border:0;border-radius:4px;padding:10px 28px;font:inherit;font-weight:600;cursor:pointer;min-width:120px}
+  .btn:hover{background:var(--primary-dark)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:22px;padding:0 12px}
+  .done{text-align:center;padding:30px 10px}
+  .done .check{width:64px;height:64px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;margin:0 auto 18px;font-size:34px}
+  .done h2{font-size:20px;font-weight:600;margin:0 0 8px}
+  .done p{color:var(--muted);margin:0 0 20px}
+  .link{color:var(--primary);background:none;border:0;font:inherit;cursor:pointer;text-decoration:underline}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#323130;color:#fff;padding:10px 16px;border-radius:4px;font-size:14px;display:none;max-width:90%}
+</style>
+</head>
+<body>
+<div class="banner"></div>
+<div class="wrap">
+  <div class="card" id="formCard">
+    <h1>📝 Inscreva-se Quick-Massage | Programa Bem+VIVER</h1>
+    <div class="desc">
+      <ul><li><b>Quick Massage:</b> massagem rápida e localizada que ajuda a aliviar tensões musculares, reduzir o estresse e promover relaxamento.</li></ul>
+    </div>
+    <div class="reqnote">* Obrigatória</div>
+
+    <form id="form" novalidate>
+      <div class="q" data-id="nome">
+        <div class="namenote"><span>*</span> Este formulário registrará seu nome. Preencha-o.</div>
+        <input type="text" name="nome" autocomplete="name" maxlength="120">
+        <div class="err">Esta pergunta é obrigatória.</div>
+      </div>
+
+      <div class="section-title">INSTRUÇÕES</div>
+      <p class="section-body"><b>Importante:</b> Caso o número de inscritos ultrapasse a quantidade de vagas disponíveis, será realizado um sorteio entre os colaboradores inscritos para definir os participantes da ação.</p>
+
+      <div id="questions"></div>
+
+      <div class="actions"><button class="btn" type="submit" id="send">Enviar</button></div>
+    </form>
+  </div>
+
+  <div class="card done" id="doneCard" style="display:none">
+    <div class="check">✓</div>
+    <h2>Obrigado!</h2>
+    <p>Suas respostas foram enviadas com sucesso.</p>
+    <button class="link" id="again">Enviar outra resposta</button>
+  </div>
+
+  <div class="footer">Os dados que você enviar serão enviados ao proprietário do formulário.</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ CONFIGURAÇÃO ============
+   Preencher com os dados do projeto Supabase. Enquanto estiver vazio,
+   o formulário funciona em modo de teste (não salva nada). */
+const SUPABASE_URL = "https://pplhwupjbrtzqdwzlcem.supabase.co";
+const SUPABASE_KEY = "sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
+
+/* Unidades onde existe plantão (perguntam o turno). Ajuste aqui se precisar. */
+const UNIDADES_COM_PLANTAO = [
+  "Hospital Vitória","PS Glória- CDM - Oftalmo","Centro - ES",
+  "PS- Taguatinga Sul","PS- SIG Brasília",
+  "PS Gutierrez","Hospital Pampulha",
+  "PS Botafogo","PS Barra da Tijuca","PS Campo Grande"
+];
+/* Unidade que pergunta o andar */
+const UNIDADES_COM_ANDAR = ["Centro - ES"];
+
+/* ============ PERGUNTAS (iguais ao Microsoft Forms) ============ */
+const Q = [
+  {n:1, id:"estado", t:"Selecione o estado em que você trabalha", type:"radio", req:true,
+   o:["Distrito Federal","Espírito Santo","Minas Gerais","Rio de Janeiro","São Paulo","Sul","Pernambuco"]},
+  {n:2, id:"unidade_es", t:"Selecione sua unidade do Espirito Santo", type:"radio", req:true,
+   o:["Hospital Vitória","PS Glória- CDM - Oftalmo","Matriz","Centro - ES","Bressan","Unidade Jerônimo","Unidade Serra"],
+   show:a=>a.estado==="Espírito Santo"},
+  {n:3, id:"unidade_df", t:"Selecione sua unidade do Distrito Federal", type:"radio", req:true,
+   o:["PS- Taguatinga Sul","PS- SIG Brasília","Ambulatório Asa Sul","Unidade Águas Claras","Taguatinga Norte - Ambulatório","Comercial DF"],
+   show:a=>a.estado==="Distrito Federal"},
+  {n:4, id:"unidade_mg", t:"Selecione sua unidade de Minas Gerais", type:"radio", req:true,
+   o:["PS Gutierrez","Hospital Pampulha","Funcionários","Amb. Contagem","Comercial MG","Savassi"],
+   show:a=>a.estado==="Minas Gerais"},
+  {n:5, id:"unidade_rj", t:"Selecione sua Unidade do Rio de Janeiro", type:"radio", req:true,
+   o:["PS Botafogo","PS Barra da Tijuca","PS Campo Grande","Unidade Botafogo","Unidade Tijuca","Unidade Niterói","Comercial RJ"],
+   show:a=>a.estado==="Rio de Janeiro"},
+  {n:6, id:"unidade_sp", t:"Selecione sua Unidade de São Paulo", type:"radio", req:true,
+   o:["Unidade Av. Brasil","Unidade Av. Paulista","Unidade Tatuapé","Unidade Santana","Unidade Sumarézinho","Unidade Campinas"],
+   show:a=>a.estado==="São Paulo"},
+  {n:7, id:"unidade_sul", t:"Selecione sua unidade do Sul", type:"radio", req:true,
+   o:["Ambulatório Curitiba","Ambulatório Porto Alegre"],
+   show:a=>a.estado==="Sul"},
+  {n:8, id:"andar", t:"Você trabalha em qual andar?", type:"radio", req:true,
+   o:["Segundo","Terceiro"], show:a=>UNIDADES_COM_ANDAR.includes(unidade(a))},
+  {n:9, id:"turno", t:"Qual é o seu turno?", type:"radio", req:true,
+   o:["ADM","Matutino (plantão)","Noturno (plantão)"], show:a=>UNIDADES_COM_PLANTAO.includes(unidade(a))},
+  {n:10, id:"periodo_adm", t:"Qual período você atua no administrativo?", type:"radio", req:true,
+   o:["Manhã","Tarde","Ambos"], show:a=>visivel("turno",a) && a.turno==="ADM"},
+  {n:11, id:"plantao", t:"Quando você estará de plantão no mês de NOVEMBRO?", type:"radio", req:true,
+   o:["Par","Ímpar"], show:a=>visivel("turno",a) && (a.turno==="Matutino (plantão)"||a.turno==="Noturno (plantão)")},
+  {n:12, id:"setor", t:"Qual é o seu setor?", type:"text", req:true},
+  {n:13, id:"celular", t:"Informe o número do seu celular com DDD", type:"tel", req:true},
+  {n:14, id:"observacao", t:"Alguma observação?", type:"textarea", req:false},
+];
+
+const byId = Object.fromEntries(Q.map(q=>[q.id,q]));
+function unidade(a){
+  const m={"Espírito Santo":"unidade_es","Distrito Federal":"unidade_df","Minas Gerais":"unidade_mg",
+           "Rio de Janeiro":"unidade_rj","São Paulo":"unidade_sp","Sul":"unidade_sul"}[a.estado];
+  return m ? a[m]||"" : "";
+}
+function visivel(id,a){const q=byId[id];return !q.show || q.show(a)}
+
+/* ============ MONTAGEM DA TELA ============ */
+const box=document.getElementById("questions");
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+for(const q of Q){
+  const d=document.createElement("div");
+  d.className="q";d.dataset.id=q.id;
+  let h=`<div class="q-title"><span class="q-num">${q.n}.</span><span>${esc(q.t)}${q.req?' <span class="ast">*</span>':''}</span></div>`;
+  if(q.type==="radio"){
+    h+='<div class="opts" role="radiogroup">'+q.o.map(o=>
+      `<label class="opt"><input type="radio" name="${q.id}" value="${esc(o)}"><span class="radio"></span><span>${esc(o)}</span></label>`).join("")+'</div>';
+  }else if(q.type==="textarea"){
+    h+=`<textarea name="${q.id}" placeholder="Insira sua resposta" maxlength="1000"></textarea>`;
+  }else{
+    h+=`<input type="${q.type==='tel'?'tel':'text'}" name="${q.id}" placeholder="Insira sua resposta" maxlength="${q.type==='tel'?20:120}" ${q.type==='tel'?'inputmode="tel" autocomplete="tel"':''}>`;
+  }
+  h+=`<div class="err">${q.type==='tel'?'Informe um celular válido com DDD.':'Esta pergunta é obrigatória.'}</div>`;
+  d.innerHTML=h;box.appendChild(d);
+}
+
+const form=document.getElementById("form");
+function answers(){
+  const a={};const fd=new FormData(form);
+  for(const [k,v] of fd.entries()) a[k]=String(v).trim();
+  return a;
+}
+function refresh(){
+  const a=answers();
+  for(const q of Q){
+    const el=box.querySelector(`.q[data-id="${q.id}"]`);
+    const on=visivel(q.id,a);
+    el.classList.toggle("hidden",!on);
+    if(!on){ el.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false); el.classList.remove("invalid"); }
+  }
+}
+form.addEventListener("change",e=>{refresh();const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
+form.addEventListener("input",e=>{const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
+
+/* máscara do celular: (27) 99999-9999 */
+const tel=form.querySelector('input[name="celular"]');
+tel.addEventListener("input",()=>{
+  let d=tel.value.replace(/\D/g,"").slice(0,11);
+  let s=d;
+  if(d.length>2) s=`(${d.slice(0,2)}) `+d.slice(2);
+  if(d.length>7) s=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;
+  tel.value=s;
+});
+
+refresh();
+
+/* ============ ENVIO ============ */
+function validar(){
+  const a=answers();let first=null;
+  const nomeBox=form.querySelector('.q[data-id="nome"]');
+  const okNome=(a.nome||"").length>=3;
+  nomeBox.classList.toggle("invalid",!okNome); if(!okNome) first=nomeBox;
+  for(const q of Q){
+    const el=box.querySelector(`.q[data-id="${q.id}"]`);
+    if(!visivel(q.id,a)||!q.req){el.classList.remove("invalid");continue}
+    let ok=!!a[q.id];
+    if(q.type==="tel"){const d=(a[q.id]||"").replace(/\D/g,"");ok=d.length===11&&d[2]==="9"}
+    el.classList.toggle("invalid",!ok);
+    if(!ok&&!first) first=el;
+  }
+  if(first){first.scrollIntoView({behavior:"smooth",block:"center"});return null}
+  const tud = d=>d||null;
+  return {
+    nome:a.nome, estado:a.estado, unidade:tud(unidade(a)),
+    andar:visivel("andar",a)?tud(a.andar):null,
+    turno:visivel("turno",a)?tud(a.turno):null,
+    periodo_adm:visivel("periodo_adm",a)?tud(a.periodo_adm):null,
+    plantao:visivel("plantao",a)?tud(a.plantao):null,
+    setor:a.setor, celular:a.celular.replace(/\D/g,""),
+    observacao:tud(a.observacao)
+  };
+}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",4000)}
+
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const row=validar(); if(!row) return;
+  const btn=document.getElementById("send");btn.disabled=true;btn.textContent="Enviando...";
+  try{
+    if(SUPABASE_URL){
+      const r=await fetch(`${SUPABASE_URL}/rest/v1/bemviver_inscricoes`,{
+        method:"POST",
+        headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json","Prefer":"return=minimal"},
+        body:JSON.stringify(row)
+      });
+      if(!r.ok){
+        const txt=await r.text();
+        if(r.status===409||txt.includes("23505")||txt.includes("duplicate")) throw new Error("dup");
+        throw new Error(txt);
+      }
+    }else{
+      console.log("Modo de teste – resposta:",row);
+    }
+    document.getElementById("formCard").style.display="none";
+    document.getElementById("doneCard").style.display="block";
+    window.scrollTo(0,0);
+  }catch(err){
+    toast(err.message==="dup"?"Este celular já está inscrito.":"Não foi possível enviar. Verifique a internet e tente novamente.");
+  }finally{btn.disabled=false;btn.textContent="Enviar"}
+});
+document.getElementById("again").onclick=()=>{form.reset();refresh();
+  document.getElementById("doneCard").style.display="none";document.getElementById("formCard").style.display="block";window.scrollTo(0,0)};
+</script>
+</body>
+</html>

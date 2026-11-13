@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Painel de Inscritos | Quick-Massage Bem+VIVER</title>
+<style>
+  :root{--primary:#03787c;--primary-dark:#025c5f;--text:#242424;--muted:#605e5c;--border:#e1dfdd;--bg:#f3f2f1;--red:#a4262c}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+  header{background:var(--primary);color:#fff;padding:14px 18px}
+  header h1{margin:0;font-size:17px;font-weight:600}
+  header p{margin:2px 0 0;font-size:12px;opacity:.85}
+  main{max-width:1100px;margin:0 auto;padding:16px}
+  .card{background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:16px;margin-bottom:14px}
+  .login{max-width:360px;margin:60px auto}
+  .login h2{margin:0 0 12px;font-size:18px}
+  input,select{font:inherit;padding:8px 10px;border:1px solid #c8c6c4;border-radius:4px;background:#fff;color:var(--text);width:100%}
+  input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+  .btn{background:var(--primary);color:#fff;border:0;border-radius:4px;padding:9px 16px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
+  .btn:hover{background:var(--primary-dark)}
+  .btn.sec{background:#fff;color:var(--primary);border:1px solid var(--primary)}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  .err{color:var(--red);font-size:13px;margin-top:8px;min-height:18px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+  .kpi{background:#fff;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.12);padding:12px}
+  .kpi b{display:block;font-size:24px;font-weight:600;color:var(--primary)}
+  .kpi span{font-size:12px;color:var(--muted)}
+  .filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;align-items:end}
+  .filters label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  h3{margin:0 0 10px;font-size:15px;font-weight:600}
+  .units{display:flex;flex-direction:column;gap:6px}
+  .unit{display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer}
+  .unit .name{width:210px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .unit .bar{flex:1;background:#edebe9;border-radius:3px;height:14px;overflow:hidden}
+  .unit .bar i{display:block;height:100%;background:var(--primary)}
+  .unit .n{width:34px;text-align:right;font-variant-numeric:tabular-nums}
+  @media(max-width:600px){.unit .name{width:130px}}
+  .tablewrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-weight:600;color:var(--muted);font-size:12px;white-space:nowrap;position:sticky;top:0;background:#fff}
+  td.nowrap{white-space:nowrap}
+  tr.win td{background:#e6f4f4}
+  .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:10px;background:#edebe9;color:var(--muted)}
+  .tag.ok{background:var(--primary);color:#fff}
+  .del{background:none;border:0;color:var(--red);cursor:pointer;font-size:12px}
+  .muted{color:var(--muted);font-size:12px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:16px;z-index:9}
+  .modal .box{background:#fff;border-radius:8px;padding:18px;max-width:380px;width:100%}
+  .modal h3{margin-bottom:6px}
+  .modal p{margin:0 0 14px;color:var(--muted);font-size:13px}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<header>
+  <h1>Painel de Inscritos · Quick-Massage</h1>
+  <p>Programa Bem+VIVER</p>
+</header>
+
+<main>
+  <div class="card login" id="loginBox">
+    <h2>Entrar</h2>
+    <input type="password" id="senha" placeholder="Senha do painel" autocomplete="current-password">
+    <div class="row"><button class="btn" id="entrar">Entrar</button></div>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Inscritos por unidade</h3>
+      <div class="units" id="units"></div>
+      <p class="muted" style="margin:10px 0 0">Toque numa unidade para filtrar a lista.</p>
+    </div>
+
+    <div class="card">
+      <div class="filters">
+        <div><label>Estado</label><select id="fEstado"></select></div>
+        <div><label>Unidade</label><select id="fUnidade"></select></div>
+        <div><label>Turno</label><select id="fTurno"></select></div>
+        <div><label>Plantão</label><select id="fPlantao"></select></div>
+        <div><label>Buscar</label><input id="fBusca" placeholder="Nome, setor ou celular"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="exportar">Baixar planilha (Excel)</button>
+        <button class="btn sec" id="sortear">Sorteio</button>
+        <button class="btn sec" id="atualizar">Atualizar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 id="countTitle">Inscritos</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>#</th><th>Data</th><th>Nome</th><th>Estado</th><th>Unidade</th><th>Andar</th><th>Turno</th><th>Período ADM</th><th>Plantão</th><th>Setor</th><th>Celular</th><th>Observação</th><th></th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="modal" id="mSorteio"><div class="box">
+  <h3>Sorteio</h3>
+  <p id="sorteioInfo"></p>
+  <label class="muted">Quantas vagas?</label>
+  <input type="number" id="vagas" min="1" value="28">
+  <div class="row"><button class="btn" id="fazerSorteio">Sortear</button><button class="btn sec" data-close>Cancelar</button></div>
+</div></div>
+
+<div class="modal" id="mConfirm"><div class="box">
+  <h3>Excluir inscrição?</h3>
+  <p id="confirmTxt"></p>
+  <div class="row"><button class="btn" style="background:var(--red)" id="confirmSim">Excluir</button><button class="btn sec" data-close>Cancelar</button></div>
+</div></div>
+
+<script>
+const SUPABASE_URL="https://pplhwupjbrtzqdwzlcem.supabase.co";
+const SUPABASE_KEY="sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let senha="",dados=[],sorteados=new Set(),filtroUnidadeClick="";
+
+async function rpc(fn,body){
+  const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",
+    headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const t=await r.text();
+  if(!r.ok) throw new Error(t.includes("senha")?"senha":"rede");
+  return t?JSON.parse(t):null;
+}
+
+async function carregar(){
+  dados=await rpc("bemviver_listar",{senha});
+  montarFiltros();render();
+}
+
+$("entrar").onclick=async()=>{
+  senha=$("senha").value.trim();$("loginErr").textContent="";
+  try{await carregar();$("loginBox").classList.add("hidden");$("app").classList.remove("hidden");
+    try{sessionStorage.setItem("bv_s",senha)}catch(e){}}
+  catch(e){$("loginErr").textContent=e.message==="senha"?"Senha incorreta.":"Erro de conexão. Tente de novo."}
+};
+$("senha").addEventListener("keydown",e=>{if(e.key==="Enter")$("entrar").click()});
+try{const s=sessionStorage.getItem("bv_s");if(s){$("senha").value=s;$("entrar").click()}}catch(e){}
+
+function opts(sel,vals,label){
+  const cur=sel.value;
+  sel.innerHTML=`<option value="">${label}</option>`+vals.map(v=>`<option>${esc(v)}</option>`).join("");
+  if(vals.includes(cur)) sel.value=cur;
+}
+const uniq=a=>[...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,"pt"));
+function montarFiltros(){
+  opts($("fEstado"),uniq(dados.map(d=>d.estado)),"Todos");
+  const est=$("fEstado").value;
+  opts($("fUnidade"),uniq(dados.filter(d=>!est||d.estado===est).map(d=>d.unidade||"(sem unidade)")),"Todas");
+  opts($("fTurno"),uniq(dados.map(d=>d.turno)),"Todos");
+  opts($("fPlantao"),uniq(dados.map(d=>d.plantao)),"Todos");
+}
+["fEstado","fUnidade","fTurno","fPlantao"].forEach(id=>$(id).addEventListener("change",()=>{if(id==="fEstado")montarFiltros();sorteados.clear();render()}));
+$("fBusca").addEventListener("input",render);
+
+function filtrados(){
+  const e=$("fEstado").value,u=$("fUnidade").value,t=$("fTurno").value,p=$("fPlantao").value,b=$("fBusca").value.trim().toLowerCase();
+  const bd=b.replace(/\D/g,"");
+  return dados.filter(d=>(!e||d.estado===e)&&(!u||(d.unidade||"(sem unidade)")===u)&&(!t||d.turno===t)&&(!p||d.plantao===p)&&
+    (!b||(d.nome||"").toLowerCase().includes(b)||(d.setor||"").toLowerCase().includes(b)||(bd.length>=3&&d.celular.includes(bd))));
+}
+const fmtTel=c=>c&&c.length===11?`(${c.slice(0,2)}) ${c.slice(2,7)}-${c.slice(7)}`:c;
+const fmtData=s=>new Date(s).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+
+function render(){
+  const lista=filtrados();
+  // KPIs
+  const porEstado={};dados.forEach(d=>porEstado[d.estado]=(porEstado[d.estado]||0)+1);
+  $("kpis").innerHTML=`<div class="kpi"><b>${dados.length}</b><span>Total de inscritos</span></div>`+
+    Object.entries(porEstado).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="kpi"><b>${v}</b><span>${esc(k)}</span></div>`).join("");
+  // por unidade
+  const pu={};dados.forEach(d=>{const k=`${d.unidade||"(sem unidade)"}|${d.estado}`;pu[k]=(pu[k]||0)+1});
+  const arr=Object.entries(pu).sort((a,b)=>b[1]-a[1]);const max=Math.max(1,...arr.map(a=>a[1]));
+  $("units").innerHTML=arr.length?arr.map(([k,v])=>{const[u,e]=k.split("|");
+    return `<div class="unit" data-u="${esc(u)}" data-e="${esc(e)}"><span class="name" title="${esc(u)} · ${esc(e)}">${esc(u)}</span><span class="bar"><i style="width:${v/max*100}%"></i></span><span class="n">${v}</span></div>`}).join("")
+    :'<p class="muted">Nenhuma inscrição ainda.</p>';
+  // tabela
+  $("countTitle").textContent=`Inscritos (${lista.length}${lista.length!==dados.length?" de "+dados.length:""})`+(sorteados.size?` · ${sorteados.size} sorteados`:"");
+  const ordem=sorteados.size?[...lista].sort((a,b)=>sorteados.has(b.id)-sorteados.has(a.id)):lista;
+  $("tbody").innerHTML=ordem.map((d,i)=>`<tr class="${sorteados.has(d.id)?"win":""}">
+    <td>${i+1}</td><td class="nowrap">${fmtData(d.created_at)}</td><td>${esc(d.nome)}${sorteados.has(d.id)?' <span class="tag ok">sorteado</span>':''}</td>
+    <td>${esc(d.estado)}</td><td>${esc(d.unidade)}</td><td>${esc(d.andar)}</td><td>${esc(d.turno)}</td><td>${esc(d.periodo_adm)}</td><td>${esc(d.plantao)}</td>
+    <td>${esc(d.setor)}</td><td class="nowrap">${esc(fmtTel(d.celular))}</td><td>${esc(d.observacao)}</td>
+    <td><button class="del" data-id="${d.id}">Excluir</button></td></tr>`).join("")||'<tr><td colspan="13" class="muted">Nenhum inscrito com esses filtros.</td></tr>';
+}
+
+$("units").addEventListener("click",e=>{const u=e.target.closest(".unit");if(!u)return;
+  $("fEstado").value=u.dataset.e;montarFiltros();$("fUnidade").value=u.dataset.u;sorteados.clear();render();
+  $("tbody").scrollIntoView({behavior:"smooth"})});
+
+/* Exportar para Excel (CSV com acentos) */
+$("exportar").onclick=()=>{
+  const lista=filtrados();
+  const cols=[["Data","created_at"],["Nome","nome"],["Estado","estado"],["Unidade","unidade"],["Andar","andar"],["Turno","turno"],["Período ADM","periodo_adm"],["Plantão","plantao"],["Setor","setor"],["Celular","celular"],["Observação","observacao"]];
+  if(sorteados.size) cols.push(["Sorteado","_s"]);
+  const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+  const linhas=[cols.map(c=>q(c[0])).join(";")].concat(lista.map(d=>cols.map(([,k])=>
+    q(k==="created_at"?new Date(d[k]).toLocaleString("pt-BR"):k==="celular"?fmtTel(d[k]):k==="_s"?(sorteados.has(d.id)?"Sim":"Não"):d[k])).join(";")));
+  const blob=new Blob(["﻿"+linhas.join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  const u=$("fUnidade").value||$("fEstado").value||"todos";
+  a.download=`inscritos-quick-massage-${u.normalize("NFD").replace(/[^\w]+/g,"-").toLowerCase()}.csv`;a.click();
+};
+
+/* Sorteio */
+const abrir=id=>$(id).style.display="flex";
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").style.display="none");
+$("sortear").onclick=()=>{
+  const n=filtrados().length;
+  const f=[$("fUnidade").value,$("fTurno").value,$("fPlantao").value].filter(Boolean).join(" · ")||$("fEstado").value||"todos os inscritos";
+  $("sorteioInfo").textContent=`Sorteio entre ${n} inscrito(s) de: ${f}. Use os filtros antes para sortear por unidade.`;
+  abrir("mSorteio");
+};
+$("fazerSorteio").onclick=()=>{
+  const lista=filtrados();const v=Math.max(1,parseInt($("vagas").value)||1);
+  const arr=lista.map(d=>d.id);
+  for(let i=arr.length-1;i>0;i--){const r=new Uint32Array(1);crypto.getRandomValues(r);const j=r[0]%(i+1);[arr[i],arr[j]]=[arr[j],arr[i]]}
+  sorteados=new Set(arr.slice(0,v));$("mSorteio").style.display="none";render();
+};
+
+/* Excluir */
+let delId=null;
+$("tbody").addEventListener("click",e=>{const b=e.target.closest(".del");if(!b)return;
+  delId=+b.dataset.id;const d=dados.find(x=>x.id===delId);$("confirmTxt").textContent=`${d.nome} · ${d.unidade||d.estado}`;abrir("mConfirm")});
+$("confirmSim").onclick=async()=>{try{await rpc("bemviver_excluir",{senha,inscricao_id:delId});dados=dados.filter(d=>d.id!==delId);sorteados.delete(delId);montarFiltros();render()}
+  catch(e){alert("Não foi possível excluir.")}$("mConfirm").style.display="none"};
+$("atualizar").onclick=()=>carregar().catch(()=>{});
+</script>
+</body>
+</html>
