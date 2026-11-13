@@ -27,6 +27,9 @@
   .kpi b{display:block;font-size:24px;font-weight:600;color:var(--primary)}
   .kpi.res b{color:var(--amber)}
   .kpi span{font-size:12px;color:var(--muted)}
+  .kpi{cursor:pointer;border:1px solid transparent}
+  .kpi:hover,.kpi:active{border-color:var(--primary)}
+  .kpi em{display:block;font-style:normal;font-size:11px;color:var(--primary);margin-top:4px}
   .tabs{display:flex;gap:6px;margin-bottom:14px}
   .tab{flex:1;background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px;font:inherit;font-weight:600;cursor:pointer;color:var(--muted)}
   .tab.on{background:var(--primary);color:#fff;border-color:var(--primary)}
@@ -103,7 +106,7 @@
         <div class="filters">
           <div><label>Estado</label><select id="fEstado"></select></div>
           <div><label>Unidade</label><select id="fUnidade"></select></div>
-          <div><label>Situação</label><select id="fSit"><option value="">Todas</option><option value="ag">Agendados</option><option value="res">Lista de reserva</option></select></div>
+          <div><label>Situação</label><select id="fSit"><option value="">Todas</option><option value="ag">Agendados</option><option value="res">Lista de reserva</option><option value="hoje">Inscritos hoje (formulário)</option></select></div>
           <div><label>Buscar</label><input id="fBusca" placeholder="Nome, setor ou celular"></div>
         </div>
         <div class="row"><button class="btn" id="exportar">Baixar lista (Excel)</button><button class="btn sec" id="atualizar2">Atualizar</button></div>
@@ -120,9 +123,9 @@
     <!-- UNIDADES -->
     <div id="t-unidades" class="hidden">
       <div class="card">
-        <h3>Ocupação por unidade</h3>
+        <h3>Vagas livres por unidade</h3>
         <div class="units" id="units"></div>
-        <p class="muted" style="margin:10px 0 0">Agendados / vagas totais. Toque numa unidade para abrir a agenda dela.</p>
+        <p class="muted" style="margin:10px 0 0">A barra mostra quanto já foi ocupado. "R" = pessoas na lista de reserva. Toque numa unidade para abrir a agenda dela.</p>
       </div>
     </div>
   </div>
@@ -176,8 +179,8 @@ function montar(){
   const ag=dados.filter(d=>!d.reserva).length, res=dados.length-ag;
   const vagas=horarios.reduce((s,h)=>s+h.capacidade,0);
   const hoje=dados.filter(d=>d.origem==="formulario"&&new Date(d.created_at).toDateString()===new Date().toDateString()).length;
-  $("kpis").innerHTML=`<div class="kpi"><b>${ag}</b><span>Agendados</span></div><div class="kpi res"><b>${res}</b><span>Lista de reserva</span></div>
-    <div class="kpi"><b>${vagas-ag}</b><span>Vagas livres de ${vagas}</span></div><div class="kpi"><b>${hoje}</b><span>Inscrições hoje (formulário)</span></div>`;
+  $("kpis").innerHTML=`<div class="kpi" data-k="ag"><b>${ag}</b><span>Agendados</span><em>ver lista ›</em></div><div class="kpi res" data-k="res"><b>${res}</b><span>Lista de reserva</span><em>ver lista ›</em></div>
+    <div class="kpi" data-k="livres"><b>${vagas-ag}</b><span>Vagas livres de ${vagas}</span><em>ver por unidade ›</em></div><div class="kpi" data-k="hoje"><b>${hoje}</b><span>Inscrições hoje (formulário)</span><em>ver lista ›</em></div>`;
   opts($("aUnidade"),uniq(horarios.map(h=>h.unidade)));
   opts($("fEstado"),uniq(dados.map(d=>d.estado)),"Todos");
   filtrosUnidade();
@@ -226,7 +229,9 @@ $("fEstado").onchange=()=>{filtrosUnidade();renderLista()};
 ["fUnidade","fSit"].forEach(id=>$(id).onchange=renderLista);$("fBusca").oninput=renderLista;
 function filtrados(){
   const e=$("fEstado").value,u=$("fUnidade").value,s=$("fSit").value,b=$("fBusca").value.trim().toLowerCase(),bd=b.replace(/\D/g,"");
-  return dados.filter(d=>(!e||d.estado===e)&&(!u||d.unidade===u)&&(!s||(s==="res")===d.reserva)&&
+  const hojeStr=new Date().toDateString();
+  return dados.filter(d=>(!e||d.estado===e)&&(!u||d.unidade===u)&&
+    (!s||(s==="hoje"?(d.origem==="formulario"&&new Date(d.created_at).toDateString()===hojeStr):(s==="res")===d.reserva))&&
     (!b||(d.nome||"").toLowerCase().includes(b)||(d.setor||"").toLowerCase().includes(b)||(bd.length>=3&&(d.celular||"").includes(bd))));
 }
 function renderLista(){
@@ -244,14 +249,21 @@ $("exportar").onclick=()=>{
     "inscritos-"+($("fUnidade").value||$("fEstado").value||"todos"));
 };
 
+/* CLIQUE NOS NÚMEROS */
+$("kpis").onclick=e=>{const k=e.target.closest(".kpi");if(!k)return;
+  if(k.dataset.k==="livres"){abrirTab("unidades");}
+  else{$("fEstado").value="";filtrosUnidade();$("fUnidade").value="";$("fBusca").value="";
+    $("fSit").value={ag:"ag",res:"res",hoje:"hoje"}[k.dataset.k];renderLista();abrirTab("lista");}
+  document.querySelector(".tabs").scrollIntoView({behavior:"smooth"});};
+
 /* UNIDADES */
 function renderUnidades(){
   const us=uniq(horarios.map(h=>h.unidade)).map(u=>{
     const tot=horarios.filter(h=>h.unidade===u).reduce((s,h)=>s+h.capacidade,0);
     const ag=dados.filter(d=>d.unidade===u&&!d.reserva).length;const res=dados.filter(d=>d.unidade===u&&d.reserva).length;
     return {u,tot,ag,res};
-  }).sort((a,b)=>b.ag/b.tot-a.ag/a.tot);
-  $("units").innerHTML=us.map(x=>`<div class="unit" data-u="${esc(x.u)}"><span class="name">${esc(x.u)}</span><span class="bar"><i style="width:${x.ag/x.tot*100}%"></i></span><span class="n">${x.ag}/${x.tot}${x.res?` · ${x.res}R`:""}</span></div>`).join("");
+  }).sort((a,b)=>(b.tot-b.ag)-(a.tot-a.ag));
+  $("units").innerHTML=us.map(x=>`<div class="unit" data-u="${esc(x.u)}"><span class="name">${esc(x.u)}</span><span class="bar"><i style="width:${x.ag/x.tot*100}%"></i></span><span class="n">${x.tot-x.ag} livres${x.res?` · ${x.res}R`:""}</span></div>`).join("");
 }
 $("units").onclick=e=>{const el=e.target.closest(".unit");if(!el)return;$("aUnidade").value=el.dataset.u;renderAgenda();abrirTab("agenda");window.scrollTo(0,0)};
 
