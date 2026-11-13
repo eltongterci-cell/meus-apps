@@ -72,7 +72,7 @@ main.wrap{margin-top:-46px;padding-bottom:40px}
 .kpi span{display:block;font-size:13px;color:var(--muted)}
 .kpi em{display:block;margin-top:4px;font-style:normal;font-size:12px;font-weight:700;color:var(--lime)}
 /* ============ 8. ABAS ============ */
-.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:14px}
 .tab{height:44px;border:1.5px solid var(--line);border-radius:var(--r-md);background:#fff;font-weight:700;color:var(--muted);cursor:pointer}
 .tab.on{background:var(--green);border-color:var(--green);color:#fff}
 /* ============ 9. DATAS ============ */
@@ -124,6 +124,28 @@ td.nw{white-space:nowrap}
 .unit .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--lime))}
 .unit .n{text-align:right;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 .unit .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* ============ 11b. PRESENÇA, RESERVA, RELATÓRIO ============ */
+.acts{display:inline-flex;gap:4px;flex-wrap:wrap}
+.mini{height:28px;padding:0 9px;border:1.5px solid var(--line);border-radius:8px;background:#fff;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center}
+.mini:hover{border-color:var(--green);color:var(--green)}
+.mini.ok.on{background:var(--green);border-color:var(--green);color:#fff}
+.mini.no.on{background:var(--red);border-color:var(--red);color:#fff}
+.mini.wa{color:#128c4b}
+.mini.fit{border-style:dashed;color:var(--green)}
+.tag.ok{background:var(--mint);color:var(--green)}
+.tag.no{background:var(--red-soft);color:var(--red)}
+.rep-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+@media(max-width:720px){.rep-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.rep-kpis div{padding:14px;border-radius:var(--r-md);background:var(--mint-2);border:1px solid var(--line)}
+.rep-kpis b{display:block;font-size:24px;font-weight:800;color:var(--green)}
+.rep-kpis span{font-size:13px;color:var(--muted)}
+.pick{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto;margin:6px 0 14px}
+.pick button{display:flex;justify-content:space-between;gap:8px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;text-align:left;cursor:pointer}
+.pick button:hover{border-color:var(--green)}
+.pick small{color:var(--muted)}
+.topacts{display:flex;gap:6px;align-items:center}
+.linkish{border:0;background:none;color:var(--green);font-weight:700;font-size:13.5px;cursor:pointer;padding:6px 8px;border-radius:8px}
+.linkish:hover{background:var(--mint)}
 /* ============ 12. MODAL E AVISO ============ */
 .modal{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(10,30,18,.4)}
 .modal.on{display:flex}
@@ -132,11 +154,12 @@ td.nw{white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:20px;z-index:40;max-width:min(92vw,460px);padding:12px 16px;border-radius:var(--r-md);background:var(--ink);color:#fff;font-size:14.5px;
   transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:all .2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:560px){.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.unit{grid-template-columns:1fr 90px}.unit .bar{grid-column:1/-1;order:3}.pl-row .hr{width:92px}}
+@media(max-width:560px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.unit{grid-template-columns:1fr 90px}.unit .bar{grid-column:1/-1;order:3}.pl-row .hr{width:92px}}
 </style>
 </head>
 <body>
-<header class="appbar"><div class="wrap"><img src="logo-medsenior.png" alt="MedSênior" width="87" height="30"><span class="pill">Área restrita</span></div></header>
+<header class="appbar"><div class="wrap"><img src="logo-medsenior.png" alt="MedSênior" width="87" height="30">
+  <div class="topacts"><button class="linkish" id="btnSenha" hidden>Trocar senha</button><button class="linkish" id="btnSair" hidden>Sair</button><span class="pill" id="pillRestrita">Área restrita</span></div></div></header>
 <section class="hero"><div class="wrap"><small>Programa Bem+VIVER</small><h1>Painel · Quick Massage</h1></div></section>
 
 <main class="wrap">
@@ -164,6 +187,7 @@ td.nw{white-space:nowrap}
       <button class="tab" data-tab="agenda">Agenda</button>
       <button class="tab" data-tab="lista">Lista</button>
       <button class="tab" data-tab="unidades">Unidades</button>
+      <button class="tab" data-tab="relatorio">Relatório</button>
     </div>
 
     <!-- DATAS -->
@@ -197,7 +221,18 @@ td.nw{white-space:nowrap}
         <div class="row"><button class="btn btn-primary" id="exportar">Baixar lista (Excel)</button></div>
       </div>
       <div class="card"><h3 id="countTitle">Inscritos</h3>
-        <div class="tablewrap"><table><thead><tr><th>Unidade</th><th>Data</th><th>Horário</th><th>Escala</th><th>Nome</th><th>Setor</th><th>Celular</th><th>Inscrito em</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+        <div class="tablewrap"><table><thead><tr><th>Unidade</th><th>Data</th><th>Horário</th><th>Escala</th><th>Nome</th><th>Setor</th><th>Celular</th><th>Código</th><th>Presença</th><th>Inscrito em</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+      </div>
+    </section>
+
+    <!-- RELATÓRIO -->
+    <section id="t-relatorio" hidden>
+      <div class="card">
+        <h3>Relatório do mês</h3>
+        <p class="muted" style="margin:0 0 14px">Presença registrada na Agenda (botões <b>Veio</b> e <b>Faltou</b>). A taxa considera só quem já tem presença marcada.</p>
+        <div class="rep-kpis" id="repKpis"></div>
+        <div class="row" style="margin-bottom:10px"><button class="btn btn-primary" id="repExport">Baixar relatório (Excel)</button></div>
+        <div class="tablewrap"><table><thead><tr><th>Unidade</th><th>Vagas</th><th>Agendados</th><th>Vieram</th><th>Faltaram</th><th>Sem registro</th><th>Reserva</th><th>Presença</th></tr></thead><tbody id="repBody"></tbody></table></div>
       </div>
     </section>
 
@@ -213,6 +248,14 @@ td.nw{white-space:nowrap}
 <div class="modal" id="mNovo"><div class="box"><h3>Novo mês</h3><p>Escolha o mês para cadastrar as datas.</p>
   <div class="grid-f"><div><label class="label" for="nMes">Mês</label><select class="input" id="nMes"></select></div><div><label class="label" for="nAno">Ano</label><select class="input" id="nAno"></select></div></div>
   <div class="row" style="margin-top:14px"><button class="btn btn-primary" id="nCriar">Criar mês</button><button class="btn btn-ghost" id="nCancelar">Cancelar</button></div></div></div>
+<div class="modal" id="mPick"><div class="box"><h3>Encaixar da reserva</h3><p id="pickInfo"></p><div class="pick" id="pickList"></div>
+  <div class="row"><button class="btn btn-ghost" id="pickNao">Cancelar</button></div></div></div>
+<div class="modal" id="mSenha"><div class="box"><h3>Trocar senha do painel</h3><p>A nova senha precisa ter pelo menos 8 caracteres.</p>
+  <label class="label" for="sAtual">Senha atual</label><input class="input" type="password" id="sAtual" autocomplete="current-password">
+  <label class="label" for="sNova" style="margin-top:10px">Nova senha</label><input class="input" type="password" id="sNova" autocomplete="new-password">
+  <label class="label" for="sNova2" style="margin-top:10px">Repita a nova senha</label><input class="input" type="password" id="sNova2" autocomplete="new-password">
+  <div class="err" id="sErr"></div>
+  <div class="row"><button class="btn btn-primary" id="sSalvar">Salvar nova senha</button><button class="btn btn-ghost" id="sNao">Cancelar</button></div></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -266,7 +309,7 @@ async function carregarTudo(){
 $("entrar").onclick=async()=>{
   senha=$("senha").value.trim();$("loginErr").textContent="";
   const b=$("entrar");b.disabled=true;b.textContent="Entrando...";
-  try{await carregarTudo();$("loginBox").hidden=true;$("app").hidden=false;try{sessionStorage.setItem("bv_s",senha)}catch(e){}
+  try{await carregarTudo();$("loginBox").hidden=true;$("app").hidden=false;$("btnSenha").hidden=false;$("btnSair").hidden=false;$("pillRestrita").hidden=true;try{sessionStorage.setItem("bv_s",senha)}catch(e){}
     if(!mesId) abrirNovoMes(); else abrirAba(datas.length?"agenda":"datas");}
   catch(e){$("loginErr").textContent=e.message==="senha"?"Senha incorreta.":"Erro de conexão. Tente de novo."}
   b.disabled=false;b.textContent="Entrar";
@@ -332,14 +375,14 @@ function montar(){
   const us=unidades();$("aUnidade").innerHTML=us.map(u=>`<option>${esc(u)}</option>`).join("");if(planUnidade&&us.includes(planUnidade))$("aUnidade").value=planUnidade;
   const est=$("fEstado").value;$("fEstado").innerHTML='<option value="">Todos</option>'+ESTADOS.map(e=>`<option>${e}</option>`).join("");$("fEstado").value=est;
   filtrosUnidade();
-  renderDatas();renderAgenda();renderLista();renderUnidades();
+  renderDatas();renderAgenda();renderLista();renderUnidades();renderRelatorio();
 }
 const capacidadeMes=()=>datas.reduce((s,d)=>s+horarios.filter(h=>h.unidade===d.unidade&&h.grupo===d.grupo).reduce((a,h)=>a+h.capacidade,0),0);
 const agComData=()=>doMes().filter(d=>!d.reserva&&d.data_id).length;
 
 /* ---------- abas ---------- */
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>abrirTab(t.dataset.tab));
-function abrirTab(n){aba=n;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===n));["datas","agenda","lista","unidades"].forEach(x=>$("t-"+x).hidden=x!==n)}
+function abrirTab(n){aba=n;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===n));["datas","agenda","lista","unidades","relatorio"].forEach(x=>$("t-"+x).hidden=x!==n)}
 const abrirAba=abrirTab;
 $("kpis").onclick=e=>{const k=e.target.closest(".kpi");if(!k)return;
   if(k.dataset.k==="livres")abrirTab("unidades");
@@ -408,7 +451,9 @@ function renderAgenda(){
     const linhas=hs.map(h=>{
       const ps=insc.filter(x=>x.data_id===d.id&&x.horario_id===h.id),livres=h.capacidade-ps.length;
       if(mostrar==="ocupados"&&!ps.length)return"";if(mostrar==="livres"&&livres<=0)return"";
-      return `<div class="pl-row"><div class="hr">${h.hora} – ${fim(h.hora)}</div><div class="who">`+ps.map(pessoa).join("")+(livres>0?`<div class="free">${livres>1?livres+" vagas livres":"livre"}</div>`:"")+`</div></div>`}).join("");
+      const temRes=insc.some(x=>x.reserva);
+      return `<div class="pl-row"><div class="hr">${h.hora} – ${fim(h.hora)}</div><div class="who">`+ps.map(pessoa).join("")+
+        (livres>0?`<div class="free">${livres>1?livres+" vagas livres":"livre"}${temRes?` <button class="mini fit" data-fit="${d.id}|${h.id}">Encaixar da reserva</button>`:""}</div>`:"")+`</div></div>`}).join("");
     html+=`<div class="day"><h4>${esc(dataLonga(d.data))}${gruposDe(u).length>1?` <span>· ${esc(ROTULO_G[d.grupo]||d.grupo)}</span>`:""}</h4>${linhas||'<div class="muted" style="padding:8px 4px">Nada para mostrar com este filtro.</div>'}</div>`;
   }
   const semData=insc.filter(x=>!x.reserva&&!x.data_id);
@@ -417,9 +462,15 @@ function renderAgenda(){
   if(res.length) html+=`<div class="day"><h4>Lista de reserva <span>· ${res.length}</span></h4>`+res.map((p,i)=>`<div class="pl-row"><div class="hr">${i+1}º</div><div class="who">${pessoa(p)}</div></div>`).join("")+`</div>`;
   $("planner").innerHTML=html;
 }
+function waLink(p,texto){const c=(p.celular||"").replace(/\D/g,"");if(c.length<10)return"";return `https://wa.me/55${c}?text=${encodeURIComponent(texto)}`}
+function msgVaga(p){return `Olá, ${p.nome.split(" ")[0]}! Aqui é da equipe do Programa Bem+VIVER. Abriu uma vaga para a Quick Massage na ${p.unidade}. Você ainda tem interesse?`}
+function msgLembrete(p){return `Olá, ${p.nome.split(" ")[0]}! Lembrete da sua Quick Massage na ${p.unidade}: ${p.data?dataLonga(p.data)+", ":""}${p.hora||""}. Programa Bem+VIVER.`}
 function pessoa(p){
   const extra=[p.setor,fmtTel(p.celular),p.reserva&&p.grupo&&p.grupo!=="Geral"?ROTULO_G[p.grupo]:""].filter(Boolean).join(" · ");
-  return `<div class="p">${esc(p.nome)} <span>${esc(extra)}</span>${p.origem==="planilha"?' <span class="tag plan">planilha</span>':""} <button class="del" data-id="${p.id}">excluir</button></div>`;
+  const wa=waLink(p,p.reserva?msgVaga(p):msgLembrete(p));
+  const pres=!p.reserva&&p.data_id?`<button class="mini ok${p.presenca==="compareceu"?" on":""}" data-pres="${p.id}|compareceu">✓ Veio</button><button class="mini no${p.presenca==="faltou"?" on":""}" data-pres="${p.id}|faltou">✗ Faltou</button>`:"";
+  return `<div class="p">${esc(p.nome)} <span>${esc(extra)}</span>${p.origem==="planilha"?' <span class="tag plan">planilha</span>':""}
+    <span class="acts">${pres}${wa?`<a class="mini wa" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}<button class="mini" data-id="${p.id}" data-del>Excluir</button></span></div>`;
 }
 $("aExport").onclick=()=>{
   const u=$("aUnidade").value,insc=doMes().filter(x=>x.unidade===u),linhas=[["Data","Escala","Horário","Nome","Setor","Celular","Situação"]];
@@ -445,12 +496,13 @@ function renderLista(){
   $("tbody").innerHTML=l.map(d=>`<tr><td>${esc(d.unidade)}</td><td class="nw">${d.data?esc(dataCurta(d.data)):"—"}</td>
     <td class="nw">${d.reserva?'<span class="tag res">Reserva</span>':d.hora+" – "+fim(d.hora)}</td><td>${esc(ROTULO_G[d.grupo]&&d.grupo!=="Geral"?ROTULO_G[d.grupo]:"")}</td>
     <td>${esc(d.nome)}${d.origem==="planilha"?' <span class="tag plan">planilha</span>':""}</td><td>${esc(d.setor)}</td><td class="nw">${esc(fmtTel(d.celular))}</td>
+    <td class="nw">${esc(d.codigo||"—")}</td><td>${d.presenca==="compareceu"?'<span class="tag ok">Veio</span>':d.presenca==="faltou"?'<span class="tag no">Faltou</span>':"—"}</td>
     <td class="nw">${d.origem==="planilha"?"—":fmtCriado(d.created_at)}</td><td><button class="del" data-id="${d.id}">excluir</button></td></tr>`).join("")
-    ||'<tr><td colspan="9"><div class="empty">Nenhum inscrito com esses filtros.</div></td></tr>';
+    ||'<tr><td colspan="11"><div class="empty">Nenhum inscrito com esses filtros.</div></td></tr>';
 }
 $("exportar").onclick=()=>{const l=filtrados();
-  baixar([["Mês","Estado","Unidade","Data","Horário","Situação","Escala","Atuação","Nome","Setor","Celular","Origem","Inscrito em"]].concat(l.map(d=>
-    [d.mes_ref||"",d.estado,d.unidade,d.data?dataLonga(d.data):"",d.reserva?"":`${d.hora} - ${fim(d.hora)}`,d.reserva?"Reserva":"Agendado",ROTULO_G[d.grupo]||"",d.atuacao||"",d.nome,d.setor||"",fmtTel(d.celular),d.origem,d.origem==="planilha"?"":new Date(d.created_at).toLocaleString("pt-BR")])),
+  baixar([["Mês","Estado","Unidade","Data","Horário","Situação","Escala","Atuação","Nome","Setor","Celular","Código","Presença","Origem","Inscrito em"]].concat(l.map(d=>
+    [d.mes_ref||"",d.estado,d.unidade,d.data?dataLonga(d.data):"",d.reserva?"":`${d.hora} - ${fim(d.hora)}`,d.reserva?"Reserva":"Agendado",ROTULO_G[d.grupo]||"",d.atuacao||"",d.nome,d.setor||"",fmtTel(d.celular),d.codigo||"",d.presenca==="compareceu"?"Veio":d.presenca==="faltou"?"Faltou":"",d.origem,d.origem==="planilha"?"":new Date(d.created_at).toLocaleString("pt-BR")])),
     `inscritos-${refMes(mesAtual()||{mes:0,ano:0})}-${$("fUnidade").value||$("fEstado").value||"todos"}`)};
 
 /* ---------- UNIDADES ---------- */
@@ -465,10 +517,79 @@ function renderUnidades(){
 $("units").onclick=e=>{const el=e.target.closest(".unit");if(!el)return;planUnidade=el.dataset.u;$("aUnidade").value=planUnidade;renderAgenda();abrirTab("agenda");window.scrollTo(0,0)};
 
 /* ---------- EXCLUIR ---------- */
-document.addEventListener("click",e=>{const b=e.target.closest(".del");if(!b)return;const id=+b.dataset.id,d=dados.find(x=>x.id===id);if(!d)return;
+document.addEventListener("click",e=>{const b=e.target.closest(".del,[data-del]");if(!b)return;const id=+b.dataset.id,d=dados.find(x=>x.id===id);if(!d)return;
   confirmar("Excluir inscrição?",`${d.nome} · ${d.unidade}${d.reserva?" · reserva":d.data?" · "+dataCurta(d.data)+" "+d.hora:""}. O horário volta a ficar livre no formulário.`,"Excluir",async()=>{
     try{await rpc("bemviver_excluir",{senha,inscricao_id:id});dados=dados.filter(x=>x.id!==id);datas=await rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}).catch(()=>datas);montar();toast("Inscrição excluída.")}
     catch(e){toast("Não foi possível excluir. Verifique a internet.")}})});
+
+/* ---------- PRESENÇA ---------- */
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("[data-pres]");if(!b||b.disabled)return;
+  const[id,v]=b.dataset.pres.split("|"),p=dados.find(x=>x.id===+id);if(!p)return;
+  const novo=p.presenca===v?null:v;b.disabled=true;
+  try{await rpc("bemviver_admin_presenca",{senha,p_id:+id,p_presenca:novo});p.presenca=novo;renderAgenda();renderLista();renderRelatorio()}
+  catch(err){toast("Não foi possível salvar a presença.")}
+  b.disabled=false;
+});
+
+/* ---------- ENCAIXAR DA RESERVA ---------- */
+let fitAlvo=null;
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-fit]");if(!b)return;
+  const[did,hid]=b.dataset.fit.split("|").map(Number),dt=datas.find(x=>x.id===did),h=horarios.find(x=>x.id===hid);if(!dt||!h)return;
+  fitAlvo={did,hid};
+  const res=doMes().filter(x=>x.unidade===dt.unidade&&x.reserva).sort((a,b)=>(a.grupo===dt.grupo?0:1)-(b.grupo===dt.grupo?0:1)||a.created_at.localeCompare(b.created_at));
+  $("pickInfo").textContent=`${dt.unidade} · ${dataLonga(dt.data)} · ${h.hora} – ${fim(h.hora)}${ROTULO_G[dt.grupo]&&dt.grupo!=="Geral"?" · "+ROTULO_G[dt.grupo]:""}. Escolha quem vai ocupar a vaga (a ordem é a da inscrição).`;
+  $("pickList").innerHTML=res.map((p,i)=>`<button data-pick="${p.id}"><span><b>${i+1}º ${esc(p.nome)}</b><br><small>${esc([p.setor,fmtTel(p.celular),ROTULO_G[p.grupo]&&p.grupo!=="Geral"?ROTULO_G[p.grupo]:""].filter(Boolean).join(" · "))}</small></span>${p.grupo===dt.grupo||dt.grupo==="Geral"?'<span class="tag ok">mesma escala</span>':""}</button>`).join("");
+  $("mPick").classList.add("on");
+});
+$("pickNao").onclick=()=>$("mPick").classList.remove("on");
+$("pickList").addEventListener("click",async e=>{
+  const b=e.target.closest("[data-pick]");if(!b||!fitAlvo)return;
+  b.disabled=true;
+  try{await rpc("bemviver_admin_encaixar",{senha,p_id:+b.dataset.pick,p_data_id:fitAlvo.did,p_horario_id:fitAlvo.hid});
+    $("mPick").classList.remove("on");await carregarTudo();toast("Pessoa encaixada. Avise pelo WhatsApp na Agenda.")}
+  catch(err){toast(err.message==="horario_ocupado"?"Esse horário já foi ocupado.":"Não foi possível encaixar.");b.disabled=false}
+});
+
+/* ---------- RELATÓRIO ---------- */
+function linhasRelatorio(){
+  const insc=doMes();
+  return unidades().map(u=>{
+    const vagas=blocosDaUnidade(u).reduce((s,b)=>s+b.hs.reduce((a,h)=>a+h.capacidade,0),0);
+    const ag=insc.filter(x=>x.unidade===u&&!x.reserva&&x.data_id);
+    const veio=ag.filter(x=>x.presenca==="compareceu").length,faltou=ag.filter(x=>x.presenca==="faltou").length;
+    const res=insc.filter(x=>x.unidade===u&&x.reserva).length;
+    return{u,est:estadoDe(u),vagas,ag:ag.length,veio,faltou,sem:ag.length-veio-faltou,res,taxa:veio+faltou?Math.round(veio/(veio+faltou)*100):null};
+  }).filter(r=>r.vagas||r.ag||r.res);
+}
+function renderRelatorio(){
+  const L=linhasRelatorio(),T=L.reduce((t,r)=>({vagas:t.vagas+r.vagas,ag:t.ag+r.ag,veio:t.veio+r.veio,faltou:t.faltou+r.faltou,res:t.res+r.res}),{vagas:0,ag:0,veio:0,faltou:0,res:0});
+  const taxa=T.veio+T.faltou?Math.round(T.veio/(T.veio+T.faltou)*100)+"%":"—";
+  const ocup=T.vagas?Math.round(T.ag/T.vagas*100)+"%":"—";
+  $("repKpis").innerHTML=`<div><b>${T.ag}</b><span>Agendados de ${T.vagas} vagas (${ocup})</span></div><div><b>${T.veio}</b><span>Vieram</span></div>
+    <div><b>${T.faltou}</b><span>Faltaram</span></div><div><b>${taxa}</b><span>Taxa de presença</span></div>`;
+  $("repBody").innerHTML=L.map(r=>`<tr><td>${esc(r.u)}</td><td>${r.vagas}</td><td>${r.ag}</td><td>${r.veio}</td><td>${r.faltou}</td><td>${r.sem}</td><td>${r.res}</td><td>${r.taxa==null?"—":r.taxa+"%"}</td></tr>`).join("")
+    ||'<tr><td colspan="8"><div class="empty">Sem dados neste mês.</div></td></tr>';
+}
+$("repExport").onclick=()=>{const L=linhasRelatorio();
+  baixar([["Estado","Unidade","Vagas","Agendados","Vieram","Faltaram","Sem registro","Reserva","Taxa de presença"]].concat(L.map(r=>[r.est,r.u,r.vagas,r.ag,r.veio,r.faltou,r.sem,r.res,r.taxa==null?"":r.taxa+"%"])),
+    `relatorio-quick-massage-${refMes(mesAtual()||{mes:0,ano:0})}`)};
+
+/* ---------- SENHA E SAIR ---------- */
+$("btnSenha").onclick=()=>{["sAtual","sNova","sNova2"].forEach(i=>$(i).value="");$("sErr").textContent="";$("mSenha").classList.add("on")};
+$("sNao").onclick=()=>$("mSenha").classList.remove("on");
+$("sSalvar").onclick=async()=>{
+  const a=$("sAtual").value,n=$("sNova").value,n2=$("sNova2").value;
+  if(n.length<8){$("sErr").textContent="A nova senha precisa ter pelo menos 8 caracteres.";return}
+  if(n!==n2){$("sErr").textContent="As duas senhas novas não são iguais.";return}
+  const b=$("sSalvar");b.disabled=true;
+  try{await rpc("bemviver_admin_trocar_senha",{senha:a,nova:n});senha=n;try{sessionStorage.setItem("bv_s",n)}catch(e){}
+    $("mSenha").classList.remove("on");toast("Senha alterada.")}
+  catch(e){$("sErr").textContent=e.message==="senha"?"Senha atual incorreta.":"Não foi possível alterar."}
+  b.disabled=false;
+};
+$("btnSair").onclick=()=>{try{sessionStorage.removeItem("bv_s")}catch(e){}location.reload()};
 
 /* ---------- CSV ---------- */
 function baixar(linhas,nome){const q=v=>`"${String(v??"").replace(/"/g,'""')}"`;
