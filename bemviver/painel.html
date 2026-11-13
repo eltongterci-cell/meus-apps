@@ -260,8 +260,8 @@ function renderLista(){
 }
 $("exportar").onclick=()=>{
   const l=filtrados();
-  baixar([["Estado","Unidade","Situação","Grupo","Horário","Nome","Setor","Celular","Origem","Inscrito em"]].concat(l.map(d=>
-    [d.estado,d.unidade,d.reserva?"Reserva":"Agendado",nomeG(d.grupo),d.reserva?"":`${d.hora} - ${fim(d.hora)}`,d.nome,d.setor||"",fmtTel(d.celular),d.origem,d.origem==="planilha"?"":new Date(d.created_at).toLocaleString("pt-BR")])),
+  baixar([["Estado","Unidade","Situação","Atuação","Grupo","Horário","Nome","Setor","Celular","Mês de referência","Origem","Inscrito em"]].concat(l.map(d=>
+    [d.estado,d.unidade,d.reserva?"Reserva":"Agendado",d.atuacao||"",nomeG(d.grupo),d.reserva?"":`${d.hora} - ${fim(d.hora)}`,d.nome,d.setor||"",fmtTel(d.celular),d.mes_ref||"",d.origem,d.origem==="planilha"?"":new Date(d.created_at).toLocaleString("pt-BR")])),
     "inscritos-"+($("fUnidade").value||$("fEstado").value||"todos"));
 };
 
