@@ -5,7 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#006633">
 <title>Quick Massage · Programa Bem+VIVER | MedSênior</title>
-<link rel="icon" href="logo-medsenior.png">
+<link rel="icon" href="icons/favicon-32.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Quick Massage">
+<meta name="format-detection" content="telephone=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -208,7 +215,7 @@ button,input{font:inherit;color:inherit}
 .lgpd{margin:18px 0 0;font-size:12.5px;color:var(--faint)}
 .status-tag{display:inline-block;margin-bottom:12px;padding:4px 10px;border-radius:999px;font-size:12.5px;font-weight:700;background:var(--mint);color:var(--green)}
 .status-tag.res{background:var(--amber-soft);color:#7a5200}
-.modal{position:fixed;inset:0;z-index:30;display:none;align-items:flex-end;justify-content:center;padding:16px;background:rgba(10,30,18,.45)}
+.modal{position:fixed;top:0;right:0;bottom:0;left:0;z-index:30;display:none;align-items:flex-end;justify-content:center;padding:16px;background:rgba(10,30,18,.45)}
 .modal.on{display:flex}
 .modal .sheet{width:100%;max-width:440px;margin-bottom:env(safe-area-inset-bottom);padding:22px 20px 18px;border-radius:var(--r-lg);background:#fff;box-shadow:var(--shadow-2);animation:up .22s ease}
 @keyframes up{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
@@ -222,6 +229,13 @@ button,input{font:inherit;color:inherit}
 @media (min-width:480px){.slots{grid-template-columns:repeat(4,minmax(0,1fr))}.step{padding:28px 28px 30px}.hero h1{font-size:34px}}
 @media (max-width:350px){.choices.grid{grid-template-columns:1fr}.slots{grid-template-columns:repeat(2,minmax(0,1fr))}.btn{padding:0 16px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ===== instalar como app ===== */
+.btn-install{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border:0;border-radius:999px;background:var(--mint);color:var(--green);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn-install:hover{background:#dcece2}
+.ios-steps{margin:0 0 18px;padding:0;list-style:none;counter-reset:i;display:grid;gap:10px}
+.ios-steps li{display:flex;gap:10px;align-items:flex-start;font-size:15px}
+.ios-steps li::before{counter-increment:i;content:counter(i);flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:13px;font-weight:800}
 </style>
 </head>
 <body>
@@ -230,6 +244,7 @@ button,input{font:inherit;color:inherit}
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
   <img src="logo-medsenior.png" alt="MedSênior" width="87" height="30">
+  <span style="flex:1"></span><button class="btn-install" id="btnInstalar" type="button" hidden><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span class="lbl">Instalar app</span></button>
 </div></header>
 
 <section class="hero"><div class="shell">
@@ -251,6 +266,16 @@ button,input{font:inherit;color:inherit}
   <button class="btn btn-primary" id="btnNext" type="button">Continuar</button>
 </div></nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal" id="mInstalar" role="dialog" aria-modal="true" aria-labelledby="iTitle"><div class="sheet">
+  <h3 id="iTitle">Instalar no iPhone / iPad</h3>
+  <p>Assim o app fica na sua tela de início, como um aplicativo.</p>
+  <ol class="ios-steps">
+    <li><span>Toque no botão <b>Compartilhar</b> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-3px"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg> na barra do Safari.</span></li>
+    <li><span>Role e toque em <b>Adicionar à Tela de Início</b>.</span></li>
+    <li><span>Toque em <b>Adicionar</b>. Pronto!</span></li>
+  </ol>
+  <button class="btn btn-primary" type="button" data-fechar style="width:100%">Entendi</button>
+</div></div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="sheet">
   <h3 id="mTitle"></h3><p id="mText"></p>
   <div class="actions-col"><button class="btn btn-primary" id="mSim" type="button"></button><button class="btn btn-ghost" id="mNao" type="button">Voltar</button></div>
@@ -872,6 +897,25 @@ async function iniciar(){
   render(0);
 }
 iniciar();
+
+/* ================= INSTALAR COMO APP ================= */
+(function(){
+  if("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  const btn = document.getElementById("btnInstalar"), sheet = document.getElementById("mInstalar");
+  if(!btn || !sheet) return;
+  const instalado = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  const ua = navigator.userAgent;
+  const ios = /iphone|ipad|ipod/i.test(ua) || (/macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
+  let pedido = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); pedido = e; if(!instalado()) btn.hidden = false; });
+  window.addEventListener("appinstalled", () => { btn.hidden = true; pedido = null; });
+  if(ios && !instalado()) btn.hidden = false;
+  btn.addEventListener("click", async () => {
+    if(pedido){ pedido.prompt(); try{ await pedido.userChoice; }catch(e){} pedido = null; btn.hidden = true; return; }
+    sheet.classList.add("on");
+  });
+  sheet.addEventListener("click", e => { if(e.target === sheet || e.target.closest("[data-fechar]")) sheet.classList.remove("on"); });
+})();
 </script>
 </body>
 </html>
