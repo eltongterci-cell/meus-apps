@@ -51,6 +51,7 @@ main.wrap{margin-top:-46px;padding-bottom:40px}
 .btn-primary{background:var(--green);color:#fff}.btn-primary:hover{background:var(--green-700)}
 .btn-ghost{background:var(--mint);color:var(--green)}.btn-ghost:hover{background:#dcece2}
 .btn-danger{background:var(--red);color:#fff}
+.btn-white{background:#fff;color:var(--red);border:1.5px solid #f3cdc9}
 .btn-sm{height:36px;padding:0 12px;font-size:14px}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .grid-f{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
@@ -72,7 +73,7 @@ main.wrap{margin-top:-46px;padding-bottom:40px}
 .kpi span{display:block;font-size:13px;color:var(--muted)}
 .kpi em{display:block;margin-top:4px;font-style:normal;font-size:12px;font-weight:700;color:var(--lime)}
 /* ============ 8. ABAS ============ */
-.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:14px}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:14px}
 .tab{height:44px;border:1.5px solid var(--line);border-radius:var(--r-md);background:#fff;font-weight:700;color:var(--muted);cursor:pointer}
 .tab.on{background:var(--green);border-color:var(--green);color:#fff}
 /* ============ 9. DATAS ============ */
@@ -131,7 +132,33 @@ textarea.input{height:auto;min-height:180px;padding:12px;resize:vertical;line-he
 .chipline{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .chipline span{padding:3px 9px;border-radius:999px;background:var(--mint);color:var(--green);font-size:12.5px;font-weight:700}
 .modal .box.wide{max-width:560px;max-height:90vh;overflow:auto}
+/* ============ 9b. STATUS DO MÊS ============ */
+.monthcard .top{display:flex;gap:8px;align-items:flex-end}
+.monthcard .top>div{flex:1;min-width:0}
+.statusbox{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding:14px;border-radius:var(--r-md);border:1.5px solid var(--line);background:#f6f7f6}
+.statusbox.open{background:var(--mint);border-color:#bfdcca}
+.statusbox b{display:block;font-size:16px}
+.statusbox span{display:block;font-size:13.5px;color:var(--muted)}
+.statusbox .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--faint);margin-right:6px}
+.statusbox.open .dot{background:var(--green);box-shadow:0 0 0 4px rgba(0,102,51,.15)}
 /* ============ 10. AGENDA ============ */
+.dchips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 6px;margin-top:12px;scrollbar-width:thin}
+.dchip{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:9px 13px;border:1.5px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;text-align:left}
+.dchip b{font-size:14.5px;white-space:nowrap}
+.dchip small{font-size:12px;color:var(--muted);white-space:nowrap}
+.dchip.on{background:var(--green);border-color:var(--green);color:#fff}
+.dchip.on small{color:var(--lime-soft)}
+.dchip.res{border-style:dashed}
+.dayhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+.dayhead h3{margin:0;font-size:19px}
+.dayhead .muted{margin-top:2px}
+.dayacts{display:flex;gap:6px;flex-wrap:wrap}
+.helpline{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--mint-2);font-size:13px;color:var(--muted)}
+.grptitle{margin:18px 0 4px;font-size:12.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--green)}
+.pl-row.closed .hr{color:var(--faint);text-decoration:line-through}
+.closedtag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--red)}
+.mini.close{color:var(--red);border-color:#f3cdc9}
+.mini.open{color:var(--green);border-color:#bfdcca}
 .day{margin-top:18px}
 .day h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--green)}
 .day h4 span{font-weight:600;color:var(--muted);text-transform:none;letter-spacing:0}
@@ -188,7 +215,7 @@ td.nw{white-space:nowrap}
 .toast{position:fixed;left:50%;bottom:20px;z-index:40;max-width:min(92vw,460px);padding:12px 16px;border-radius:var(--r-md);background:var(--ink);color:#fff;font-size:14.5px;
   transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:all .2s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-@media(max-width:560px){.tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.unit{grid-template-columns:1fr 90px}.unit .bar{grid-column:1/-1;order:3}.pl-row .hr{width:92px}}
+@media(max-width:560px){.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.unit{grid-template-columns:1fr 90px}.unit .bar{grid-column:1/-1;order:3}.pl-row .hr{width:92px}}
 </style>
 </head>
 <body>
@@ -206,21 +233,23 @@ td.nw{white-space:nowrap}
 
   <div id="app" hidden>
     <!-- mês -->
-    <div class="card monthbar">
-      <div class="left">
+    <div class="card monthcard">
+      <div class="top">
         <div><label class="label" for="mesSel">Mês</label><select class="input" id="mesSel"></select></div>
         <button class="btn btn-ghost" id="novoMes" type="button">+ Novo mês</button>
       </div>
-      <div class="status"><span class="pill off" id="statusPill">Fechado</span><button class="btn btn-primary" id="toggleMes" type="button">Abrir inscrições</button></div>
+      <div class="statusbox" id="statusBox">
+        <div><b id="statusPill"><i class="dot"></i>Inscrições fechadas</b><span id="statusTxt"></span></div>
+        <button class="btn btn-primary" id="toggleMes" type="button">Abrir inscrições</button>
+      </div>
     </div>
 
     <div class="kpis" id="kpis"></div>
 
     <div class="tabs">
-      <button class="tab" data-tab="datas">Datas</button>
-      <button class="tab" data-tab="agenda">Agenda</button>
-      <button class="tab" data-tab="lista">Lista</button>
-      <button class="tab" data-tab="unidades">Unidades</button>
+      <button class="tab" data-tab="datas">1. Datas</button>
+      <button class="tab" data-tab="agenda">2. Agenda</button>
+      <button class="tab" data-tab="lista">Inscritos</button>
       <button class="tab" data-tab="relatorio">Relatório</button>
     </div>
 
@@ -246,10 +275,9 @@ td.nw{white-space:nowrap}
 
     <!-- AGENDA -->
     <section id="t-agenda" hidden>
-      <div class="card grid-f">
-        <div><label class="label" for="aUnidade">Unidade</label><select class="input" id="aUnidade"></select></div>
-        <div><label class="label" for="aMostrar">Mostrar</label><select class="input" id="aMostrar"><option value="todos">Todos os horários</option><option value="ocupados">Só ocupados</option><option value="livres">Só livres</option></select></div>
-        <div class="row"><button class="btn btn-primary" id="aExport">Baixar agenda (Excel)</button></div>
+      <div class="card">
+        <label class="label" for="aUnidade">Unidade</label><select class="input" id="aUnidade"></select>
+        <div class="dchips" id="aDatas"></div>
       </div>
       <div class="card" id="planner"></div>
     </section>
@@ -272,17 +300,13 @@ td.nw{white-space:nowrap}
     <section id="t-relatorio" hidden>
       <div class="card">
         <h3>Relatório do mês</h3>
-        <p class="muted" style="margin:0 0 14px">Presença registrada na Agenda (botões <b>Veio</b> e <b>Faltou</b>). A taxa considera só quem já tem presença marcada.</p>
+        <p class="muted" style="margin:0 0 14px">Resumo de cada unidade. A presença vem dos botões <b>Veio</b> e <b>Faltou</b> da Agenda. Toque numa unidade para abrir a agenda dela.</p>
         <div class="rep-kpis" id="repKpis"></div>
         <div class="row" style="margin-bottom:10px"><button class="btn btn-primary" id="repExport">Baixar relatório (Excel)</button></div>
-        <div class="tablewrap"><table><thead><tr><th>Unidade</th><th>Vagas</th><th>Agendados</th><th>Vieram</th><th>Faltaram</th><th>Sem registro</th><th>Reserva</th><th>Presença</th></tr></thead><tbody id="repBody"></tbody></table></div>
+        <div class="tablewrap"><table><thead><tr><th>Unidade</th><th>Vagas</th><th>Agendados</th><th>Livres</th><th>Vieram</th><th>Faltaram</th><th>Sem registro</th><th>Reserva</th><th>Presença</th></tr></thead><tbody id="repBody"></tbody></table></div>
       </div>
     </section>
 
-    <!-- UNIDADES -->
-    <section id="t-unidades" hidden>
-      <div class="card"><h3>Vagas por unidade no mês</h3><p class="muted" style="margin:0 0 12px">Vagas livres considerando as datas cadastradas. "R" = pessoas na lista de reserva. Toque para abrir a agenda.</p><div class="units" id="units"></div></div>
-    </section>
   </div>
 </main>
 
@@ -359,8 +383,14 @@ async function carregarTudo(){
   const [m,h,d]=await Promise.all([rpc("bemviver_admin_meses",{senha}),rpc("bemviver_horarios_todos",{senha}),rpc("bemviver_listar",{senha})]);
   meses=m;horarios=h;dados=d;
   if(!meses.some(x=>x.id===mesId)) mesId=(meses.find(x=>x.aberto)||meses[0]||{}).id||null;
-  datas=mesId?await rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}):[];
+  await carregarMes();
   montar();
+}
+let bloq=new Set();                         /* "dataId|horarioId" fechados pela Day */
+async function carregarMes(){
+  if(!mesId){datas=[];bloq=new Set();return}
+  const[ds,bs]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_bloqueios",{senha,p_mes_id:mesId})]);
+  datas=ds;bloq=new Set(bs.map(b=>b.data_id+"|"+b.horario_id));
 }
 $("entrar").onclick=async()=>{
   senha=$("senha").value.trim();$("loginErr").textContent="";
@@ -378,7 +408,7 @@ async function silencioso(){if(!senha||ocupado||document.hidden||document.queryS
 setInterval(silencioso,60000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)silencioso()});
 
 /* ---------- mês ---------- */
-$("mesSel").onchange=async()=>{mesId=+$("mesSel").value;datas=await rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}).catch(()=>[]);montar()};
+$("mesSel").onchange=async()=>{mesId=+$("mesSel").value;planData="";try{await carregarMes()}catch(e){datas=[]}montar()};
 function abrirNovoMes(){
   const hoje=new Date();$("nMes").innerHTML=MESES.map((n,i)=>`<option value="${i+1}">${n}</option>`).join("");
   $("nAno").innerHTML=[hoje.getFullYear(),hoje.getFullYear()+1].map(a=>`<option>${a}</option>`).join("");
@@ -416,32 +446,41 @@ function montar(){
   $("mesSel").innerHTML=meses.map(m=>`<option value="${m.id}">${nomeMes(m)}${m.aberto?" · aberto":""}</option>`).join("")||'<option value="">Nenhum mês criado</option>';
   if(mesId)$("mesSel").value=mesId;
   const m=mesAtual();
-  $("statusPill").textContent=m&&m.aberto?"Inscrições abertas":"Inscrições fechadas";
-  $("statusPill").className="pill"+(m&&m.aberto?"":" off");
-  $("toggleMes").textContent=m&&m.aberto?"Fechar inscrições":"Abrir inscrições";
-  $("toggleMes").className="btn "+(m&&m.aberto?"btn-ghost":"btn-primary");
+  const ab=!!(m&&m.aberto);
+  $("statusBox").className="statusbox"+(ab?" open":"");
+  $("statusPill").innerHTML=`<i class="dot"></i>Inscrições ${ab?"ABERTAS":"FECHADAS"}`;
+  $("statusTxt").textContent=!m?"Crie um mês para começar.":ab?`Os colaboradores já podem se inscrever em ${nomeMes(m)}.`:`Ninguém consegue se inscrever em ${nomeMes(m)} agora.`;
+  $("toggleMes").textContent=ab?"Fechar inscrições":"Abrir inscrições";
+  $("toggleMes").className="btn "+(m&&m.aberto?"btn-white":"btn-primary");
   $("toggleMes").disabled=!m;
   const lista=doMes(),ag=lista.filter(d=>!d.reserva).length,res=lista.length-ag;
   const cap=capacidadeMes();
   const hoje=lista.filter(d=>d.origem==="formulario"&&new Date(d.created_at).toDateString()===new Date().toDateString()).length;
   $("kpis").innerHTML=`<button class="kpi" data-k="ag"><b>${ag}</b><span>Agendados</span><em>ver lista ›</em></button>
     <button class="kpi res" data-k="res"><b>${res}</b><span>Lista de reserva</span><em>ver lista ›</em></button>
-    <button class="kpi" data-k="livres"><b>${Math.max(cap-agComData(),0)}</b><span>Vagas livres de ${cap}</span><em>ver por unidade ›</em></button>
+    <button class="kpi" data-k="livres"><b>${livresMes()}</b><span>Vagas livres de ${cap}</span><em>ver por unidade ›</em></button>
     <button class="kpi" data-k="hoje"><b>${hoje}</b><span>Inscrições hoje</span><em>ver lista ›</em></button>`;
   const us=unidades();$("aUnidade").innerHTML=us.map(u=>`<option>${esc(u)}</option>`).join("");if(planUnidade&&us.includes(planUnidade))$("aUnidade").value=planUnidade;
   const est=$("fEstado").value;$("fEstado").innerHTML='<option value="">Todos</option>'+ESTADOS.map(e=>`<option>${e}</option>`).join("");$("fEstado").value=est;
   filtrosUnidade();
-  renderDatas();renderAgenda();renderLista();renderUnidades();renderRelatorio();
+  renderDatas();renderAgenda();renderLista();renderRelatorio();
 }
-const capacidadeMes=()=>datas.reduce((s,d)=>s+horarios.filter(h=>h.unidade===d.unidade&&h.grupo===d.grupo).reduce((a,h)=>a+h.capacidade,0),0);
+/* vagas abertas = capacidade das datas cadastradas menos os horários fechados que estavam vazios */
+const ocupados=(did,hid)=>dados.filter(x=>x.data_id===did&&x.horario_id===hid).length;
+function vagasDe(filtro){let cap=0,liv=0;
+  for(const d of datas.filter(filtro||(()=>true))) for(const h of horarios.filter(h=>h.unidade===d.unidade&&h.grupo===d.grupo)){
+    const o=ocupados(d.id,h.id),f=bloq.has(d.id+"|"+h.id);cap+=f?o:h.capacidade;liv+=f?0:Math.max(h.capacidade-o,0)}
+  return{cap,liv}}
+const capacidadeMes=()=>vagasDe().cap;
+const livresMes=()=>vagasDe().liv;
 const agComData=()=>doMes().filter(d=>!d.reserva&&d.data_id).length;
 
 /* ---------- abas ---------- */
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>abrirTab(t.dataset.tab));
-function abrirTab(n){aba=n;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===n));["datas","agenda","lista","unidades","relatorio"].forEach(x=>$("t-"+x).hidden=x!==n)}
+function abrirTab(n){aba=n;document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===n));["datas","agenda","lista","relatorio"].forEach(x=>$("t-"+x).hidden=x!==n)}
 const abrirAba=abrirTab;
 $("kpis").onclick=e=>{const k=e.target.closest(".kpi");if(!k)return;
-  if(k.dataset.k==="livres")abrirTab("unidades");
+  if(k.dataset.k==="livres")abrirTab("relatorio");
   else{$("fEstado").value="";filtrosUnidade();$("fUnidade").value="";$("fBusca").value="";$("fSit").value=k.dataset.k;renderLista();abrirTab("lista")}
   document.querySelector(".tabs").scrollIntoView({behavior:"smooth"})};
 
@@ -620,36 +659,76 @@ $("colarSalvar").onclick=async()=>{
 };
 
 /* ---------- AGENDA ---------- */
-let planUnidade="";
-["aUnidade","aMostrar"].forEach(id=>$(id).onchange=()=>{planUnidade=$("aUnidade").value;renderAgenda()});
+let planUnidade="",planData="";
+$("aUnidade").onchange=()=>{planUnidade=$("aUnidade").value;planData="";renderAgenda()};
 function blocosDaUnidade(u){
   /* cada bloco = uma data + um grupo, com os horários */
   const ds=datas.filter(d=>d.unidade===u).sort((a,b)=>a.data.localeCompare(b.data)||ORDEM_G.indexOf(a.grupo)-ORDEM_G.indexOf(b.grupo));
   return ds.map(d=>({d,hs:horarios.filter(h=>h.unidade===u&&h.grupo===d.grupo).sort((a,b)=>a.hora.localeCompare(b.hora))}));
 }
+function hojeISO(){const t=new Date();return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`}
 function renderAgenda(){
-  const u=$("aUnidade").value,mostrar=$("aMostrar").value,m=mesAtual();
-  if(!u||!m){$("planner").innerHTML='<div class="empty">Selecione um mês.</div>';return}
-  const insc=doMes().filter(x=>x.unidade===u);
-  const blocos=blocosDaUnidade(u);
-  const cap=blocos.reduce((s,b)=>s+b.hs.reduce((a,h)=>a+h.capacidade,0),0);
-  let html=`<h3>${esc(u)}</h3><div class="muted">${nomeMes(m)} · ${insc.filter(x=>!x.reserva&&x.data_id).length} agendados de ${cap} vagas · ${insc.filter(x=>x.reserva).length} na reserva</div>`;
-  if(!blocos.length) html+=`<div class="empty" style="margin-top:14px">Nenhuma data cadastrada para esta unidade em ${nomeMes(m)}. Cadastre na aba <b>Datas</b>.</div>`;
-  for(const {d,hs} of blocos){
-    const linhas=hs.map(h=>{
-      const ps=insc.filter(x=>x.data_id===d.id&&x.horario_id===h.id),livres=h.capacidade-ps.length;
-      if(mostrar==="ocupados"&&!ps.length)return"";if(mostrar==="livres"&&livres<=0)return"";
-      const temRes=insc.some(x=>x.reserva);
-      return `<div class="pl-row"><div class="hr">${h.hora} – ${fim(h.hora)}</div><div class="who">`+ps.map(pessoa).join("")+
-        (livres>0?`<div class="free">${livres>1?livres+" vagas livres":"livre"}${temRes?` <button class="mini fit" data-fit="${d.id}|${h.id}">Encaixar da reserva</button>`:""}</div>`:"")+`</div></div>`}).join("");
-    html+=`<div class="day"><h4>${esc(dataLonga(d.data))}${gruposDe(u).length>1?` <span>· ${esc(ROTULO_G[d.grupo]||d.grupo)}</span>`:""}</h4>${linhas||'<div class="muted" style="padding:8px 4px">Nada para mostrar com este filtro.</div>'}</div>`;
+  const u=$("aUnidade").value,m=mesAtual();
+  if(!u||!m){$("aDatas").innerHTML="";$("planner").innerHTML='<div class="empty">Crie um mês e cadastre as datas na aba <b>1. Datas</b>.</div>';return}
+  const insc=doMes().filter(x=>x.unidade===u),blocos=blocosDaUnidade(u);
+  const dias=[...new Set(blocos.map(b=>b.d.data))];
+  const res=insc.filter(x=>x.reserva),semData=insc.filter(x=>!x.reserva&&!x.data_id);
+  const opcoes=[...dias,...(res.length?["reserva"]:[]),...(semData.length?["semdata"]:[])];
+  if(!opcoes.includes(planData)) planData=dias.find(d=>d>=hojeISO())||dias[0]||opcoes[0]||"";
+  $("aDatas").innerHTML=dias.map(dt=>{const v=vagasDe(d=>d.unidade===u&&d.data===dt);
+      return `<button type="button" class="dchip${planData===dt?" on":""}" data-dia="${dt}"><b>${esc(dataCurta(dt))}</b><small>${v.liv} livre${v.liv===1?"":"s"}</small></button>`}).join("")+
+    (res.length?`<button type="button" class="dchip res${planData==="reserva"?" on":""}" data-dia="reserva"><b>Reserva</b><small>${res.length} pessoa${res.length===1?"":"s"}</small></button>`:"")+
+    (semData.length?`<button type="button" class="dchip res${planData==="semdata"?" on":""}" data-dia="semdata"><b>Sem data</b><small>${semData.length} da planilha</small></button>`:"");
+  let html="";
+  if(!dias.length&&!res.length&&!semData.length){$("planner").innerHTML=`<div class="empty">Esta unidade ainda não tem datas em ${nomeMes(m)}.<br>Cadastre na aba <b>1. Datas</b>.</div>`;return}
+  if(planData==="reserva"){
+    html=`<div class="dayhead"><div><h3>Lista de reserva</h3><div class="muted">${esc(u)} · em ordem de inscrição</div></div></div>
+      <p class="helpline">Quando abrir uma vaga, toque em <b>WhatsApp</b> para avisar a pessoa, ou vá até o dia e use <b>+ Reserva</b> no horário livre.</p>`+
+      res.map((p,i)=>`<div class="pl-row"><div class="hr">${i+1}º</div><div class="who">${pessoa(p)}</div></div>`).join("");
+  }else if(planData==="semdata"){
+    html=`<div class="dayhead"><div><h3>Importados sem data</h3><div class="muted">Pessoas da planilha antiga sem dia definido</div></div></div>`+
+      semData.map(p=>`<div class="pl-row"><div class="hr">${p.hora?p.hora+" – "+fim(p.hora):"—"}</div><div class="who">${pessoa(p)}</div></div>`).join("");
+  }else{
+    const doDia=blocos.filter(b=>b.d.data===planData),v=vagasDe(d=>d.unidade===u&&d.data===planData);
+    const agDia=insc.filter(x=>doDia.some(b=>b.d.id===x.data_id)).length;
+    const slots=doDia.flatMap(b=>b.hs.map(h=>b.d.id+"|"+h.id)),fech=slots.filter(k=>bloq.has(k)).length;
+    html=`<div class="dayhead"><div><h3>${esc(dataLonga(planData))}</h3><div class="muted">${agDia} agendado${agDia===1?"":"s"} · ${v.liv} vaga${v.liv===1?"":"s"} livre${v.liv===1?"":"s"}${fech?` · ${fech} horário${fech===1?"":"s"} fechado${fech===1?"":"s"}`:""}</div></div>
+      <div class="dayacts">${fech<slots.length?`<button class="mini close" data-dia-fechar="1">Fechar o dia todo</button>`:""}${fech?`<button class="mini open" data-dia-fechar="0">Abrir o dia todo</button>`:""}</div></div>
+      <p class="helpline"><b>Fechar</b> tira o horário do formulário: ninguém consegue marcar. <b>Abrir</b> faz ele voltar a aparecer.</p>`;
+    for(const {d,hs} of doDia){
+      if(doDia.length>1||gruposDe(u).length>1) html+=`<div class="grptitle">${esc(ROTULO_G[d.grupo]||d.grupo)}</div>`;
+      html+=hs.map(h=>{
+        const ps=insc.filter(x=>x.data_id===d.id&&x.horario_id===h.id),livres=h.capacidade-ps.length,f=bloq.has(d.id+"|"+h.id),k=d.id+"|"+h.id;
+        let fimLinha="";
+        if(f) fimLinha=`<div class="closedtag">Fechado <button class="mini open" data-bloq="${k}|0">Abrir</button></div>`;
+        else if(livres>0) fimLinha=`<div class="free">${livres>1?livres+" vagas livres":"Livre"} <button class="mini close" data-bloq="${k}|1">Fechar</button>${res.length?` <button class="mini fit" data-fit="${k}">+ Reserva</button>`:""}</div>`;
+        return `<div class="pl-row${f&&!ps.length?" closed":""}"><div class="hr">${h.hora} – ${fim(h.hora)}</div><div class="who">${ps.map(pessoa).join("")}${fimLinha}</div></div>`;
+      }).join("");
+    }
+    html+=`<div class="row" style="margin-top:16px"><button class="btn btn-ghost" id="aExport" type="button">Baixar agenda da unidade (Excel)</button></div>`;
   }
-  const semData=insc.filter(x=>!x.reserva&&!x.data_id);
-  if(semData.length) html+=`<div class="day"><h4>Importados sem data <span>· planilha</span></h4>`+semData.map(p=>`<div class="pl-row"><div class="hr">${p.hora?p.hora+" – "+fim(p.hora):"—"}</div><div class="who">${pessoa(p)}</div></div>`).join("")+`</div>`;
-  const res=insc.filter(x=>x.reserva);
-  if(res.length) html+=`<div class="day"><h4>Lista de reserva <span>· ${res.length}</span></h4>`+res.map((p,i)=>`<div class="pl-row"><div class="hr">${i+1}º</div><div class="who">${pessoa(p)}</div></div>`).join("")+`</div>`;
   $("planner").innerHTML=html;
 }
+$("aDatas").addEventListener("click",e=>{const b=e.target.closest("[data-dia]");if(!b)return;planData=b.dataset.dia;renderAgenda()});
+
+/* ---------- FECHAR / ABRIR HORÁRIOS ---------- */
+async function bloquear(did,hids,fechar){
+  try{await rpc("bemviver_admin_bloquear",{senha,p_data_id:did,p_horarios:hids,p_fechar:fechar});
+    for(const h of hids){const k=did+"|"+h;fechar?bloq.add(k):bloq.delete(k)}
+    montar();toast(fechar?(hids.length>1?"Horários fechados.":"Horário fechado. Ninguém consegue marcar."):(hids.length>1?"Horários abertos.":"Horário aberto de novo."))}
+  catch(e){toast("Não foi possível alterar. Verifique a internet.")}
+}
+$("planner").addEventListener("click",e=>{
+  const b=e.target.closest("[data-bloq]");
+  if(b){const[did,hid,f]=b.dataset.bloq.split("|").map(Number);b.disabled=true;bloquear(did,[hid],!!f);return}
+  const d=e.target.closest("[data-dia-fechar]");
+  if(d){const fechar=d.dataset.diaFechar==="1",u=$("aUnidade").value,doDia=blocosDaUnidade(u).filter(x=>x.d.data===planData);
+    confirmar(fechar?"Fechar o dia todo?":"Abrir o dia todo?",
+      fechar?`Nenhum horário de ${dataLonga(planData)} vai aparecer no formulário. Quem já marcou continua agendado.`:`Todos os horários de ${dataLonga(planData)} voltam a aparecer no formulário.`,
+      fechar?"Fechar o dia":"Abrir o dia",async()=>{for(const b of doDia) await bloquear(b.d.id,b.hs.map(h=>h.id),fechar)},fechar);
+    return}
+  if(e.target.closest("#aExport")) exportarAgenda();
+});
 function waLink(p,texto){const c=(p.celular||"").replace(/\D/g,"");if(c.length<10)return"";return `https://wa.me/55${c}?text=${encodeURIComponent(texto)}`}
 function msgVaga(p){return `Olá, ${p.nome.split(" ")[0]}! Aqui é da equipe do Programa Bem+VIVER. Abriu uma vaga para a Quick Massage na ${p.unidade}. Você ainda tem interesse?`}
 function msgLembrete(p){return `Olá, ${p.nome.split(" ")[0]}! Lembrete da sua Quick Massage na ${p.unidade}: ${p.data?dataLonga(p.data)+", ":""}${p.hora||""}. Programa Bem+VIVER.`}
@@ -660,13 +739,13 @@ function pessoa(p){
   return `<div class="p">${esc(p.nome)} <span>${esc(extra)}</span>${p.origem==="planilha"?' <span class="tag plan">planilha</span>':""}
     <span class="acts">${pres}${wa?`<a class="mini wa" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>`:""}<button class="mini" data-id="${p.id}" data-del>Excluir</button></span></div>`;
 }
-$("aExport").onclick=()=>{
+function exportarAgenda(){
   const u=$("aUnidade").value,insc=doMes().filter(x=>x.unidade===u),linhas=[["Data","Escala","Horário","Nome","Setor","Celular","Situação"]];
-  for(const {d,hs} of blocosDaUnidade(u)) for(const h of hs){const ps=insc.filter(x=>x.data_id===d.id&&x.horario_id===h.id);
-    for(let i=0;i<h.capacidade;i++){const p=ps[i];linhas.push([dataLonga(d.data),ROTULO_G[d.grupo]||d.grupo,`${h.hora} - ${fim(h.hora)}`,p?.nome||"",p?.setor||"",fmtTel(p?.celular),p?"Agendado":"Livre"])}}
+  for(const {d,hs} of blocosDaUnidade(u)) for(const h of hs){const ps=insc.filter(x=>x.data_id===d.id&&x.horario_id===h.id),f=bloq.has(d.id+"|"+h.id);
+    for(let i=0;i<Math.max(h.capacidade,ps.length);i++){const p=ps[i];linhas.push([dataLonga(d.data),ROTULO_G[d.grupo]||d.grupo,`${h.hora} - ${fim(h.hora)}`,p?.nome||"",p?.setor||"",fmtTel(p?.celular),p?"Agendado":f?"Fechado":"Livre"])}}
   insc.filter(x=>x.reserva).forEach(p=>linhas.push(["","",ROTULO_G[p.grupo]||"",p.nome,p.setor||"",fmtTel(p.celular),"Reserva"]));
   baixar(linhas,`agenda-${u}-${refMes(mesAtual())}`);
-};
+}
 
 /* ---------- LISTA ---------- */
 function filtrosUnidade(){const e=$("fEstado").value,cur=$("fUnidade").value,us=unidades().filter(u=>!e||estadoDe(u)===e);
@@ -693,21 +772,10 @@ $("exportar").onclick=()=>{const l=filtrados();
     [d.mes_ref||"",d.estado,d.unidade,d.data?dataLonga(d.data):"",d.reserva?"":`${d.hora} - ${fim(d.hora)}`,d.reserva?"Reserva":"Agendado",ROTULO_G[d.grupo]||"",d.atuacao||"",d.nome,d.setor||"",fmtTel(d.celular),d.codigo||"",d.presenca==="compareceu"?"Veio":d.presenca==="faltou"?"Faltou":"",d.origem,d.origem==="planilha"?"":new Date(d.created_at).toLocaleString("pt-BR")])),
     `inscritos-${refMes(mesAtual()||{mes:0,ano:0})}-${$("fUnidade").value||$("fEstado").value||"todos"}`)};
 
-/* ---------- UNIDADES ---------- */
-function renderUnidades(){
-  const insc=doMes();
-  const us=unidades().map(u=>{const tot=blocosDaUnidade(u).reduce((s,b)=>s+b.hs.reduce((a,h)=>a+h.capacidade,0),0);
-    const ag=insc.filter(x=>x.unidade===u&&!x.reserva&&x.data_id).length,res=insc.filter(x=>x.unidade===u&&x.reserva).length;return{u,tot,ag,res}})
-    .sort((a,b)=>(b.tot-b.ag)-(a.tot-a.ag));
-  $("units").innerHTML=us.map(x=>`<div class="unit" data-u="${esc(x.u)}"><span class="nm">${esc(x.u)}</span><span class="bar"><i style="width:${x.tot?x.ag/x.tot*100:0}%"></i></span>
-    <span class="n">${x.tot?`${x.tot-x.ag} livres`:"sem data"}${x.res?` · ${x.res}R`:""}</span></div>`).join("");
-}
-$("units").onclick=e=>{const el=e.target.closest(".unit");if(!el)return;planUnidade=el.dataset.u;$("aUnidade").value=planUnidade;renderAgenda();abrirTab("agenda");window.scrollTo(0,0)};
-
 /* ---------- EXCLUIR ---------- */
 document.addEventListener("click",e=>{const b=e.target.closest(".del,[data-del]");if(!b)return;const id=+b.dataset.id,d=dados.find(x=>x.id===id);if(!d)return;
   confirmar("Excluir inscrição?",`${d.nome} · ${d.unidade}${d.reserva?" · reserva":d.data?" · "+dataCurta(d.data)+" "+d.hora:""}. O horário volta a ficar livre no formulário.`,"Excluir",async()=>{
-    try{await rpc("bemviver_excluir",{senha,inscricao_id:id});dados=dados.filter(x=>x.id!==id);datas=await rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}).catch(()=>datas);montar();toast("Inscrição excluída.")}
+    try{await rpc("bemviver_excluir",{senha,inscricao_id:id});dados=dados.filter(x=>x.id!==id);await carregarMes().catch(()=>{});montar();toast("Inscrição excluída.")}
     catch(e){toast("Não foi possível excluir. Verifique a internet.")}})});
 
 /* ---------- PRESENÇA ---------- */
@@ -744,11 +812,11 @@ $("pickList").addEventListener("click",async e=>{
 function linhasRelatorio(){
   const insc=doMes();
   return unidades().map(u=>{
-    const vagas=blocosDaUnidade(u).reduce((s,b)=>s+b.hs.reduce((a,h)=>a+h.capacidade,0),0);
+    const vv=vagasDe(d=>d.unidade===u),vagas=vv.cap;
     const ag=insc.filter(x=>x.unidade===u&&!x.reserva&&x.data_id);
     const veio=ag.filter(x=>x.presenca==="compareceu").length,faltou=ag.filter(x=>x.presenca==="faltou").length;
     const res=insc.filter(x=>x.unidade===u&&x.reserva).length;
-    return{u,est:estadoDe(u),vagas,ag:ag.length,veio,faltou,sem:ag.length-veio-faltou,res,taxa:veio+faltou?Math.round(veio/(veio+faltou)*100):null};
+    return{u,est:estadoDe(u),vagas,liv:vv.liv,ag:ag.length,veio,faltou,sem:ag.length-veio-faltou,res,taxa:veio+faltou?Math.round(veio/(veio+faltou)*100):null};
   }).filter(r=>r.vagas||r.ag||r.res);
 }
 function renderRelatorio(){
@@ -757,11 +825,12 @@ function renderRelatorio(){
   const ocup=T.vagas?Math.round(T.ag/T.vagas*100)+"%":"—";
   $("repKpis").innerHTML=`<div><b>${T.ag}</b><span>Agendados de ${T.vagas} vagas (${ocup})</span></div><div><b>${T.veio}</b><span>Vieram</span></div>
     <div><b>${T.faltou}</b><span>Faltaram</span></div><div><b>${taxa}</b><span>Taxa de presença</span></div>`;
-  $("repBody").innerHTML=L.map(r=>`<tr><td>${esc(r.u)}</td><td>${r.vagas}</td><td>${r.ag}</td><td>${r.veio}</td><td>${r.faltou}</td><td>${r.sem}</td><td>${r.res}</td><td>${r.taxa==null?"—":r.taxa+"%"}</td></tr>`).join("")
-    ||'<tr><td colspan="8"><div class="empty">Sem dados neste mês.</div></td></tr>';
+  $("repBody").innerHTML=L.map(r=>`<tr data-u="${esc(r.u)}" style="cursor:pointer"><td><b>${esc(r.u)}</b></td><td>${r.vagas}</td><td>${r.ag}</td><td>${r.liv}</td><td>${r.veio}</td><td>${r.faltou}</td><td>${r.sem}</td><td>${r.res}</td><td>${r.taxa==null?"—":r.taxa+"%"}</td></tr>`).join("")
+    ||'<tr><td colspan="9"><div class="empty">Sem datas cadastradas neste mês.</div></td></tr>';
 }
+$("repBody").addEventListener("click",e=>{const tr=e.target.closest("tr[data-u]");if(!tr)return;planUnidade=tr.dataset.u;$("aUnidade").value=planUnidade;planData="";renderAgenda();abrirTab("agenda");window.scrollTo({top:0,behavior:"smooth"})});
 $("repExport").onclick=()=>{const L=linhasRelatorio();
-  baixar([["Estado","Unidade","Vagas","Agendados","Vieram","Faltaram","Sem registro","Reserva","Taxa de presença"]].concat(L.map(r=>[r.est,r.u,r.vagas,r.ag,r.veio,r.faltou,r.sem,r.res,r.taxa==null?"":r.taxa+"%"])),
+  baixar([["Estado","Unidade","Vagas","Agendados","Livres","Vieram","Faltaram","Sem registro","Reserva","Taxa de presença"]].concat(L.map(r=>[r.est,r.u,r.vagas,r.ag,r.liv,r.veio,r.faltou,r.sem,r.res,r.taxa==null?"":r.taxa+"%"])),
     `relatorio-quick-massage-${refMes(mesAtual()||{mes:0,ano:0})}`)};
 
 /* ---------- SENHA E SAIR ---------- */
