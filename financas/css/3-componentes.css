@@ -1,0 +1,243 @@
+/* ============================================================
+   3 — COMPONENTES (as "peças" da tela)
+   ------------------------------------------------------------
+   Cada bloco abaixo é uma peça: topo, cartão, resumo,
+   linhas de lista, etiquetas, aviso...
+   ============================================================ */
+
+/* ---------- Topo ---------- */
+.topo {
+  display: flex;
+  flex-wrap: wrap;               /* no celular, os botões descem para a linha de baixo */
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 4px 0 14px;
+}
+.topo__botoes { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- Navegação de mês ---------- */
+.navegacao-mes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.navegacao-mes__nome { margin: 0; font-size: 18px; text-transform: capitalize; }
+
+/* ---------- Cartão (cada bloco branco) ---------- */
+.cartao {
+  background: var(--cor-cartao);
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-cartao);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+.cartao__cabecalho { margin-bottom: 12px; }
+.cartao__titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  font-size: 16px;
+}
+.cartao__explica {                  /* frase que explica para que serve o bloco */
+  margin: 4px 0 0;
+  color: var(--cor-texto-apagado);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.cartao__titulo small { color: var(--cor-texto-apagado); font-weight: 500; }
+.cartao__vazio { color: var(--cor-texto-apagado); font-size: 13px; padding: 6px 0; margin: 0; }
+
+/* ---------- Ajuda "Como usar" ---------- */
+.cartao--ajuda { border-color: var(--cor-destaque); }
+.ajuda__passos { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.45; }
+
+/* ---------- Resumo do mês ---------- */
+.resumo__rotulo { color: var(--cor-texto-apagado); font-size: 13px; }
+.resumo__total { font-size: 32px; font-weight: 800; letter-spacing: -0.03em; margin: 2px 0 12px; }
+
+.resumo__caixas { display: flex; gap: 10px; margin-bottom: 14px; }
+.resumo__caixa { flex: 1; background: var(--cor-fundo); border-radius: 12px; padding: 10px 12px; }
+.resumo__caixa span { display: block; font-size: 12px; color: var(--cor-texto-apagado); }
+.resumo__caixa b { font-size: 15px; }
+
+.resumo__frase { margin: 0; color: var(--cor-texto-apagado); font-size: 13px; }
+.resumo__frase + .barra { margin-top: 8px; }
+
+/* Legenda: uma linha por classificação, com a explicação embaixo do nome */
+.legenda { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+.legenda__item { display: flex; align-items: center; gap: 10px; }
+.legenda__texto { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.legenda__nome { font-size: 14px; font-weight: 600; }
+.legenda__explica { font-size: 12px; color: var(--cor-texto-apagado); }
+.legenda__valor { white-space: nowrap; }
+
+.alerta { margin-top: 14px; padding: 12px; border-radius: 12px; font-size: 13px; line-height: 1.45; }
+
+/* ---------- Barra colorida (proporção) ---------- */
+.barra { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--cor-linha); }
+.barra i { display: block; height: 100%; }
+.barra--fina { height: 5px; margin-top: 6px; }
+.barra--fina i { border-radius: 99px; }
+
+/* ---------- Bolinha de cor ---------- */
+.bolinha { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+/* ---------- Linha de lista (categorias, gastos, parcelas) ---------- */
+.linha {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-top: 1px solid var(--cor-linha);
+}
+.linha:first-of-type { border-top: 0; }
+.linha__info { flex: 1; min-width: 0; }
+.linha__nome { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.linha__detalhe { color: var(--cor-texto-apagado); font-size: 12px; margin-top: 2px; }
+.linha__valor { font-weight: 700; white-space: nowrap; }
+.linha__direita { text-align: right; }
+.linha__direita .etiqueta { margin-top: 4px; }
+
+/* ---------- Item "a classificar" ---------- */
+.pendente { padding: 12px 0; border-top: 1px solid var(--cor-linha); }
+.pendente:first-of-type { border-top: 0; }
+.pendente__topo { display: flex; gap: 10px; }
+.pendente__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; }
+.pendente__acoes .etiqueta { padding: 8px 12px; }
+.pendente__lembrar {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 10px; font-size: 12px; color: var(--cor-texto-apagado); line-height: 1.4;
+}
+.pendente__lembrar input { width: 18px; height: 18px; flex: none; }
+
+/* ---------- Etiqueta (Prioridade / Supérfluo / Neutro / A classificar) ---------- */
+.etiqueta {
+  border: 0;
+  border-radius: 99px;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.etiqueta--prioridade { background: var(--fundo-prioridade); color: var(--cor-prioridade); }
+.etiqueta--superfluo  { background: var(--fundo-superfluo);  color: var(--cor-superfluo); }
+.etiqueta--neutro     { background: var(--fundo-neutro);     color: var(--cor-neutro); }
+.etiqueta--pendente   { background: var(--fundo-pendente);   color: var(--cor-pendente); }
+
+/* ---------- Aviso rápido (embaixo da tela) ---------- */
+.aviso {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  max-width: 90vw;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--cor-texto);
+  color: var(--cor-fundo);
+  font-size: 13px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.aviso--visivel { opacity: 1; }
+
+/* ============================================================
+   PEÇAS PARA GASTAR MENOS
+   ============================================================ */
+
+/* Cartão em destaque (limite de supérfluo) */
+.cartao--destaque { border: 2px solid var(--cor-destaque); }
+
+.economia__numeros {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px; font-size: 14px; color: var(--cor-texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+.economia__numeros b { color: var(--cor-texto); font-size: 22px; }
+.economia__frase { margin: 12px 0 0; font-size: 14px; line-height: 1.5; }
+
+/* Campo + botão lado a lado */
+.campo-linha { display: flex; gap: 8px; }
+.campo-linha .campo { flex: 1; min-width: 0; }
+.botao--acao {
+  padding: 0 18px; border: 0; background: var(--cor-destaque); color: #fff; font-weight: 600;
+}
+
+/* Selo pequeno ao lado do nome (↑ 2x sua média) */
+.selo {
+  display: inline-block; margin-left: 6px; padding: 2px 8px; border-radius: 99px;
+  font-size: 11px; font-weight: 600; vertical-align: middle;
+}
+.selo--superfluo  { background: var(--fundo-superfluo);  color: var(--cor-superfluo); }
+.selo--prioridade { background: var(--fundo-prioridade); color: var(--cor-prioridade); }
+
+/* Posso comprar? */
+.simulador { display: flex; gap: 10px; }
+.simulador__campo { flex: 1; min-width: 0; }
+.simulador__campo .rotulo { margin-top: 0; }
+.simulacao { margin-top: 14px; padding: 12px 14px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+.simulacao p { margin: 0; }
+.simulacao p + p { margin-top: 8px; }
+
+/* ============================================================
+   💸 LISTA DE PAGAMENTOS (o que pagar primeiro)
+   ============================================================ */
+
+/* Grupo: "1º Essencial", "2º Dízimo", "3º Dívidas" */
+.grupo { margin-top: 16px; }
+.grupo__titulo {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--cor-texto); padding-bottom: 6px; border-bottom: 1px solid var(--cor-linha);
+}
+.grupo__titulo span { text-transform: none; letter-spacing: 0; font-weight: 500; color: var(--cor-texto-apagado); }
+
+/* Cada conta da lista */
+.conta {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-top: 1px solid var(--cor-linha);
+}
+.grupo__titulo + .conta { border-top: 0; }
+.conta--proxima {                 /* a próxima a pagar fica destacada */
+  margin: 6px -10px 0; padding: 12px 10px;
+  border: 0; border-radius: 12px; background: var(--fundo-pendente);
+}
+.conta__numero {                  /* posição na ordem de pagamento */
+  flex: none; width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--cor-fundo); border: 1px solid var(--cor-linha);
+  font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums;
+}
+.conta--proxima .conta__numero { background: var(--cor-pendente); border-color: var(--cor-pendente); color: #fff; }
+.conta__numero--pago { background: var(--fundo-prioridade); border-color: transparent; color: var(--cor-prioridade); }
+.conta__acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 8px; }
+.conta__acoes .botao--link { padding: 0; }
+
+.botao--paguei {
+  padding: 7px 14px; border: 0; border-radius: 99px;
+  background: var(--cor-prioridade); color: #fff; font-size: 13px; font-weight: 600;
+}
+
+/* Próximo a pagar */
+.proximo { margin-top: 12px; font-size: 14px; }
+
+/* Itens já pagos */
+.linha--paga .linha__nome { text-decoration: line-through; color: var(--cor-texto-apagado); }
+.linha--paga .linha__valor { color: var(--cor-texto-apagado); font-weight: 600; }
+.linha--paga .botao--link { padding: 0 0 0 6px; font-size: 12px; }
+
+/* Formulário de conta/dívida */
+.formulario__titulo { margin: 0 0 4px; font-size: 15px; }
+.formulario__linha { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.formulario__linha > div { min-width: 0; }
+.formulario__botoes { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.formulario__botoes .botao--acao { padding: 11px 20px; }
+.formulario__botoes .botao--link { padding: 0; }
+.botao--perigo { color: var(--cor-superfluo); }
+select.campo { appearance: auto; }

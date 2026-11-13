@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Fogo na Vila//Relogio de Oracao//PT
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:2026-11-18-1930@relogio-oracao-fnv
+DTSTAMP:20261112T101629Z
+DTSTART:20261118T223000Z
+DTEND:20261118T230000Z
+SUMMARY:Relógio de Oração do FNV
+DESCRIPTION:Dia 3 de 12 · Daniel 3. Mesmo que não… Ore por coragem para não se curvar diante da pressão.\nNa hora\, abra o relógio e toque em "Comecei a orar": https://eltongterci-cell.github.io/meus-apps/fnv/
+URL:https://eltongterci-cell.github.io/meus-apps/fnv/
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Seu horário de oração começa em 10 minutos
+END:VALARM
+END:VEVENT
+END:VCALENDAR

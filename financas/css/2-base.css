@@ -1,0 +1,89 @@
+/* ============================================================
+   2 — BASE (página, textos, botões e campos)
+   ------------------------------------------------------------
+   Estilos gerais, usados em todo o app.
+   ============================================================ */
+
+/* ---------- Página ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pagina {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  padding: var(--espaco) var(--espaco) 48px;
+}
+.pagina--centro {                 /* usada na tela de login */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.pagina--centro .cartao { width: 100%; }
+
+.escondido { display: none !important; }
+
+/* ---------- Textos ---------- */
+.titulo {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.texto-apagado { color: var(--cor-texto-apagado); margin: 0 0 20px; }
+.carregando { color: var(--cor-texto-apagado); text-align: center; padding: 40px 0; }
+.mensagem-erro { color: var(--cor-superfluo); font-size: 13px; min-height: 18px; margin: 10px 0 0; }
+
+/* ---------- Campos de formulário ---------- */
+.rotulo {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 13px;
+  color: var(--cor-texto-apagado);
+}
+.campo {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-botao);
+  background: var(--cor-fundo);
+  color: var(--cor-texto);
+  font: inherit;
+}
+
+/* ---------- Botões ---------- */
+.botao {
+  border: 1px solid var(--cor-linha);
+  border-radius: var(--raio-botao);
+  background: var(--cor-cartao);
+  color: var(--cor-texto);
+  font: inherit;
+  cursor: pointer;
+}
+.botao:disabled { opacity: 0.6; }
+
+.botao--principal {               /* botão roxo grande (Entrar) */
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: 0;
+  background: var(--cor-destaque);
+  color: #fff;
+  font-weight: 600;
+}
+.botao--pequeno { padding: 8px 10px; font-size: 13px; }
+.botao--icone { width: 40px; height: 40px; font-size: 18px; }
+.botao--link {
+  border: 0;
+  background: none;
+  padding: 10px 0 0;
+  color: var(--cor-destaque);
+  font-weight: 600;
+}

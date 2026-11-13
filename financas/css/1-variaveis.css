@@ -1,0 +1,46 @@
+/* ============================================================
+   1 — VARIÁVEIS (cores e medidas)
+   ------------------------------------------------------------
+   Quer mudar uma cor do app inteiro? Mude só aqui.
+   O resto do CSS usa estes nomes, ex.: var(--cor-prioridade)
+   ============================================================ */
+
+/* ---------- Tema claro (padrão) ---------- */
+:root {
+  /* Fundo e textos */
+  --cor-fundo: #f4f5f7;
+  --cor-cartao: #ffffff;
+  --cor-texto: #14161a;
+  --cor-texto-apagado: #6b7280;
+  --cor-linha: #e7e9ee;
+  --cor-destaque: #7c3aed;      /* roxo dos botões */
+
+  /* Classificações (cor do texto + cor do fundo da etiqueta) */
+  --cor-prioridade: #16a34a;    --fundo-prioridade: #dcfce7;   /* 🟢 */
+  --cor-superfluo: #dc2626;     --fundo-superfluo: #fee2e2;    /* 🔴 */
+  --cor-neutro: #64748b;        --fundo-neutro: #e2e8f0;       /* ⚪ */
+  --cor-pendente: #d97706;      --fundo-pendente: #fef3c7;     /* 🟡 */
+
+  /* Medidas */
+  --raio-cartao: 18px;
+  --raio-botao: 12px;
+  --espaco: 16px;
+  --largura-maxima: 560px;
+}
+
+/* ---------- Tema escuro (quando o celular está no modo escuro) ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cor-fundo: #0e1013;
+    --cor-cartao: #171a1f;
+    --cor-texto: #f1f2f4;
+    --cor-texto-apagado: #9aa1ad;
+    --cor-linha: #262a31;
+    --cor-destaque: #a78bfa;
+
+    --fundo-prioridade: #12301f;
+    --fundo-superfluo: #3a1616;
+    --fundo-neutro: #232831;
+    --fundo-pendente: #3a2a0d;
+  }
+}

@@ -1,0 +1,81 @@
+<!doctype html>
+<!--
+  ============================================================
+  MINHAS FINANÇAS — página principal
+  ------------------------------------------------------------
+  Este arquivo só tem a ESTRUTURA da página (o "esqueleto").
+  - Aparência (cores, tamanhos) ...... pasta css/
+  - Comportamento (dados, cliques) ... pasta js/
+  ============================================================
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0e1013">
+  <title>Minhas Finanças</title>
+
+  <!-- Fonte -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos: carregados nesta ordem (1 → 2 → 3) -->
+  <link rel="stylesheet" href="css/1-variaveis.css">
+  <link rel="stylesheet" href="css/2-base.css">
+  <link rel="stylesheet" href="css/3-componentes.css">
+</head>
+<body>
+
+  <!-- ===================== TELA DE LOGIN ===================== -->
+  <main id="telaLogin" class="pagina pagina--centro escondido">
+    <section class="cartao">
+      <h1 class="titulo">💰 Minhas Finanças</h1>
+      <p class="texto-apagado">Entre com o login que você criou no Supabase.</p>
+
+      <form id="formLogin">
+        <label class="rotulo" for="campoEmail">E-mail</label>
+        <input class="campo" id="campoEmail" type="email" autocomplete="username" required>
+
+        <label class="rotulo" for="campoSenha">Senha</label>
+        <input class="campo" id="campoSenha" type="password" autocomplete="current-password" required>
+
+        <button class="botao botao--principal" id="botaoEntrar" type="submit">Entrar</button>
+        <p class="mensagem-erro" id="erroLogin"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- ===================== TELA DO APP ===================== -->
+  <main id="telaApp" class="pagina escondido">
+
+    <!-- Topo: título e botões -->
+    <header class="topo">
+      <h1 class="titulo">💰 Finanças</h1>
+      <div class="topo__botoes">
+        <button class="botao botao--pequeno" data-acao="ajuda" title="Como usar o app">❓ Ajuda</button>
+        <button class="botao botao--pequeno" data-acao="baixar" title="Baixar todas as transações em planilha">⬇ Baixar tudo</button>
+        <button class="botao botao--pequeno" data-acao="atualizar">↻ Atualizar</button>
+        <button class="botao botao--pequeno" data-acao="sair">Sair</button>
+      </div>
+    </header>
+
+    <!-- Navegação entre meses -->
+    <nav class="navegacao-mes">
+      <button class="botao botao--icone" data-acao="mes-anterior" aria-label="Mês anterior">‹</button>
+      <h2 id="nomeDoMes" class="navegacao-mes__nome"></h2>
+      <button class="botao botao--icone" data-acao="mes-seguinte" aria-label="Próximo mês">›</button>
+    </nav>
+
+    <!-- Aqui o JavaScript desenha os blocos (resumo, categorias, etc.) -->
+    <div id="conteudo">
+      <p class="carregando">Carregando…</p>
+    </div>
+  </main>
+
+  <!-- Aviso rápido que aparece embaixo da tela -->
+  <div id="aviso" class="aviso"></div>
+
+  <!-- Ponto de partida do JavaScript -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
