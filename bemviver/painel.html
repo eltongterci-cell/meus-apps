@@ -759,8 +759,21 @@ $("planner").addEventListener("click",e=>{
   if(e.target.closest("#aExport")) exportarAgenda();
 });
 function waLink(p,texto){const c=(p.celular||"").replace(/\D/g,"");if(c.length<10)return"";return `https://wa.me/55${c}?text=${encodeURIComponent(texto)}`}
-function msgVaga(p){return `Olá, ${p.nome.split(" ")[0]}! Aqui é da equipe do Programa Bem+VIVER. Abriu uma vaga para a Quick Massage na ${p.unidade}. Você ainda tem interesse?`}
-function msgLembrete(p){return `Olá, ${p.nome.split(" ")[0]}! Lembrete da sua Quick Massage na ${p.unidade}: ${p.data?dataLonga(p.data)+", ":""}${p.hora||""}. Programa Bem+VIVER.`}
+/* mensagens do WhatsApp (modelo aprovado) */
+const primeiroNome=n=>{const x=String(n||"").trim().split(/\s+/)[0]||"";return x.charAt(0).toUpperCase()+x.slice(1).toLowerCase()};
+const horaFala=h=>{if(!h)return"";const[H,M]=h.split(":");return M==="00"?`${+H}h`:`${+H}h${M}`};
+function msgLembrete(p){
+  return `Olá, ${primeiroNome(p.nome)}! Tudo bem?\n\n`+
+    `Este é um lembrete da sua sessão de Quick Massage, na ${p.unidade}, pelo Programa Bem+VIVER.\n\n`+
+    `📅 Data: ${p.data?dataLonga(p.data):"a confirmar"}\n`+
+    `⏰ Horário: ${horaFala(p.hora)||"a confirmar"}\n\n`+
+    `Esperamos por você! Aproveite esse momento de cuidado e bem-estar.`;
+}
+function msgVaga(p){
+  return `Olá, ${primeiroNome(p.nome)}! Tudo bem?\n\n`+
+    `Abriu uma vaga para a sessão de Quick Massage, na ${p.unidade}, pelo Programa Bem+VIVER, e você está na nossa lista de reserva.\n\n`+
+    `Você ainda tem interesse? Responda esta mensagem para confirmarmos o seu horário.`;
+}
 function pessoa(p){
   const extra=[p.setor,fmtTel(p.celular),p.reserva&&p.grupo&&p.grupo!=="Geral"?ROTULO_G[p.grupo]:""].filter(Boolean).join(" · ");
   const wa=waLink(p,p.reserva?msgVaga(p):msgLembrete(p));
