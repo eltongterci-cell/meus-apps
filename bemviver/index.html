@@ -117,6 +117,8 @@ button,input{font:inherit;color:inherit}
 .slot-group>h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:12.5px;font-weight:800;letter-spacing:.7px;
   text-transform:uppercase;color:var(--green)}
 .slot-group>h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.escala{margin:12px 0 8px;font-size:13px;font-weight:800;color:var(--ink)}
+.slot-group>h3+.escala{margin-top:0}
 .period{margin:14px 0 8px;font-size:13.5px;font-weight:700;color:var(--muted)}
 .period:first-of-type{margin-top:0}
 .slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -244,11 +246,13 @@ const UNIDADES_PLANTAO = ["Hospital Vitória","PS Glória- CDM - Oftalmo","PS- T
 const UNIDADES_ANDAR = ["Centro - ES"];
 const UNIDADES_ATUACAO = ["Hospital Vitória"];              /* perguntam ADM ou Plantonista */
 const GRUPOS_EXTRAS = {"ADM":"Horários ADM","Extra":"Horários extras"};
-/* mês atual em Brasília: a pergunta do plantão acompanha o mês e o ano sozinha */
-const MES_ATUAL = new Intl.DateTimeFormat("pt-BR",{month:"long",timeZone:"America/Sao_Paulo"}).format(new Date()).toUpperCase();
+const MESES = ["JANEIRO","FEVEREIRO","MARÇO","ABRIL","MAIO","JUNHO","JULHO","AGOSTO","SETEMBRO","OUTUBRO","NOVEMBRO","DEZEMBRO"];
+/* o mês da pergunta do plantão vem do mês aberto pela equipe (cai no mês atual enquanto carrega) */
+let MES_ATUAL = new Intl.DateTimeFormat("pt-BR",{month:"long",timeZone:"America/Sao_Paulo"}).format(new Date()).toUpperCase();
+let MES_ABERTO = null;
 
 /* ================= ESTADO ================= */
-const VAZIO = () => ({nome:"",estado:"",unidade:"",atuacao:"",andar:"",plantao:"",horarioId:null,reserva:false,
+const VAZIO = () => ({nome:"",estado:"",unidade:"",atuacao:"",andar:"",plantao:"",sel:null,reserva:false,semDatas:false,
                       slots:[],chave:"",carregando:false,erroSlots:false,setor:"",celular:""});
 let S = VAZIO();
 let passo = 0, req = 0, enviando = false, concluido = false, autoTimer = null;
@@ -262,6 +266,10 @@ const periodo = h => minutos(h) < 720 ? "Manhã" : minutos(h) < 1080 ? "Tarde" :
 const soDigitos = s => String(s || "").replace(/\D/g, "");
 const limpar = s => String(s || "").trim().replace(/\s+/g, " ");
 const resolve = v => typeof v === "function" ? v() : v;
+const parseData = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const dataLonga = s => { const t = parseData(s).toLocaleDateString("pt-BR",{weekday:"long", day:"2-digit", month:"2-digit"}); return t.charAt(0).toUpperCase() + t.slice(1); };
+const dataCurta = s => parseData(s).toLocaleDateString("pt-BR",{weekday:"short", day:"2-digit", month:"2-digit"}).replace(".", "");
+const chaveSlot = s => s.data_id + "-" + s.horario_id;
 let toastTimer;
 function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 4500); }
 
@@ -308,7 +316,7 @@ function etapas(){
 function completa(id){
   if(id === "nome") return S.nome.length >= 3;
   if(ESCOLHAS[id]) return !!S[id];
-  if(id === "horario") return S.reserva || !!S.horarioId;
+  if(id === "horario") return S.reserva || !!S.sel;
   return true;
 }
 function limiteValido(alvo){
@@ -364,7 +372,7 @@ function render(direcao){
   }
   else if(id === "horario"){
     html = `<div class="kicker">Agendamento</div><h2>Escolha o seu horário</h2>
-      <p class="sub">${esc(unidadeAtual())}${S.andar ? " · " + esc(S.andar) + " andar" : ""} · sessões de 15 minutos, de segunda a sexta-feira.</p>
+      <p class="sub">${esc(unidadeAtual())}${S.andar ? " · " + esc(S.andar) + " andar" : ""} · sessões de 15 minutos.</p>
       <div id="slotBox" aria-live="polite">${htmlHorarios()}</div>`;
   }
   else if(id === "contato"){
@@ -392,7 +400,7 @@ function htmlResumo(){
   if(S.atuacao) linhas.push(["Atuação", S.atuacao]);
   if(S.plantao) linhas.push(["Plantão", S.plantao]);
   if(S.reserva) linhas.push(["Situação", "Lista de reserva"]);
-  else { const s = S.slots.find(x => x.horario_id === S.horarioId); if(s) linhas.push(["Horário", `${s.hora} às ${fimDe(s.hora)}`]); }
+  else if(S.sel){ linhas.push(["Data", dataLonga(S.sel.data)]); linhas.push(["Horário", `${S.sel.hora} às ${fimDe(S.sel.hora)}`]); }
   return `<dl class="summary">${linhas.map(([k,v]) => `<div class="row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl>`;
 }
 
@@ -406,7 +414,7 @@ function atualizarBarra(){
   if(enviando){ next.disabled = true; next.innerHTML = `<span class="spinner"></span>Enviando`; return; }
   next.disabled = false;
   if(ESCOLHAS[id]){ next.textContent = "Continuar"; next.disabled = !S[id]; }
-  else if(id === "horario"){ next.textContent = "Continuar"; next.disabled = S.carregando || S.erroSlots || (!S.reserva && !S.horarioId); }
+  else if(id === "horario"){ next.textContent = "Continuar"; next.disabled = S.carregando || S.erroSlots || S.semDatas || (!S.reserva && !S.sel); }
   else if(id === "contato"){ next.textContent = S.reserva ? "Entrar na lista de reserva" : "Confirmar agendamento"; if(S.reserva) next.classList.add("amber"); }
   else next.textContent = "Continuar";
 }
@@ -416,27 +424,37 @@ function htmlHorarios(){
   if(S.carregando || !S.chave) return `<div class="slots">${'<div class="skeleton"></div>'.repeat(8)}</div>`;
   if(S.erroSlots) return `<div class="state-box info"><div><b>Não foi possível carregar os horários.</b>Verifique a internet e tente de novo.
     <button type="button" class="btn btn-ghost" style="height:42px;margin-top:12px" data-acao="recarregar">Tentar de novo</button></div></div>`;
+  if(S.semDatas) return `<div class="state-box info"><div><b>As datas desta unidade ainda não foram divulgadas.</b>Volte em breve: assim que a equipe do Programa Bem+VIVER cadastrar as datas, os horários aparecem aqui.</div></div>`;
   if(S.reserva) return `<div class="state-box warn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 7v6M12 17h.01"/></svg>
     <div><b>Os horários estão preenchidos</b>Você pode entrar na lista de reserva. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo seu celular.</div></div>`;
-  const porGrupo = new Map();
-  for(const s of S.slots){ if(!porGrupo.has(s.grupo)) porGrupo.set(s.grupo, []); porGrupo.get(s.grupo).push(s); }
-  const grupos = [...porGrupo.keys()].sort((a,b) => (GRUPOS_EXTRAS[a]?1:0) - (GRUPOS_EXTRAS[b]?1:0));
-  const titulo = grupos.length > 1 || grupos[0] !== "Geral";
-  return grupos.map(g => {
-    const itens = porGrupo.get(g).sort((a,b) => minutos(a.hora) - minutos(b.hora));
-    const porPeriodo = new Map();
-    for(const s of itens){ const p = periodo(s.hora); if(!porPeriodo.has(p)) porPeriodo.set(p, []); porPeriodo.get(p).push(s); }
-    let h = `<div class="slot-group">${titulo ? `<h3>${esc(nomeGrupo(g))}</h3>` : ""}`;
-    for(const [p, lista] of porPeriodo){
-      if(porPeriodo.size > 1) h += `<div class="period">${p}</div>`;
-      h += `<div class="slots">` + lista.map(s => `<button type="button" class="slot" data-id="${s.horario_id}" aria-pressed="${S.horarioId === s.horario_id}" aria-label="${s.hora} até ${fimDe(s.hora)}"><b>${s.hora}</b><small>até ${fimDe(s.hora)}${s.livres > 1 ? ` · <em>${s.livres} vagas</em>` : ""}</small></button>`).join("") + `</div>`;
+  /* agrupa por data → escala → período */
+  const porData = new Map();
+  for(const s of S.slots){ if(!porData.has(s.data)) porData.set(s.data, []); porData.get(s.data).push(s); }
+  const varias = porData.size > 1;
+  let out = "";
+  for(const [data, doDia] of [...porData].sort((a,b) => a[0].localeCompare(b[0]))){
+    const porGrupo = new Map();
+    for(const s of doDia){ if(!porGrupo.has(s.grupo)) porGrupo.set(s.grupo, []); porGrupo.get(s.grupo).push(s); }
+    const grupos = [...porGrupo.keys()].sort((a,b) => (GRUPOS_EXTRAS[a]?1:0) - (GRUPOS_EXTRAS[b]?1:0));
+    out += `<div class="slot-group"><h3>${esc(dataLonga(data))}</h3>`;
+    for(const g of grupos){
+      const itens = porGrupo.get(g).sort((a,b) => minutos(a.hora) - minutos(b.hora));
+      if(grupos.length > 1) out += `<div class="escala">${esc(nomeGrupo(g))}</div>`;
+      const porPeriodo = new Map();
+      for(const s of itens){ const p = periodo(s.hora); if(!porPeriodo.has(p)) porPeriodo.set(p, []); porPeriodo.get(p).push(s); }
+      for(const [p, lista] of porPeriodo){
+        if(porPeriodo.size > 1) out += `<div class="period">${p}</div>`;
+        out += `<div class="slots">` + lista.map(s => { const k = chaveSlot(s), on = S.sel && S.sel.k === k;
+          return `<button type="button" class="slot" data-k="${k}" aria-pressed="${!!on}" aria-label="${esc(dataLonga(s.data))}, ${s.hora} até ${fimDe(s.hora)}"><b>${s.hora}</b><small>até ${fimDe(s.hora)}${s.livres > 1 ? ` · <em>${s.livres} vagas</em>` : ""}</small></button>`; }).join("") + `</div>`;
+      }
     }
-    return h + `</div>`;
-  }).join("");
+    out += `</div>`;
+  }
+  return out;
 }
 function garantirHorarios(){
   const chave = unidadeAtual() + "|" + grupoBase();
-  if(chave !== S.chave || S.erroSlots){ S.chave = chave; S.horarioId = null; S.reserva = false; carregarHorarios(); }
+  if(chave !== S.chave || S.erroSlots){ S.chave = chave; S.sel = null; S.reserva = false; S.semDatas = false; carregarHorarios(); }
 }
 async function carregarHorarios(){
   const meu = ++req, chave = S.chave;
@@ -445,12 +463,14 @@ async function carregarHorarios(){
     const lista = await rpc("bemviver_vagas", {p_unidade: unidadeAtual()});
     if(meu !== req || chave !== S.chave) return;
     const ok = gruposPermitidos();
-    S.slots = lista.filter(s => ok.includes(s.grupo) && s.livres > 0);
-    if(S.horarioId && !S.slots.some(s => s.horario_id === S.horarioId)) S.horarioId = null;
-    S.reserva = S.slots.length === 0;
+    const daPessoa = lista.filter(s => ok.includes(s.grupo));
+    S.slots = daPessoa.filter(s => s.livres > 0);
+    if(S.sel && !S.slots.some(s => chaveSlot(s) === S.sel.k)) S.sel = null;
+    S.semDatas = daPessoa.length === 0;
+    S.reserva = !S.semDatas && S.slots.length === 0;
   }catch(e){
     if(meu !== req) return;
-    S.erroSlots = true; S.slots = [];
+    S.erroSlots = true; S.slots = []; S.semDatas = false; S.reserva = false;
   }
   S.carregando = false; pintarHorarios();
 }
@@ -512,7 +532,7 @@ $("stage").addEventListener("click", e => {
       if(q === "estado"){ S.unidade = ""; S.atuacao = ""; S.andar = ""; S.plantao = ""; }
       if(q === "unidade"){ S.atuacao = ""; S.andar = ""; S.plantao = ""; }
       if(q === "atuacao"){ S.plantao = ""; }
-      S.chave = ""; S.horarioId = null; S.reserva = false;   /* horários precisam recarregar */
+      S.chave = ""; S.sel = null; S.reserva = false;          /* horários precisam recarregar */
     }
     ch.parentElement.querySelectorAll(".choice").forEach(x => x.setAttribute("aria-checked", x === ch));
     atualizarBarra();
@@ -523,7 +543,9 @@ $("stage").addEventListener("click", e => {
   }
   const slot = e.target.closest(".slot");
   if(slot){
-    S.horarioId = Number(slot.dataset.id);
+    const s = S.slots.find(x => chaveSlot(x) === slot.dataset.k);
+    if(!s) return;
+    S.sel = {k: slot.dataset.k, data_id: s.data_id, horario_id: s.horario_id, data: s.data, hora: s.hora};
     document.querySelectorAll(".slot").forEach(x => x.setAttribute("aria-pressed", x === slot));
     atualizarBarra();
     return;
@@ -550,14 +572,17 @@ function mascaraTel(v){
 const MENSAGENS = {
   horario_ocupado: "Esse horário acabou de ser preenchido. Escolha outro.",
   ha_vagas: "Abriu uma vaga! Escolha um horário.",
-  duplicado: "Este celular já está inscrito. Para mudar o horário, fale com a equipe do Programa Bem+VIVER.",
+  duplicado: "Este celular já está inscrito neste mês. Para mudar o horário, fale com a equipe do Programa Bem+VIVER.",
+  sem_datas: "As datas desta unidade ainda não foram divulgadas.",
+  inscricoes_fechadas: "As inscrições foram encerradas.",
   rede: "Sem conexão. Verifique a internet e tente novamente."
 };
 async function enviar(){
   if(enviando) return;
   enviando = true; atualizarBarra();
   const dados = {nome:S.nome, estado:S.estado, unidade:unidadeAtual(), atuacao:S.atuacao || null, plantao:S.plantao || null,
-                 andar:S.andar || null, horario_id:S.reserva ? null : S.horarioId, setor:S.setor, celular:S.celular};
+                 andar:S.andar || null, horario_id:S.reserva || !S.sel ? null : S.sel.horario_id, data_id:S.reserva || !S.sel ? null : S.sel.data_id,
+                 setor:S.setor, celular:S.celular};
   try{
     const r = await rpc("bemviver_inscrever", {d: dados});
     enviando = false;
@@ -566,8 +591,9 @@ async function enviar(){
     enviando = false;
     const m = err.message;
     toast(MENSAGENS[m] || "Não foi possível enviar. Confira os dados e tente novamente.");
-    if(m === "horario_ocupado" || m === "ha_vagas"){
-      S.horarioId = null; S.chave = "";
+    if(m === "inscricoes_fechadas"){ mostrarFechado(); return; }
+    if(m === "horario_ocupado" || m === "ha_vagas" || m === "sem_datas"){
+      S.sel = null; S.chave = "";
       const i = etapas().indexOf("horario");
       history.pushState({p: i}, "");
       irPara(i, -1);
@@ -581,9 +607,9 @@ function mostrarConfirmacao(r){
   if(S.andar) linhas.push(["Andar", S.andar + " andar"]);
   if(S.atuacao) linhas.push(["Atuação", S.atuacao]);
   if(ag){
+    if(r.data) linhas.push(["Data", dataLonga(r.data)]);
     linhas.push(["Horário", `${r.hora} às ${fimDe(r.hora)}`]);
     if(nomeGrupo(r.grupo)) linhas.push(["Escala", nomeGrupo(r.grupo)]);
-    linhas.push(["Dias", "Segunda a sexta-feira"]);
   }else{
     if(S.plantao) linhas.push(["Plantão", S.plantao]);
     linhas.push(["Situação", "Lista de reserva"]);
@@ -602,14 +628,38 @@ function mostrarConfirmacao(r){
   window.scrollTo({top:0, behavior:"smooth"});
 }
 function reiniciar(){
+  if(!MES_ABERTO){ mostrarFechado(); return; }
   S = VAZIO(); concluido = false; enviando = false; req++;
   history.replaceState({p:0}, "");
   irPara(0, -1);
 }
 
 /* ================= INÍCIO ================= */
-history.replaceState({p:0}, "");
-render(0);
+function mostrarFechado(){
+  concluido = true;
+  $("stage").innerHTML = `<section class="done step anim"><div class="badge res"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+    <h2>Inscrições fechadas</h2><p>No momento não há inscrições abertas para a Quick Massage. Fique de olho nos comunicados do Programa Bem+VIVER.</p></section>`;
+  $("progress").firstElementChild.style.width = "0";
+  atualizarBarra();
+}
+async function iniciar(){
+  $("stage").innerHTML = `<section class="step"><div class="slots">${'<div class="skeleton"></div>'.repeat(6)}</div></section>`;
+  $("actionbar").hidden = true;
+  try{
+    const r = await rpc("bemviver_mes_aberto", {});
+    MES_ABERTO = r && r[0] ? r[0] : null;
+  }catch(e){
+    $("stage").innerHTML = `<section class="done step"><h2>Sem conexão</h2><p>Não foi possível carregar a inscrição. Verifique a internet.</p><button type="button" class="btn btn-primary btn-block" id="retryInit">Tentar de novo</button></section>`;
+    $("retryInit").addEventListener("click", iniciar);
+    return;
+  }
+  if(!MES_ABERTO){ mostrarFechado(); return; }
+  MES_ATUAL = MESES[MES_ABERTO.mes - 1];
+  concluido = false;
+  history.replaceState({p:0}, "");
+  render(0);
+}
+iniciar();
 </script>
 </body>
 </html>
