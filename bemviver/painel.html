@@ -29,6 +29,7 @@
   input:focus,select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
   .btn{background:var(--primary);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
   .btn:hover{background:var(--primary-dark)}
+  .btn:disabled{opacity:.6;cursor:default}
   .btn.sec{background:#fff;color:var(--primary);border:1px solid var(--primary)}
   .err{color:var(--red);font-size:13px;margin-top:8px;min-height:18px}
   .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
@@ -151,7 +152,7 @@
 const SUPABASE_URL="https://pplhwupjbrtzqdwzlcem.supabase.co";
 const SUPABASE_KEY="sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 let senha="",dados=[],horarios=[];
 const ORDEM_G=["Par","Ímpar","Segundo andar","Terceiro andar","Geral","ADM","Extra"];
 const nomeG=g=>g==="Par"||g==="Ímpar"?"Plantão "+g:g==="ADM"?"Horários ADM":g==="Extra"?"Horários extras":g||"";
@@ -173,7 +174,11 @@ $("entrar").onclick=async()=>{
 };
 $("senha").addEventListener("keydown",e=>{if(e.key==="Enter")$("entrar").click()});
 try{const s=sessionStorage.getItem("bv_s");if(s){$("senha").value=s;$("entrar").click()}}catch(e){}
-["atualizar1","atualizar2"].forEach(id=>$(id).onclick=()=>carregar().catch(()=>{}));
+let ocupado=false;
+async function atualizarSilencioso(){if(!senha||ocupado||document.hidden||$("mConfirm").style.display==="flex")return;ocupado=true;try{await carregar()}catch(e){}ocupado=false}
+["atualizar1","atualizar2"].forEach(id=>$(id).onclick=async()=>{const b=$(id);b.disabled=true;b.textContent="Atualizando...";try{await carregar()}catch(e){alert("Sem conexão. Tente de novo.")}b.disabled=false;b.textContent="Atualizar"});
+setInterval(atualizarSilencioso,60000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)atualizarSilencioso()});
 
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>abrirTab(t.dataset.tab));
 function abrirTab(n){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===n));
@@ -201,7 +206,8 @@ function montar(){
 ["aUnidade","aMostrar"].forEach(id=>$(id).onchange=renderAgenda);
 function renderAgenda(){
   const u=$("aUnidade").value, mostrar=$("aMostrar").value;
-  const hs=horarios.filter(h=>h.unidade===u);
+  if(!u){$("planner").innerHTML='<p class="muted">Nenhuma unidade cadastrada.</p>';return;}
+  const hs=horarios.filter(h=>h.unidade===u).sort((a,b)=>a.hora.localeCompare(b.hora));
   const porH={};dados.filter(d=>d.unidade===u&&!d.reserva).forEach(d=>(porH[d.horario_id]=porH[d.horario_id]||[]).push(d));
   const grupos=[...new Set(hs.map(h=>h.grupo))].sort((a,b)=>ORDEM_G.indexOf(a)-ORDEM_G.indexOf(b));
   const reservas=dados.filter(d=>d.unidade===u&&d.reserva);
@@ -283,8 +289,10 @@ document.addEventListener("click",e=>{const b=e.target.closest(".del");if(!b)ret
   delId=+b.dataset.id;const d=dados.find(x=>x.id===delId);
   $("confirmTxt").textContent=`${d.nome} · ${d.unidade}${d.reserva?" · reserva":" · "+d.hora}. O horário volta a ficar livre no formulário.`;$("mConfirm").style.display="flex"});
 $("confirmNao").onclick=()=>$("mConfirm").style.display="none";
-$("confirmSim").onclick=async()=>{try{await rpc("bemviver_excluir",{senha,inscricao_id:delId});dados=dados.filter(d=>d.id!==delId);montar()}
-  catch(e){alert("Não foi possível excluir.")}$("mConfirm").style.display="none"};
+$("confirmSim").onclick=async()=>{const b=$("confirmSim");if(b.disabled)return;b.disabled=true;b.textContent="Excluindo...";
+  try{await rpc("bemviver_excluir",{senha,inscricao_id:delId});dados=dados.filter(d=>d.id!==delId);montar()}
+  catch(e){alert("Não foi possível excluir. Verifique a internet.")}
+  b.disabled=false;b.textContent="Excluir";$("mConfirm").style.display="none"};
 
 /* CSV para Excel */
 function baixar(linhas,nome){

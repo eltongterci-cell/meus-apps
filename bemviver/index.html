@@ -10,366 +10,509 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --green:#006633;        /* verde escuro MedSênior */
-    --green-700:#00552a;
-    --lime:#80a517;         /* verde-folha MedSênior */
-    --lime-50:#f3f8e6;
-    --mint:#e8f3ec;
-    --ink:#1d2b22;
-    --muted:#5f6f64;
-    --line:#dfe7e1;
-    --bg:#f4f7f2;
-    --red:#b42318;
-    --amber:#b7791f;
-    --radius:14px;
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;padding:0}
-  body{font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5}
+/* =========================================================
+   1. TOKENS (cores, espaços e raios da identidade MedSênior)
+   ========================================================= */
+:root{
+  --green:#006633; --green-700:#00552a; --green-900:#004d26;
+  --lime:#80a517;  --lime-50:#f3f8e6;  --lime-200:#dbe8b5;
+  --mint:#e8f3ec;  --ink:#1d2b22;      --muted:#5f6f64;
+  --line:#dfe7e1;  --field:#fbfcfa;    --bg:#f4f7f2;
+  --red:#b42318;   --amber:#b7791f;    --amber-50:#fffaeb;
+  --r-sm:10px; --r-md:12px; --r-lg:20px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px;
+  --max:720px;
+  --shadow:0 10px 30px rgba(0,60,30,.08),0 1px 3px rgba(0,60,30,.06);
+  --ring:0 0 0 4px rgba(0,102,51,.12);
+}
 
-  /* topo */
-  .topbar{background:#fff;border-bottom:1px solid var(--line)}
-  .topbar .in{max-width:720px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .topbar img{height:34px;width:auto;display:block}
-  .topbar .tag{font-size:12px;font-weight:600;color:var(--green);background:var(--mint);padding:5px 10px;border-radius:999px;white-space:nowrap}
+/* =========================================================
+   2. BASE
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box}
+*{-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:16px;line-height:1.5;color:var(--ink);background:var(--bg)}
+img,svg{display:block}
+button{font:inherit}
+.container{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--s-4)}
 
-  .hero{position:relative;overflow:hidden;color:#fff;
-    background:radial-gradient(120% 140% at 100% 0%,#0f7a45 0%,var(--green) 45%,#004d26 100%)}
-  .hero .in{position:relative;max-width:720px;margin:0 auto;padding:36px 20px 86px}
-  .hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#d6eaa0}
-  .hero .eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(128,165,23,.25)}
-  .hero h1{font-size:40px;line-height:1.05;font-weight:800;margin:12px 0 10px;letter-spacing:-.5px}
-  .hero p{margin:0;max-width:470px;font-size:17px;color:#e3efe7}
-  .hero .leaf{position:absolute;right:-40px;bottom:-30px;width:300px;opacity:.16;pointer-events:none}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-  .chips span{font-size:13px;font-weight:600;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:6px 12px;border-radius:999px}
-  @media (max-width:560px){.hero h1{font-size:32px}.hero .in{padding:28px 20px 76px}.hero p{font-size:16px}}
+/* =========================================================
+   3. CABEÇALHO
+   ========================================================= */
+.topbar{background:#fff;border-bottom:1px solid var(--line)}
+.topbar .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);min-height:62px}
+.topbar img{height:34px;width:auto}
+.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:600;color:var(--green);
+  background:var(--mint);padding:5px 10px;border-radius:999px;white-space:nowrap}
 
-  /* cartão */
-  .wrap{max-width:720px;margin:-56px auto 0;padding:0 14px 40px;position:relative}
-  .card{background:#fff;border-radius:20px;box-shadow:0 10px 30px rgba(0,60,30,.08),0 1px 3px rgba(0,60,30,.06);padding:30px 28px 32px}
-  @media (max-width:560px){.card{padding:22px 18px 26px;border-radius:18px}}
+.hero{position:relative;overflow:hidden;color:#fff;
+  background:radial-gradient(120% 140% at 100% 0%,#0f7a45 0%,var(--green) 45%,var(--green-900) 100%)}
+.hero .container{position:relative;z-index:1;padding-top:var(--s-6);padding-bottom:88px}
+.eyebrow{display:inline-flex;align-items:center;gap:var(--s-2);font-size:13px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;color:#d6eaa0}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(128,165,23,.25)}
+.hero h1{margin:var(--s-3) 0 10px;font-size:clamp(32px,7vw,42px);line-height:1.05;font-weight:800;letter-spacing:-.5px}
+.hero p{margin:0;max-width:30em;font-size:17px;color:#e3efe7}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:20px}
+.chips span{font-size:13px;font-weight:600;padding:6px 12px;border-radius:999px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+.hero .leaf{position:absolute;right:-40px;bottom:-30px;width:300px;opacity:.14;pointer-events:none}
 
-  .notice{display:flex;gap:12px;background:var(--lime-50);border:1px solid #dbe8b5;border-radius:12px;padding:14px 16px;font-size:14.5px;color:#3d4a12}
-  .notice svg{flex:none;margin-top:2px}
-  .notice b{font-weight:700}
-  .reqnote{font-size:13px;color:var(--muted);margin:18px 0 0}
-  .reqnote span,.q-title .ast{color:var(--red)}
+/* =========================================================
+   4. CARTÃO PRINCIPAL
+   ========================================================= */
+main.container{position:relative;margin-top:-58px;padding-bottom:40px}
+.card{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow);padding:30px 28px 32px}
+.notice{display:flex;gap:var(--s-3);align-items:flex-start;padding:14px var(--s-4);border-radius:var(--r-md);
+  background:var(--lime-50);border:1px solid var(--lime-200);font-size:15px;color:#3d4a12}
+.notice svg{flex:none;margin-top:2px}
+.reqnote{margin:18px 0 0;font-size:13px;color:var(--muted)}
+.ast{color:var(--red)}
 
-  .q{margin-top:26px;animation:in .25s ease}
-  .q.hidden{display:none}
-  @keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-  .q-title{font-size:17px;font-weight:700;margin:0 0 12px;display:flex;gap:8px;align-items:baseline;color:var(--ink)}
-  .q-num{flex:none;display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:8px;background:var(--mint);color:var(--green);font-size:13px;font-weight:800}
-  .q-num:empty{display:none}
+/* =========================================================
+   5. PERGUNTAS
+   ========================================================= */
+.q{margin-top:28px}
+.q[hidden]{display:none}
+.q.enter{animation:enter .22s ease}
+@keyframes enter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.q-title{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--s-3);font-size:17px;font-weight:700;line-height:1.35}
+.q-num{flex:none;display:grid;place-items:center;width:26px;height:26px;margin-top:-1px;border-radius:8px;
+  background:var(--mint);color:var(--green);font-size:13px;font-weight:800}
+.q-num:empty{display:none}
+.q-help{display:flex;align-items:center;gap:6px;margin:-4px 0 var(--s-3);font-size:14px;color:var(--muted)}
 
-  input[type=text],input[type=tel]{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;font:inherit;font-size:16px;color:var(--ink);background:#fbfcfa;outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
-  input::placeholder{color:#9aa79e}
-  input:focus{border-color:var(--green);background:#fff;box-shadow:0 0 0 4px rgba(0,102,51,.10)}
+/* campos de texto */
+.field{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:var(--r-md);background:var(--field);
+  font:inherit;font-size:16px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s,background .15s}
+.field::placeholder{color:#9aa79e}
+.field:focus{border-color:var(--green);background:#fff;box-shadow:var(--ring)}
 
-  .opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  @media (max-width:560px){.opts{grid-template-columns:1fr}}
-  .opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;font-size:15.5px;font-weight:500;user-select:none;background:#fff;transition:border-color .15s,background .15s}
-  .opt:hover{border-color:#b9cdbf}
-  .opt input{position:absolute;opacity:0;pointer-events:none}
-  .radio{width:20px;height:20px;border:2px solid #9fb2a5;border-radius:50%;flex:none;display:grid;place-items:center;background:#fff;transition:border-color .15s}
-  .opt:has(input:checked){border-color:var(--green);background:var(--mint)}
-  .opt input:checked + .radio{border-color:var(--green)}
-  .opt input:checked + .radio::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--green)}
-  .opt input:focus-visible + .radio{outline:3px solid rgba(0,102,51,.3);outline-offset:2px}
+/* opções (cartões de rádio) */
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}
+.opt{position:relative;display:flex;align-items:center;gap:var(--s-3);min-height:52px;padding:12px 14px;
+  border:1.5px solid var(--line);border-radius:var(--r-md);background:#fff;cursor:pointer;user-select:none;
+  font-size:15.5px;font-weight:500;line-height:1.3;transition:border-color .15s,background .15s}
+.opt:hover{border-color:#b9cdbf}
+.opt input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.opt .dot{flex:none;display:grid;place-items:center;width:20px;height:20px;border:2px solid #9fb2a5;border-radius:50%;background:#fff;transition:border-color .15s}
+.opt.on{border-color:var(--green);background:var(--mint)}
+.opt.on .dot{border-color:var(--green)}
+.opt.on .dot::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--green)}
+.opt:focus-within{box-shadow:var(--ring)}
 
-  .err{color:var(--red);font-size:13.5px;font-weight:500;margin-top:8px;display:none}
-  .q.invalid .err{display:block}
-  .q.invalid input[type=text],.q.invalid input[type=tel]{border-color:var(--red);background:#fff}
+/* erros */
+.err{display:none;margin-top:var(--s-2);font-size:13.5px;font-weight:600;color:var(--red)}
+.q.invalid .err{display:block}
+.q.invalid .field{border-color:var(--red);background:#fff}
+.q.invalid .slot-empty{border-color:var(--red)}
 
-  /* horários */
-  .slots-note{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);margin:-4px 0 14px}
-  .slot-group{margin:4px 0 16px}
-  .slot-group h4{font-size:12px;font-weight:700;color:var(--green);margin:0 0 8px;text-transform:uppercase;letter-spacing:.7px}
-  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-  .slot{border:1.5px solid var(--line);border-radius:12px;background:#fff;padding:11px 6px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;color:var(--ink);text-align:center;line-height:1.15;font-variant-numeric:tabular-nums;transition:all .15s}
-  .slot small{display:block;font-size:11.5px;font-weight:500;color:var(--lime);margin-top:3px}
-  .slot:hover{border-color:var(--green)}
-  .slot.sel{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 6px 14px rgba(0,102,51,.25)}
-  .slot.sel small{color:#d6eaa0}
-  .loading{font-size:14.5px;color:var(--muted);padding:6px 0}
-  .reserva-box{border:1.5px solid #f0d58a;background:#fffaeb;border-radius:12px;padding:14px 16px;font-size:15px;color:#5c4206}
-  .reserva-box b{display:block;margin-bottom:4px}
+/* =========================================================
+   6. HORÁRIOS
+   ========================================================= */
+.slot-group+.slot-group{margin-top:20px}
+.slot-group>h4{display:flex;align-items:center;gap:var(--s-2);margin:0 0 10px;font-size:12px;font-weight:800;
+  letter-spacing:.7px;text-transform:uppercase;color:var(--green)}
+.slot-group>h4::after{content:"";flex:1;height:1px;background:var(--line)}
+.period{display:flex;align-items:center;gap:6px;margin:14px 0 var(--s-2);font-size:13px;font-weight:600;color:var(--muted)}
+.period:first-of-type{margin-top:0}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-2)}
+.slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;padding:8px 4px;
+  border:1.5px solid var(--line);border-radius:var(--r-md);background:#fff;color:var(--ink);cursor:pointer;
+  font-variant-numeric:tabular-nums;line-height:1.1;transition:border-color .15s,background .15s,box-shadow .15s}
+.slot b{font-size:17px;font-weight:700}
+.slot small{font-size:12px;color:var(--muted)}
+.slot small em{font-style:normal;font-weight:600;color:var(--lime)}
+.slot:hover{border-color:var(--green)}
+.slot:focus-visible{outline:none;box-shadow:var(--ring)}
+.slot[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 6px 14px rgba(0,102,51,.25)}
+.slot[aria-pressed="true"] small,.slot[aria-pressed="true"] small em{color:#d6eaa0}
+.slot-empty,.reserva-box{padding:14px var(--s-4);border-radius:var(--r-md);font-size:15px}
+.slot-empty{border:1.5px dashed var(--line);color:var(--muted)}
+.reserva-box{border:1.5px solid #f0d58a;background:var(--amber-50);color:#5c4206}
+.reserva-box b{display:block;margin-bottom:var(--s-1)}
+.skeleton{height:60px;border-radius:var(--r-md);background:linear-gradient(90deg,#eef3ef 0%,#f7faf7 50%,#eef3ef 100%);background-size:200% 100%;animation:sk 1.1s infinite linear}
+@keyframes sk{to{background-position:-200% 0}}
 
-  .actions{margin-top:34px}
-  .btn{width:100%;background:var(--green);color:#fff;border:0;border-radius:14px;padding:16px 24px;font:inherit;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:.2px;box-shadow:0 8px 18px rgba(0,102,51,.22);transition:background .15s,transform .05s}
-  .btn:hover{background:var(--green-700)}
-  .btn:active{transform:translateY(1px)}
-  .btn:disabled{opacity:.6;cursor:default}
-  .privacy{font-size:12.5px;color:var(--muted);text-align:center;margin:12px 0 0}
+/* =========================================================
+   7. BOTÃO E RODAPÉ
+   ========================================================= */
+.actions{margin-top:34px}
+.btn{display:block;width:100%;padding:16px 24px;border:0;border-radius:14px;background:var(--green);color:#fff;
+  font-size:17px;font-weight:700;letter-spacing:.2px;cursor:pointer;box-shadow:0 8px 18px rgba(0,102,51,.22);
+  transition:background .15s,transform .05s}
+.btn:hover{background:var(--green-700)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.65;cursor:default}
+.btn.reserva{background:var(--amber);box-shadow:0 8px 18px rgba(183,121,31,.25)}
+.privacy{margin:var(--s-3) 0 0;font-size:12.5px;text-align:center;color:var(--muted)}
+.footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
+.footer img{height:22px;margin:0 auto 6px;opacity:.85}
+.link{padding:0;border:0;background:none;color:var(--green);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.toast{position:fixed;left:50%;bottom:24px;z-index:5;max-width:min(92vw,480px);padding:12px 18px;border-radius:var(--r-md);
+  background:var(--ink);color:#fff;font-size:14.5px;box-shadow:0 10px 24px rgba(0,0,0,.2);
+  transform:translate(-50%,20px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
-  /* confirmação */
-  .done{text-align:center;padding:40px 22px}
-  .done .check{width:76px;height:76px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;margin:0 auto 18px;font-size:38px;font-weight:700;box-shadow:0 0 0 10px var(--mint)}
-  .done .check.res{background:var(--amber);box-shadow:0 0 0 10px #fdf1d8}
-  .done h2{font-size:26px;font-weight:800;margin:0 0 6px;color:var(--ink)}
-  .done p{color:var(--muted);margin:0 auto 20px;max-width:440px}
-  .done .resumo{display:inline-block;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 22px;color:var(--ink);font-size:15.5px;line-height:1.7}
-  .link{color:var(--green);background:none;border:0;font:inherit;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+/* =========================================================
+   8. CONFIRMAÇÃO
+   ========================================================= */
+.done{padding:40px 22px;text-align:center}
+.done .badge{display:grid;place-items:center;width:76px;height:76px;margin:0 auto 18px;border-radius:50%;
+  background:var(--green);color:#fff;font-size:38px;font-weight:700;box-shadow:0 0 0 10px var(--mint)}
+.done .badge.res{background:var(--amber);box-shadow:0 0 0 10px #fdf1d8}
+.done h2{margin:0 0 6px;font-size:26px;font-weight:800}
+.done p{max-width:440px;margin:0 auto 20px;color:var(--muted)}
+.resumo{display:inline-grid;grid-template-columns:auto auto;gap:6px 18px;margin:0 0 22px;padding:16px 20px;
+  border:1px solid var(--line);border-radius:14px;background:var(--bg);text-align:left;font-size:15.5px}
+.resumo dt{color:var(--muted)}
+.resumo dd{margin:0;font-weight:700}
 
-  .footer{text-align:center;margin-top:26px;font-size:12.5px;color:var(--muted)}
-  .footer img{height:22px;opacity:.85;display:block;margin:0 auto 6px}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14.5px;display:none;max-width:90%;box-shadow:0 10px 24px rgba(0,0,0,.2);z-index:5}
+/* =========================================================
+   9. RESPONSIVO
+   ========================================================= */
+@media (min-width:480px){.slots{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:640px){.slots{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:560px){
+  .opts{grid-template-columns:1fr}
+  .card{padding:22px 18px 26px;border-radius:18px}
+  .hero .container{padding-top:28px;padding-bottom:78px}
+  .hero p{font-size:16px}
+  main.container{padding-left:12px;padding-right:12px}
+}
+@media (max-width:340px){.slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="in">
-  <img src="logo-medsenior.png" alt="MedSênior">
-  <span class="tag">Inscrições abertas</span>
+<header class="topbar"><div class="container">
+  <img src="logo-medsenior.png" alt="MedSênior" width="98" height="34">
+  <span class="pill">Inscrições abertas</span>
 </div></header>
 
-<section class="hero"><div class="in">
-  <div class="eyebrow"><i></i>Programa Bem+VIVER</div>
+<section class="hero"><div class="container">
+  <div class="eyebrow">Programa Bem+VIVER</div>
   <h1>Quick Massage</h1>
   <p>Massagem rápida e localizada que ajuda a aliviar tensões musculares, reduzir o estresse e promover relaxamento.</p>
   <div class="chips"><span>15 minutos</span><span>Segunda a sexta-feira</span><span>Na sua unidade</span></div>
-  <svg class="leaf" viewBox="0 0 200 200" aria-hidden="true"><path fill="#fff" d="M188 20C120 18 60 40 34 92c-18 36-10 78 18 96 6-40 26-78 64-104-30 30-46 64-50 104 52-6 96-46 116-104 8-24 8-48 6-64z"/></svg>
-</div></section>
+</div>
+<svg class="leaf" viewBox="0 0 200 200" aria-hidden="true"><path fill="#fff" d="M188 20C120 18 60 40 34 92c-18 36-10 78 18 96 6-40 26-78 64-104-30 30-46 64-50 104 52-6 96-46 116-104 8-24 8-48 6-64z"/></svg>
+</section>
 
-<div class="wrap">
+<main class="container">
   <div class="card" id="formCard">
     <div class="notice">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b8a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b8a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
       <div><b>Importante:</b> Caso o número de inscritos ultrapasse a quantidade de vagas disponíveis, será realizado um sorteio entre os colaboradores inscritos para definir os participantes da ação.</div>
     </div>
-    <div class="reqnote"><span>*</span> Obrigatória</div>
+    <p class="reqnote"><span class="ast">*</span> Obrigatória</p>
 
-    <form id="form" novalidate>
-      <div class="q" data-id="nome">
-        <div class="q-title"><span class="q-num"></span><span>Nome completo <span class="ast">*</span></span></div>
-        <input type="text" name="nome" autocomplete="name" maxlength="120" placeholder="Digite seu nome completo">
-        <div class="err">Esta pergunta é obrigatória.</div>
-      </div>
-
+    <form id="form" novalidate autocomplete="on">
       <div id="questions"></div>
-
       <div class="actions"><button class="btn" type="submit" id="send">Enviar</button></div>
       <p class="privacy">Seus dados são usados apenas para organizar os atendimentos do Programa Bem+VIVER.</p>
     </form>
   </div>
 
-  <div class="card done" id="doneCard" style="display:none">
-    <div class="check" id="doneIcon">✓</div>
-    <h2 id="doneTitle">Inscrição confirmada!</h2>
+  <div class="card done" id="doneCard" hidden>
+    <div class="badge" id="doneIcon" aria-hidden="true">✓</div>
+    <h2 id="doneTitle"></h2>
     <p id="doneText"></p>
-    <div class="resumo" id="doneResumo"></div><br>
-    <button class="link" id="again">Fazer outra inscrição</button>
+    <dl class="resumo" id="doneResumo"></dl><br>
+    <button class="link" type="button" id="again">Fazer outra inscrição</button>
   </div>
 
-  <div class="footer"><img src="logo-medsenior.png" alt="">Programa Bem+VIVER</div>
-</div>
-<div class="toast" id="toast"></div>
+  <div class="footer"><img src="logo-medsenior.png" alt="" width="64" height="22">Programa Bem+VIVER</div>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+"use strict";
+/* ================= CONFIGURAÇÃO ================= */
 const SUPABASE_URL = "https://pplhwupjbrtzqdwzlcem.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
 
-/* Unidades com plantão Par/Ímpar e unidade com andar */
+const UNIDADES = {
+  "Distrito Federal":["PS- Taguatinga Sul","PS- SIG Brasília","Ambulatório Asa Sul","Unidade Águas Claras","Taguatinga Norte - Ambulatório","Comercial DF"],
+  "Espírito Santo":["Hospital Vitória","PS Glória- CDM - Oftalmo","Matriz","Centro - ES","Bressan","Unidade Jerônimo","Unidade Serra"],
+  "Minas Gerais":["PS Gutierrez","Hospital Pampulha","Funcionários","Amb. Contagem","Comercial MG","Savassi"],
+  "Rio de Janeiro":["PS Botafogo","PS Barra da Tijuca","PS Campo Grande","Unidade Botafogo","Unidade Tijuca","Unidade Niterói","Comercial RJ"],
+  "São Paulo":["Unidade Av. Brasil","Unidade Av. Paulista","Unidade Tatuapé","Unidade Santana","Unidade Sumarézinho","Unidade Campinas"],
+  "Sul":["Ambulatório Curitiba","Ambulatório Porto Alegre"],
+  "Pernambuco":null  /* sem pergunta de unidade: vai direto para Recife */
+};
+const UNIDADE_UNICA = {"Pernambuco":"Recife"};
+const TITULO_UNIDADE = {"Distrito Federal":"Selecione sua unidade do Distrito Federal","Espírito Santo":"Selecione sua unidade do Espirito Santo",
+  "Minas Gerais":"Selecione sua unidade de Minas Gerais","Rio de Janeiro":"Selecione sua Unidade do Rio de Janeiro",
+  "São Paulo":"Selecione sua Unidade de São Paulo","Sul":"Selecione sua unidade do Sul"};
 const UNIDADES_PLANTAO = ["Hospital Vitória","PS Glória- CDM - Oftalmo","PS- Taguatinga Sul","PS- SIG Brasília",
   "PS Gutierrez","Hospital Pampulha","PS Botafogo","PS Barra da Tijuca","PS Campo Grande"];
 const UNIDADES_ANDAR = ["Centro - ES"];
-const EXTRAS = {"ADM":"Horários ADM","Extra":"Horários extras"};
+const GRUPOS_EXTRAS = {"ADM":"Horários ADM","Extra":"Horários extras"};
 
-const Q = [
-  {id:"estado", t:"Selecione o estado em que você trabalha", type:"radio",
-   o:["Distrito Federal","Espírito Santo","Minas Gerais","Rio de Janeiro","São Paulo","Sul","Pernambuco"]},
-  {id:"unidade_es", t:"Selecione sua unidade do Espirito Santo", type:"radio",
-   o:["Hospital Vitória","PS Glória- CDM - Oftalmo","Matriz","Centro - ES","Bressan","Unidade Jerônimo","Unidade Serra"],
-   show:a=>a.estado==="Espírito Santo"},
-  {id:"unidade_df", t:"Selecione sua unidade do Distrito Federal", type:"radio",
-   o:["PS- Taguatinga Sul","PS- SIG Brasília","Ambulatório Asa Sul","Unidade Águas Claras","Taguatinga Norte - Ambulatório","Comercial DF"],
-   show:a=>a.estado==="Distrito Federal"},
-  {id:"unidade_mg", t:"Selecione sua unidade de Minas Gerais", type:"radio",
-   o:["PS Gutierrez","Hospital Pampulha","Funcionários","Amb. Contagem","Comercial MG","Savassi"],
-   show:a=>a.estado==="Minas Gerais"},
-  {id:"unidade_rj", t:"Selecione sua Unidade do Rio de Janeiro", type:"radio",
-   o:["PS Botafogo","PS Barra da Tijuca","PS Campo Grande","Unidade Botafogo","Unidade Tijuca","Unidade Niterói","Comercial RJ"],
-   show:a=>a.estado==="Rio de Janeiro"},
-  {id:"unidade_sp", t:"Selecione sua Unidade de São Paulo", type:"radio",
-   o:["Unidade Av. Brasil","Unidade Av. Paulista","Unidade Tatuapé","Unidade Santana","Unidade Sumarézinho","Unidade Campinas"],
-   show:a=>a.estado==="São Paulo"},
-  {id:"unidade_sul", t:"Selecione sua unidade do Sul", type:"radio",
-   o:["Ambulatório Curitiba","Ambulatório Porto Alegre"], show:a=>a.estado==="Sul"},
-  {id:"andar", t:"Você trabalha em qual andar?", type:"radio", o:["Segundo","Terceiro"],
-   show:a=>UNIDADES_ANDAR.includes(unidade(a))},
-  {id:"plantao", t:"Quando você estará de plantão no mês de NOVEMBRO?", type:"radio", o:["Par","Ímpar"],
-   show:a=>UNIDADES_PLANTAO.includes(unidade(a))},
-  {id:"horario", t:"Escolha o seu horário", type:"horario", show:a=>prontoParaHorario(a)},
-  {id:"setor", t:"Qual é o seu setor?", type:"text"},
-  {id:"celular", t:"Informe o número do seu celular com DDD", type:"tel"},
+/* ================= ESTADO ================= */
+const S = { estado:"", unidade:"", andar:"", plantao:"", horarioId:null, reserva:false, slots:[], chave:"", req:0 };
+
+/* ================= UTILIDADES ================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const minutos = h => { const [H,M] = h.split(":").map(Number); return H*60+M; };
+const fimDe = h => { const t = minutos(h)+15; return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0"); };
+const periodo = h => minutos(h) < 720 ? "Manhã" : minutos(h) < 1080 ? "Tarde" : "Noite";
+const soDigitos = s => String(s || "").replace(/\D/g, "");
+let toastTimer;
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),5000); }
+
+async function rpc(fn, body){
+  let r;
+  try{ r = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)}); }
+  catch(e){ throw new Error("rede"); }
+  const txt = await r.text();
+  if(!r.ok){ let m="servidor"; try{ m = JSON.parse(txt).message || m; }catch(e){} throw new Error(m); }
+  return txt ? JSON.parse(txt) : null;
+}
+
+/* ================= REGRAS DO FORMULÁRIO ================= */
+const unidadeAtual = () => UNIDADE_UNICA[S.estado] || S.unidade;
+function grupoBase(){
+  const u = unidadeAtual();
+  if(!u) return "";
+  if(UNIDADES_PLANTAO.includes(u)) return S.plantao;
+  if(UNIDADES_ANDAR.includes(u)) return S.andar ? S.andar + " andar" : "";
+  return "Geral";
+}
+const nomeGrupo = g => g==="Par"||g==="Ímpar" ? "Plantão "+g : GRUPOS_EXTRAS[g] || (g==="Geral" ? "" : g);
+
+/* Perguntas: id, título, tipo, opções (fixas ou função) e quando aparecem */
+const PERGUNTAS = [
+  {id:"nome", t:"Nome completo", type:"text", ph:"Digite seu nome completo", ac:"name", max:120, numerar:false},
+  {id:"estado", t:"Selecione o estado em que você trabalha", type:"radio", o:()=>Object.keys(UNIDADES)},
+  {id:"unidade", t:()=>TITULO_UNIDADE[S.estado], type:"radio", o:()=>UNIDADES[S.estado]||[], show:()=>!!UNIDADES[S.estado]},
+  {id:"andar", t:"Você trabalha em qual andar?", type:"radio", o:()=>["Segundo","Terceiro"], show:()=>UNIDADES_ANDAR.includes(unidadeAtual())},
+  {id:"plantao", t:"Quando você estará de plantão no mês de NOVEMBRO?", type:"radio", o:()=>["Par","Ímpar"], show:()=>UNIDADES_PLANTAO.includes(unidadeAtual())},
+  {id:"horario", t:"Escolha o seu horário", type:"horario", show:()=>!!grupoBase()},
+  {id:"setor", t:"Qual é o seu setor?", type:"text", ph:"Ex.: Recepção, Farmácia, UPC", max:120},
+  {id:"celular", t:"Informe o número do seu celular com DDD", type:"tel", ph:"(00) 00000-0000", ac:"tel", max:16},
 ];
-const byId = Object.fromEntries(Q.map(q=>[q.id,q]));
-function unidade(a){
-  if(a.estado==="Pernambuco") return "Recife";
-  const m={"Espírito Santo":"unidade_es","Distrito Federal":"unidade_df","Minas Gerais":"unidade_mg",
-           "Rio de Janeiro":"unidade_rj","São Paulo":"unidade_sp","Sul":"unidade_sul"}[a.estado];
-  return m ? a[m]||"" : "";
-}
-function grupoBase(a){
-  const u=unidade(a);
-  if(UNIDADES_PLANTAO.includes(u)) return a.plantao||"";
-  if(UNIDADES_ANDAR.includes(u)) return a.andar ? a.andar+" andar" : "";
-  return u ? "Geral" : "";
-}
-function prontoParaHorario(a){return !!unidade(a) && !!grupoBase(a)}
-function visivel(id,a){const q=byId[id];return !q.show || q.show(a)}
 
-/* ============ TELA ============ */
-const box=document.getElementById("questions");
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-for(const q of Q){
-  const d=document.createElement("div");
-  d.className="q";d.dataset.id=q.id;
-  let h=`<div class="q-title"><span class="q-num"></span><span>${esc(q.t)} <span class="ast">*</span></span></div>`;
-  if(q.type==="radio"){
-    h+='<div class="opts" role="radiogroup">'+q.o.map(o=>
-      `<label class="opt"><input type="radio" name="${q.id}" value="${esc(o)}"><span class="radio"></span><span>${esc(o)}</span></label>`).join("")+'</div>';
-  }else if(q.type==="horario"){
-    h+=`<div class="slots-note">Atendimentos de segunda a sexta-feira. Cada sessão dura 15 minutos.</div><div id="slotBox"></div>`;
-  }else{
-    h+=`<input type="${q.type==='tel'?'tel':'text'}" name="${q.id}" placeholder="Insira sua resposta" maxlength="${q.type==='tel'?20:120}" ${q.type==='tel'?'inputmode="tel" autocomplete="tel"':''}>`;
+/* ================= MONTAGEM ================= */
+const box = $("questions");
+function montarPerguntas(){
+  for(const q of PERGUNTAS){
+    const el = document.createElement("div");
+    el.className = "q"; el.dataset.id = q.id;
+    let h = `<div class="q-title"><span class="q-num"></span><span><span class="q-text"></span> <span class="ast">*</span></span></div>`;
+    if(q.type==="radio") h += `<div class="opts" role="radiogroup"></div>`;
+    else if(q.type==="horario") h += `<p class="q-help">Atendimentos de segunda a sexta-feira · sessões de 15 minutos</p><div id="slotBox" aria-live="polite"></div>`;
+    else h += `<input class="field" type="${q.type==="tel"?"tel":"text"}" name="${q.id}" maxlength="${q.max}" placeholder="${esc(q.ph)}"${q.ac?` autocomplete="${q.ac}"`:""}${q.type==="tel"?' inputmode="numeric"':""}>`;
+    h += `<div class="err">${q.type==="tel"?"Informe um celular válido com DDD (11 dígitos).":q.type==="horario"?"Escolha um horário.":"Esta pergunta é obrigatória."}</div>`;
+    el.innerHTML = h;
+    box.appendChild(el);
   }
-  const msg={tel:"Informe um celular válido com DDD.",horario:"Escolha um horário."}[q.type]||"Esta pergunta é obrigatória.";
-  h+=`<div class="err">${msg}</div>`;
-  d.innerHTML=h;box.appendChild(d);
+}
+function desenharOpcoes(el, q){
+  const opcoes = q.o();
+  const chave = opcoes.join("|");
+  const wrap = el.querySelector(".opts");
+  if(wrap.dataset.k !== chave){                  /* só redesenha se as opções mudaram */
+    wrap.dataset.k = chave;
+    wrap.innerHTML = opcoes.map(o => `<label class="opt"><input type="radio" name="${q.id}" value="${esc(o)}"><span class="dot"></span><span>${esc(o)}</span></label>`).join("");
+  }
+  /* mantém a tela sempre igual ao estado (marcado / desmarcado) */
+  wrap.querySelectorAll("input").forEach(i => { const on = i.value === S[q.id]; i.checked = on; i.parentElement.classList.toggle("on", on); });
 }
 
-const form=document.getElementById("form");
-let horarioSel=null, modoReserva=false, chaveSlots="", slotsCache=[];
-function answers(){
-  const a={};const fd=new FormData(form);
-  for(const [k,v] of fd.entries()) a[k]=String(v).trim();
-  return a;
-}
-function refresh(){
-  const a=answers();let n=0;
-  for(const q of Q){
-    const el=box.querySelector(`.q[data-id="${q.id}"]`);
-    const on=visivel(q.id,a);
-    el.classList.toggle("hidden",!on);
-    if(on){n++;el.querySelector(".q-num").textContent=n+"."}
-    else{ el.querySelectorAll("input[type=radio]").forEach(r=>r.checked=false); el.classList.remove("invalid"); }
+/* Mostra/esconde perguntas, numera e limpa respostas que deixaram de valer */
+function atualizar(){
+  let n = 0;
+  for(const q of PERGUNTAS){
+    const el = box.querySelector(`.q[data-id="${q.id}"]`);
+    const ativa = !q.show || q.show();
+    const estava = !el.hidden;
+    if(!ativa){
+      el.hidden = true; el.classList.remove("invalid");
+      if(q.type==="radio"){ S[q.id] = ""; el.querySelectorAll("input").forEach(i => { i.checked = false; i.parentElement.classList.remove("on"); }); }
+      continue;
+    }
+    el.hidden = false;
+    if(!estava){ el.classList.remove("enter"); void el.offsetWidth; el.classList.add("enter"); }
+    el.querySelector(".q-num").textContent = q.numerar===false ? "" : (++n)+".";
+    el.querySelector(".q-text").textContent = typeof q.t==="function" ? q.t() : q.t;
+    if(q.type==="radio") desenharOpcoes(el, q);
   }
-  const chave=prontoParaHorario(a)?unidade(a)+"|"+grupoBase(a):"";
-  if(chave!==chaveSlots){chaveSlots=chave;horarioSel=null;modoReserva=false;if(chave)carregarSlots();}
+  const chave = grupoBase() ? unidadeAtual()+"|"+grupoBase() : "";
+  if(chave !== S.chave){
+    S.chave = chave; S.horarioId = null; S.reserva = false; S.slots = [];
+    if(chave) carregarHorarios(); else $("slotBox").innerHTML = "";
+  }
   atualizarBotao();
 }
-function atualizarBotao(){document.getElementById("send").textContent=modoReserva?"Entrar na lista de reserva":"Enviar"}
-form.addEventListener("change",e=>{refresh();const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
-form.addEventListener("input",e=>{const q=e.target.closest(".q");if(q)q.classList.remove("invalid")});
-
-async function rpc(fn,body){
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",
-    headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
-  const t=await r.text();
-  if(!r.ok){let m="erro";try{m=JSON.parse(t).message||m}catch(e){}throw new Error(m)}
-  return t?JSON.parse(t):null;
+function atualizarBotao(){
+  const b = $("send");
+  b.textContent = S.reserva ? "Entrar na lista de reserva" : "Enviar";
+  b.classList.toggle("reserva", S.reserva);
 }
-const fim=h=>{const[H,M]=h.split(":").map(Number);const t=H*60+M+15;return `${String(Math.floor(t/60)).padStart(2,"0")}:${String(t%60).padStart(2,"0")}`};
 
-async function carregarSlots(){
-  const sb=document.getElementById("slotBox");const a=answers();const chave=chaveSlots;
-  sb.innerHTML='<div class="loading">Carregando horários disponíveis...</div>';
+/* ================= HORÁRIOS ================= */
+async function carregarHorarios(){
+  const chave = S.chave, req = ++S.req, base = grupoBase();
+  $("slotBox").innerHTML = `<div class="slots">${'<div class="skeleton"></div>'.repeat(6)}</div>`;
   try{
-    const lista=await rpc("bemviver_vagas",{p_unidade:unidade(a)});
-    if(chave!==chaveSlots) return;
-    const base=grupoBase(a);
-    slotsCache=lista.filter(s=>(s.grupo===base||EXTRAS[s.grupo])&&s.livres>0);
-    desenharSlots(base);
+    const lista = await rpc("bemviver_vagas", {p_unidade: unidadeAtual()});
+    if(req !== S.req || chave !== S.chave) return;   /* resposta antiga: ignora */
+    S.slots = lista.filter(s => (s.grupo===base || GRUPOS_EXTRAS[s.grupo]) && s.livres > 0);
+    if(S.horarioId && !S.slots.some(s => s.horario_id===S.horarioId)) S.horarioId = null;
+    S.reserva = S.slots.length === 0;
+    desenharHorarios();
   }catch(e){
-    sb.innerHTML='<div class="loading">Não foi possível carregar os horários. <button type="button" class="link" id="retry">Tentar de novo</button></div>';
-    document.getElementById("retry").onclick=carregarSlots;
+    if(req !== S.req) return;
+    $("slotBox").innerHTML = `<div class="slot-empty">Não foi possível carregar os horários. <button type="button" class="link" data-acao="recarregar">Tentar de novo</button></div>`;
   }
+  atualizarBotao();
 }
-function desenharSlots(base){
-  const sb=document.getElementById("slotBox");
-  if(!slotsCache.length){
-    modoReserva=true;horarioSel=null;atualizarBotao();
-    sb.innerHTML=`<div class="reserva-box"><b>Os horários estão preenchidos.</b>Você entrará na <b style="display:inline">LISTA DE RESERVA</b>. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo celular informado.</div>`;
+function desenharHorarios(){
+  const sb = $("slotBox");
+  if(S.reserva){
+    sb.innerHTML = `<div class="reserva-box"><b>Os horários estão preenchidos.</b>Você entrará na <strong>LISTA DE RESERVA</strong>. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo celular informado.</div>`;
     return;
   }
-  modoReserva=false;atualizarBotao();
-  const grupos={};slotsCache.forEach(s=>(grupos[s.grupo]=grupos[s.grupo]||[]).push(s));
-  const ordem=Object.keys(grupos).sort((x,y)=>(EXTRAS[x]?1:0)-(EXTRAS[y]?1:0));
-  const titulo=g=>EXTRAS[g]||(g==="Par"||g==="Ímpar"?"Plantão "+g:g==="Geral"?"":g);
-  sb.innerHTML=ordem.map(g=>`<div class="slot-group">${titulo(g)&&(ordem.length>1||g!=="Geral")?`<h4>${esc(titulo(g))}</h4>`:""}<div class="slots">`+
-    grupos[g].map(s=>`<button type="button" class="slot${horarioSel===s.horario_id?" sel":""}" data-id="${s.horario_id}">${s.hora} – ${fim(s.hora)}${s.livres>1?`<small>${s.livres} vagas</small>`:""}</button>`).join("")+
-    `</div></div>`).join("");
-}
-document.addEventListener("click",e=>{
-  const b=e.target.closest(".slot");if(!b)return;
-  horarioSel=+b.dataset.id;
-  document.querySelectorAll(".slot").forEach(x=>x.classList.toggle("sel",x===b));
-  b.closest(".q").classList.remove("invalid");
-});
-
-/* máscara do celular */
-const tel=form.querySelector('input[name="celular"]');
-tel.addEventListener("input",()=>{
-  let d=tel.value.replace(/\D/g,"").slice(0,11);let s=d;
-  if(d.length>2) s=`(${d.slice(0,2)}) `+d.slice(2);
-  if(d.length>7) s=`(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;
-  tel.value=s;
-});
-refresh();
-
-/* ============ ENVIO ============ */
-function validar(){
-  const a=answers();let first=null;
-  const mark=(el,ok)=>{el.classList.toggle("invalid",!ok);if(!ok&&!first)first=el};
-  mark(form.querySelector('.q[data-id="nome"]'),(a.nome||"").length>=3);
-  for(const q of Q){
-    const el=box.querySelector(`.q[data-id="${q.id}"]`);
-    if(!visivel(q.id,a)){el.classList.remove("invalid");continue}
-    let ok=!!a[q.id];
-    if(q.type==="tel"){const d=(a[q.id]||"").replace(/\D/g,"");ok=d.length===11&&d[2]==="9"}
-    if(q.type==="horario") ok=modoReserva||!!horarioSel;
-    mark(el,ok);
-  }
-  if(first){first.scrollIntoView({behavior:"smooth",block:"center"});return null}
-  return {nome:a.nome,estado:a.estado,unidade:unidade(a),plantao:a.plantao||null,
-    andar:a.andar||null,horario_id:modoReserva?null:horarioSel,setor:a.setor,celular:a.celular};
-}
-function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",5000)}
-
-form.addEventListener("submit",async e=>{
-  e.preventDefault();
-  const d=validar(); if(!d) return;
-  const btn=document.getElementById("send");btn.disabled=true;btn.textContent="Enviando...";
-  try{
-    const r=await rpc("bemviver_inscrever",{d});
-    const grp=r.grupo==="Par"||r.grupo==="Ímpar"?"Plantão "+r.grupo:(r.grupo==="Geral"?"":r.grupo);
-    if(r.status==="agendado"){
-      document.getElementById("doneIcon").className="check";document.getElementById("doneIcon").textContent="✓";
-      document.getElementById("doneTitle").textContent="Inscrição confirmada!";
-      document.getElementById("doneText").textContent="Guarde as informações do seu atendimento:";
-      document.getElementById("doneResumo").innerHTML=`<b>${esc(d.nome)}</b><br>${esc(d.unidade)}${d.andar?" · "+esc(d.andar)+" andar":""}<br>Horário: <b>${r.hora} – ${fim(r.hora)}</b>${grp?" · "+esc(grp):""}<br>Atendimentos de segunda a sexta-feira.`;
-    }else{
-      document.getElementById("doneIcon").className="check res";document.getElementById("doneIcon").textContent="!";
-      document.getElementById("doneTitle").textContent="Você está na lista de reserva";
-      document.getElementById("doneText").textContent="Todos os horários da sua unidade estavam preenchidos. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo seu celular.";
-      document.getElementById("doneResumo").innerHTML=`<b>${esc(d.nome)}</b><br>${esc(d.unidade)}${d.plantao?" · Plantão "+esc(d.plantao):""}${d.andar?" · "+esc(d.andar)+" andar":""}<br>Situação: <b>LISTA DE RESERVA</b>`;
+  const porGrupo = new Map();
+  for(const s of S.slots){ if(!porGrupo.has(s.grupo)) porGrupo.set(s.grupo, []); porGrupo.get(s.grupo).push(s); }
+  const grupos = [...porGrupo.keys()].sort((a,b) => (GRUPOS_EXTRAS[a]?1:0) - (GRUPOS_EXTRAS[b]?1:0));
+  const mostrarTitulo = grupos.length > 1 || grupos[0] !== "Geral";
+  sb.innerHTML = grupos.map(g => {
+    const lista = porGrupo.get(g).sort((a,b) => minutos(a.hora) - minutos(b.hora));
+    const porPeriodo = new Map();
+    for(const s of lista){ const p = periodo(s.hora); if(!porPeriodo.has(p)) porPeriodo.set(p, []); porPeriodo.get(p).push(s); }
+    const variosPeriodos = porPeriodo.size > 1;
+    let html = `<div class="slot-group">${mostrarTitulo ? `<h4>${esc(nomeGrupo(g))}</h4>` : ""}`;
+    for(const [p, itens] of porPeriodo){
+      if(variosPeriodos) html += `<div class="period">${p}</div>`;
+      html += `<div class="slots">` + itens.map(s => {
+        const vagas = s.livres > 1 ? ` · <em>${s.livres} vagas</em>` : "";
+        return `<button type="button" class="slot" data-id="${s.horario_id}" aria-pressed="${S.horarioId===s.horario_id}" aria-label="${s.hora} até ${fimDe(s.hora)}"><b>${s.hora}</b><small>até ${fimDe(s.hora)}${vagas}</small></button>`;
+      }).join("") + `</div>`;
     }
-    document.getElementById("formCard").style.display="none";
-    document.getElementById("doneCard").style.display="block";
-    window.scrollTo(0,0);
-  }catch(err){
-    const m=err.message;
-    if(m==="horario_ocupado"){toast("Esse horário acabou de ser preenchido por outra pessoa. Escolha outro.");chaveSlots="";refresh();}
-    else if(m==="ha_vagas"){toast("Abriu uma vaga! Escolha um horário.");chaveSlots="";refresh();}
-    else if(m==="duplicado") toast("Este celular já está inscrito.");
-    else toast("Não foi possível enviar. Verifique a internet e tente novamente.");
-  }finally{btn.disabled=false;atualizarBotao()}
+    return html + `</div>`;
+  }).join("");
+}
+
+/* ================= EVENTOS ================= */
+const form = $("form");
+form.addEventListener("change", e => {
+  const t = e.target;
+  if(t.type !== "radio") return;
+  S[t.name] = t.value;
+  t.closest(".q").classList.remove("invalid");
+  if(t.name === "estado"){ S.unidade = ""; S.andar = ""; S.plantao = ""; }
+  if(t.name === "unidade"){ S.andar = ""; S.plantao = ""; }
+  atualizar();
 });
-document.getElementById("again").onclick=()=>{form.reset();chaveSlots="";refresh();
-  document.getElementById("doneCard").style.display="none";document.getElementById("formCard").style.display="block";window.scrollTo(0,0)};
+form.addEventListener("input", e => { const q = e.target.closest(".q"); if(q) q.classList.remove("invalid"); });
+document.addEventListener("click", e => {
+  const slot = e.target.closest(".slot");
+  if(slot){
+    S.horarioId = Number(slot.dataset.id);
+    document.querySelectorAll(".slot").forEach(x => x.setAttribute("aria-pressed", x === slot));
+    slot.closest(".q").classList.remove("invalid");
+    return;
+  }
+  if(e.target.closest('[data-acao="recarregar"]')) carregarHorarios();
+});
+
+/* máscara do celular: (27) 99999-9999 */
+function mascaraTel(v){
+  const d = soDigitos(v).slice(0,11);
+  if(d.length <= 2) return d;
+  if(d.length <= 6) return `(${d.slice(0,2)}) ${d.slice(2)}`;
+  return `(${d.slice(0,2)}) ${d.slice(2,d.length-4)}-${d.slice(-4)}`;
+}
+form.addEventListener("input", e => { if(e.target.name === "celular") e.target.value = mascaraTel(e.target.value); });
+
+/* ================= VALIDAÇÃO E ENVIO ================= */
+const valor = id => (form.elements[id]?.value || "").trim().replace(/\s+/g," ");
+function validar(){
+  let primeiro = null;
+  for(const q of PERGUNTAS){
+    const el = box.querySelector(`.q[data-id="${q.id}"]`);
+    if(el.hidden){ el.classList.remove("invalid"); continue; }
+    let ok;
+    if(q.type==="radio") ok = !!S[q.id];
+    else if(q.type==="horario") ok = S.reserva || !!S.horarioId;
+    else if(q.type==="tel"){ const d = soDigitos(valor(q.id)); ok = d.length===11 && d[0]!=="0" && d[2]==="9"; }
+    else if(q.id==="nome") ok = valor(q.id).length >= 3;
+    else ok = valor(q.id).length >= 1;
+    el.classList.toggle("invalid", !ok);
+    if(!ok && !primeiro) primeiro = el;
+  }
+  if(primeiro){ primeiro.scrollIntoView({behavior:"smooth", block:"center"}); return null; }
+  return { nome: valor("nome"), estado: S.estado, unidade: unidadeAtual(), plantao: S.plantao || null, andar: S.andar || null,
+           horario_id: S.reserva ? null : S.horarioId, setor: valor("setor"), celular: soDigitos(valor("celular")) };
+}
+
+const MENSAGENS = {
+  horario_ocupado: "Esse horário acabou de ser preenchido por outra pessoa. Escolha outro.",
+  ha_vagas: "Abriu uma vaga! Escolha um horário.",
+  duplicado: "Este celular já está inscrito. Se precisar mudar o horário, procure a equipe do Programa Bem+VIVER.",
+  rede: "Sem conexão. Verifique a internet e tente novamente."
+};
+let enviando = false;
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if(enviando) return;
+  const dados = validar(); if(!dados) return;
+  enviando = true;
+  const b = $("send"); b.disabled = true; b.textContent = "Enviando...";
+  try{
+    const r = await rpc("bemviver_inscrever", {d: dados});
+    mostrarConfirmacao(dados, r);
+  }catch(err){
+    const m = err.message;
+    toast(MENSAGENS[m] || "Não foi possível enviar. Confira os dados e tente novamente.");
+    if(m==="horario_ocupado" || m==="ha_vagas"){ S.horarioId = null; carregarHorarios(); }
+  }finally{
+    enviando = false; b.disabled = false; atualizarBotao();
+  }
+});
+
+function mostrarConfirmacao(d, r){
+  const agendado = r && r.status === "agendado";
+  $("doneIcon").className = "badge" + (agendado ? "" : " res");
+  $("doneIcon").textContent = agendado ? "✓" : "!";
+  $("doneTitle").textContent = agendado ? "Inscrição confirmada!" : "Você está na lista de reserva";
+  $("doneText").textContent = agendado ? "Guarde as informações do seu atendimento:" :
+    "Todos os horários da sua unidade estavam preenchidos. Se abrir uma vaga, a equipe do Programa Bem+VIVER entra em contato pelo seu celular.";
+  const linhas = [["Nome", d.nome], ["Unidade", d.unidade]];
+  if(d.andar) linhas.push(["Andar", d.andar + " andar"]);
+  if(agendado){
+    linhas.push(["Horário", `${r.hora} às ${fimDe(r.hora)}`]);
+    if(nomeGrupo(r.grupo)) linhas.push(["Grupo", nomeGrupo(r.grupo)]);
+    linhas.push(["Dias", "Segunda a sexta-feira"]);
+  }else{
+    if(d.plantao) linhas.push(["Plantão", d.plantao]);
+    linhas.push(["Situação", "Lista de reserva"]);
+  }
+  $("doneResumo").innerHTML = linhas.map(([k,v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
+  $("formCard").hidden = true; $("doneCard").hidden = false;
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+$("again").addEventListener("click", () => {
+  form.reset();
+  Object.assign(S, { estado:"", unidade:"", andar:"", plantao:"", horarioId:null, reserva:false, slots:[], chave:"" });
+  S.req++;
+  box.querySelectorAll(".q").forEach(q => q.classList.remove("invalid"));
+  box.querySelectorAll(".opts").forEach(o => o.dataset.k = "");
+  $("slotBox").innerHTML = "";
+  atualizar();
+  $("doneCard").hidden = true; $("formCard").hidden = false;
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+montarPerguntas();
+atualizar();
 </script>
 </body>
 </html>
