@@ -390,7 +390,7 @@ let bloq=new Set();                         /* "dataId|horarioId" fechados pela 
 async function carregarMes(){
   if(!mesId){datas=[];bloq=new Set();return}
   const[ds,bs]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_bloqueios",{senha,p_mes_id:mesId})]);
-  datas=ds;bloq=new Set(bs.map(b=>b.data_id+"|"+b.horario_id));
+  datas=ds||[];bloq=new Set((bs||[]).map(b=>b.data_id+"|"+b.horario_id));
 }
 $("entrar").onclick=async()=>{
   senha=$("senha").value.trim();$("loginErr").textContent="";
