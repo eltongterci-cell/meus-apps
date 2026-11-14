@@ -391,8 +391,18 @@ const nomeMes=m=>`${MESES[m.mes-1]}/${m.ano}`;
 const refMes=m=>`${String(m.mes).padStart(2,"0")}/${m.ano}`;
 let toastT;function toast(t){const e=$("toast");e.textContent=t;e.classList.add("show");clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove("show"),4000)}
 
-async function rpc(fn,body){
-  let r;try{r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)})}catch(e){throw new Error("rede")}
+/* o servidor entrega no máximo 1000 linhas por vez: busca em páginas até vir tudo */
+async function rpcTudo(fn,body){
+  const tam=1000;let tudo=[];
+  for(let off=0;off<200000;off+=tam){
+    const pag=await rpc(fn,body,`?limit=${tam}&offset=${off}`);
+    tudo=tudo.concat(pag||[]);
+    if(!pag||pag.length<tam)break;
+  }
+  return tudo;
+}
+async function rpc(fn,body,qs=""){
+  let r;try{r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}${qs}`,{method:"POST",headers:{"apikey":SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)})}catch(e){throw new Error("rede")}
   const t=await r.text();
   if(!r.ok){let m="servidor";try{m=JSON.parse(t).message||m}catch(e){}throw new Error(m.includes("senha")?"senha":m)}
   return t?JSON.parse(t):null;
@@ -409,7 +419,7 @@ const doMes=()=>{const m=mesAtual();if(!m)return[];return dados.filter(d=>d.mes_
 
 /* ---------- login e carga ---------- */
 async function carregarTudo(){
-  const [m,h,d]=await Promise.all([rpc("bemviver_admin_meses",{senha}),rpc("bemviver_horarios_todos",{senha}),rpc("bemviver_listar",{senha})]);
+  const [m,h,d]=await Promise.all([rpc("bemviver_admin_meses",{senha}),rpcTudo("bemviver_horarios_todos",{senha}),rpcTudo("bemviver_listar",{senha})]);
   meses=m;horarios=h;dados=d;
   if(!meses.some(x=>x.id===mesId)) mesId=(meses.find(x=>x.aberto)||meses[0]||{}).id||null;
   await carregarMes();
@@ -418,7 +428,7 @@ async function carregarTudo(){
 let bloq=new Set();                         /* "dataId|horarioId" fechados pela Day */
 async function carregarMes(){
   if(!mesId){datas=[];bloq=new Set();return}
-  const[ds,bs]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_bloqueios",{senha,p_mes_id:mesId})]);
+  const[ds,bs]=await Promise.all([rpcTudo("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpcTudo("bemviver_admin_bloqueios",{senha,p_mes_id:mesId})]);
   datas=ds||[];bloq=new Set((bs||[]).map(b=>b.data_id+"|"+b.horario_id));
 }
 $("entrar").onclick=async()=>{
@@ -601,7 +611,7 @@ async function salvarGrupo(u,g){
     toast(msg.startsWith("data_com_inscritos")?"Um dos dias já tem pessoas agendadas e não pode ser tirado.":"Não foi possível salvar. Verifique a internet e tente de novo.")}
   salvando--;
   if(!salvando&&!timers.size){
-    try{const[ds,m]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
+    try{const[ds,m]=await Promise.all([rpcTudo("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
     montar();setSave("Tudo salvo ✓","ok");
   }
 }
@@ -681,7 +691,7 @@ $("colarSalvar").onclick=async()=>{
     const lista=[...new Set([...datasServidor(x.u,g),...ds])].sort();     /* soma com o que já existe, sem apagar nada */
     try{await rpc("bemviver_admin_salvar_datas",{senha,p_mes_id:mesId,p_unidade:x.u,p_grupo:g,p_datas:lista});selLocal.delete(x.u+"|"+g);ok++}catch(e){erro++}
   }
-  try{const[ds,m]=await Promise.all([rpc("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
+  try{const[ds,m]=await Promise.all([rpcTudo("bemviver_admin_datas",{senha,p_mes_id:mesId}),rpc("bemviver_admin_meses",{senha})]);datas=ds;meses=m}catch(e){}
   b.disabled=false;b.textContent="Salvar datas marcadas";$("mColar").classList.remove("on");$("colarTexto").value="";
   datasUnidade="";montar();
   toast(erro?`Salvo com ${erro} erro(s). Confira as unidades pendentes.`:`Pronto! Datas de ${marcados.length} unidade(s) salvas.`);
@@ -795,7 +805,7 @@ function filtrosUnidade(){const e=$("fEstado").value,cur=$("fUnidade").value,us=
 $("fEstado").onchange=()=>{filtrosUnidade();renderLista()};["fUnidade","fSit"].forEach(id=>$(id).onchange=renderLista);$("fBusca").oninput=renderLista;
 function filtrados(){
   const e=$("fEstado").value,u=$("fUnidade").value,s=$("fSit").value,b=$("fBusca").value.trim().toLowerCase(),bd=b.replace(/\D/g,""),hoje=new Date().toDateString();
-  return doMes().filter(d=>(!e||d.estado===e)&&(!u||d.unidade===u)&&
+  return doMes().slice().sort((a,b)=>a.unidade.localeCompare(b.unidade,"pt")||(a.reserva-b.reserva)||String(a.data||"").localeCompare(String(b.data||""))||String(a.hora||"").localeCompare(String(b.hora||""))||a.id-b.id).filter(d=>(!e||d.estado===e)&&(!u||d.unidade===u)&&
     (!s||(s==="hoje"?d.origem==="formulario"&&new Date(d.created_at).toDateString()===hoje:(s==="res")===d.reserva))&&
     (!b||(d.nome||"").toLowerCase().includes(b)||(d.setor||"").toLowerCase().includes(b)||(bd.length>=3&&(d.celular||"").includes(bd))));
 }
