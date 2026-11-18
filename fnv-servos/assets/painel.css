@@ -1,0 +1,126 @@
+/* =========================================================
+   PAINEL DA LIDERANÇA
+   1. Estrutura  2. Entrada  3. Topo e números  4. Abas
+   5. Setores  6. Pessoas  7. Formulários  8. Selos e chips
+   ========================================================= */
+
+/* 1. ESTRUTURA */
+.shell.is-wide{max-width:720px}
+.pane{display:none}
+.pane.is-on{display:flex;flex-direction:column;gap:var(--s3)}
+.section-label{font:800 var(--fs-xs)/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:var(--s3) 4px 0}
+
+/* 2. ENTRADA */
+.login{flex:1;display:flex;flex-direction:column;justify-content:center;gap:var(--s4);max-width:360px;width:100%;margin:0 auto;text-align:center}
+.login-logo{width:150px;margin:0 auto var(--s2)}
+.login .input{text-align:center}
+
+/* 3. TOPO E NÚMEROS */
+.top{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s5)}
+.top-logo{width:58px;flex:none}
+.top-title{flex:1;min-width:0}
+.top-title h1{font-size:var(--fs-xl);line-height:1.1}
+.top-title p{color:var(--muted);font:600 var(--fs-sm)/1.3 var(--body)}
+.icon-btn{width:46px;height:46px;flex:none;display:grid;place-items:center;border-radius:var(--r-sm);
+  background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;font-size:20px;transition:transform .08s,border-bottom-width .08s}
+.icon-btn:active{transform:translateY(3px);border-bottom-width:2px}
+
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s2);margin-bottom:var(--s3)}
+.kpi{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;padding:12px 6px;border-radius:var(--r-md);
+  background:var(--surface);border:2px solid var(--line);text-align:center}
+.kpi b{font:800 28px/1.1 var(--display);color:var(--lime)}
+.kpi span{font:800 10px/1.3 var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-bottom:var(--s5)}
+
+@media (max-width:520px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpi{flex-direction:row;justify-content:flex-start;gap:10px;padding:10px 14px;text-align:left}
+  .kpi b{font-size:26px}
+}
+
+/* 4. ABAS */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+  padding:6px;margin-bottom:var(--s4);border-radius:var(--r-lg);background:var(--surface);border:2px solid var(--line);
+  box-shadow:0 10px 24px -10px #000}
+.tab{min-height:44px;border-radius:var(--r-sm);font:800 var(--fs-sm)/1 var(--body);color:var(--muted)}
+.tab.is-on{background:var(--lime);color:var(--ink)}
+
+/* 5. SETORES */
+.sector{background:var(--surface);border:2px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.sector.is-open{border-color:var(--line-strong)}
+.sector-head{width:100%;display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:var(--s3);padding:14px 14px 10px;text-align:left}
+.sector-emoji{width:44px;height:44px;display:grid;place-items:center;border-radius:var(--r-sm);background:var(--surface-2);font-size:22px}
+.sector-name{display:flex;flex-direction:column;gap:6px;min-width:0}
+.sector-name b{font:800 var(--fs-md)/1.25 var(--body)}
+.sector-count{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.sector-count b{font:800 var(--fs-xl)/1 var(--display);color:var(--lime);white-space:nowrap}
+.sector-count small{font:700 11px/1 var(--body);color:var(--muted);white-space:nowrap}
+.sector-count.is-short b{color:var(--warn)}
+.bar{height:6px;margin:0 14px 14px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lime);border-radius:var(--r-pill);transition:width .5s var(--ease)}
+.sector-body{display:flex;flex-direction:column;gap:var(--s4);padding:16px 14px;border-top:2px dashed var(--line)}
+.sector-actions{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2)}
+.sector-actions .btn-lime{grid-column:1/-1}
+
+/* 6. PESSOAS */
+.people{display:flex;flex-direction:column;gap:6px}
+.person{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:var(--s2) var(--s3);padding:12px;border-radius:var(--r-md);background:var(--surface-2)}
+.person-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+.person-info b{font:700 var(--fs-md)/1.3 var(--body);overflow-wrap:anywhere}
+.person-info small{color:var(--muted);font:600 var(--fs-sm)/1.35 var(--body)}
+.person-info .was{color:var(--faint);font:600 var(--fs-xs)/1.3 var(--body)}
+.person-info > span:last-child{margin-top:4px}
+.person-info .status{display:inline-block}
+.person-side{display:flex;align-items:center;gap:6px}
+.mini{width:40px;height:40px;display:grid;place-items:center;border-radius:11px;background:var(--line);font-size:15px;text-decoration:none}
+.mini.wa{background:var(--lime);color:var(--ink)}
+.mini.wa svg{width:19px;height:19px}
+
+/* 7. FORMULÁRIOS */
+.panel-box{background:var(--surface);border:2px solid var(--line);border-radius:var(--r-lg);padding:var(--s4);display:flex;flex-direction:column;gap:var(--s3)}
+.panel-box h3{font:800 var(--fs-xs)/1.2 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--lime)}
+.panel-box summary{cursor:pointer;font:800 var(--fs-md)/1.3 var(--body);list-style:none;display:flex;justify-content:space-between;align-items:center}
+.panel-box summary::after{content:"+";font-size:22px;color:var(--lime)}
+.panel-box[open] summary::after{content:"−"}
+.panel-box summary::-webkit-details-marker{display:none}
+
+/* campos do painel: letra menor que a do quiz */
+.shell.is-wide .input{min-height:52px;font-size:var(--fs-md);font-weight:600}
+.shell.is-wide .input::placeholder{font-size:var(--fs-sm)}
+select.input{appearance:none;padding-right:44px;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 22px) 50%,calc(100% - 16px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+textarea.input{min-height:130px;padding:14px;line-height:1.5;resize:vertical}
+
+.input-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s2)}
+.input-row .btn{width:auto}
+
+.stepper{display:grid;grid-template-columns:52px minmax(0,1fr) 52px;gap:var(--s2);align-items:center}
+.stepper button{height:52px;border-radius:var(--r-md);background:var(--surface-2);border:2px solid var(--line);border-bottom-width:5px;
+  font:800 24px/1 var(--body);color:var(--lime);transition:transform .08s,border-bottom-width .08s}
+.stepper button:active{transform:translateY(3px);border-bottom-width:2px}
+.stepper output{display:grid;place-items:center;height:52px;border-radius:var(--r-md);background:var(--surface-2);border:2px solid var(--line);
+  font:800 var(--fs-xl)/1 var(--display)}
+
+.hint{color:var(--muted);font:600 var(--fs-sm)/1.5 var(--body)}
+.form-actions{display:grid;grid-template-columns:1fr auto;gap:var(--s2)}
+.form-actions .btn{width:auto}
+.form-actions .btn-lime{width:100%}
+
+/* 8. SELOS E CHIPS */
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:var(--r-pill);font:700 11px/1.2 var(--body);
+  background:var(--line);color:var(--muted);white-space:nowrap}
+.tag.ok{background:var(--lime-soft);color:var(--lime)}
+.tag.warn{background:rgba(255,194,61,.14);color:var(--warn)}
+.status{padding:6px 10px;border-radius:var(--r-pill);font:800 11px/1 var(--body);white-space:nowrap}
+.status.ok{background:var(--lime-soft);color:var(--lime)}
+.status.mid{background:rgba(255,194,61,.14);color:var(--warn)}
+.status.no{background:var(--line);color:var(--muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:9px 13px;border-radius:var(--r-pill);background:var(--surface);border:2px solid var(--line);font:800 var(--fs-xs)/1 var(--body);color:var(--muted)}
+.chip b{color:var(--text);margin-left:4px}
+.chip.is-on{border-color:var(--lime);color:var(--lime)}
+.chip.is-on b{color:var(--lime)}
+.empty{color:var(--muted);text-align:center;padding:var(--s5);font-weight:600}

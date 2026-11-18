@@ -17,14 +17,8 @@ const FNV = (() => {
     return t ? JSON.parse(t) : null;
   }
 
-  /* Setores: emoji de cada um */
-  const EMOJI = {
-    "Pulseiras e QR Codes": "🎟️", "Revista": "🛡️", "Guarda-volumes": "🎒", "Alimentos": "🍞",
-    "Fogo na Vila Store": "🛍️", "Manutenção": "🧰", "Recepção da porta": "🚪",
-    "Lanche dos voluntários": "🥪", "Lanche do convidado": "🍽️", "Venda dos churrasquinhos": "🍢",
-    "Venda dos refrigerantes": "🥤", "Palco e instrumentação": "🎸", "Intercessão": "🙏",
-    "Enfermagem": "🩺", "Coordenação geral": "📋"
-  };
+  /* Setores e emojis vêm do arquivo de configuração */
+  const EMOJI = CONFIG.setores;
 
   /* Utilidades de texto e telefone */
   const $ = (s, el = document) => el.querySelector(s);
@@ -32,7 +26,11 @@ const FNV = (() => {
   const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const digits = t => String(t || "").replace(/\D/g, "");
   const last8 = t => digits(t).slice(-8);
-  const firstName = n => String(n || "").trim().split(/\s+/)[0] || "";
+  /* "DAYANA ALVES MACHADO" -> "Dayana Alves Machado" */
+  const PEQUENAS = ["da", "de", "do", "das", "dos", "e"];
+  const nomeBonito = n => String(n || "").trim().replace(/\s+/g, " ").toLowerCase()
+    .split(" ").map((w, i) => i > 0 && PEQUENAS.includes(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const firstName = n => nomeBonito(n).split(" ")[0] || "";
   function phone(t) {
     let d = digits(t); if (d.length > 11 && d.startsWith("55")) d = d.slice(2);
     if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
@@ -108,5 +106,5 @@ const FNV = (() => {
     })();
   }
 
-  return { rpc, EMOJI, SETORES: Object.keys(EMOJI), $, $$, esc, digits, last8, firstName, phone, waNumber, toast, vibrate, copy, embers, confetti };
+  return { rpc, EMOJI, SETORES: Object.keys(EMOJI), $, $$, esc, digits, last8, nomeBonito, firstName, phone, waNumber, toast, vibrate, copy, embers, confetti };
 })();

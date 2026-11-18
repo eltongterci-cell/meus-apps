@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel · Fogo na Vila</title>
+<meta name="theme-color" content="#0b0b0a">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="manifest" href="painel.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preload" href="assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/base.css?v=7">
+<link rel="stylesheet" href="assets/painel.css?v=7">
+</head>
+<body>
+<main class="shell is-wide">
+
+  <!-- ===== ENTRADA ===== -->
+  <section class="login" id="login">
+    <img class="login-logo" src="assets/logo.svg" alt="Fogo na Vila" width="150" height="119">
+    <span class="sticker" style="align-self:center">Painel da liderança</span>
+    <h1>Bem-vindo de volta</h1>
+    <input class="input" id="pin" type="password" placeholder="Senha do painel" autocomplete="current-password">
+    <button class="btn btn-lime" id="b-login">Entrar</button>
+    <p class="alert" id="l-err" role="alert"></p>
+  </section>
+
+  <!-- ===== PAINEL ===== -->
+  <section id="app" hidden>
+
+    <header class="top">
+      <img class="top-logo" src="assets/logo.svg" alt="" width="58" height="46">
+      <div class="top-title"><h1>Servos</h1><p>Convocação Fogo na Vila</p></div>
+      <button class="icon-btn" id="b-refresh" aria-label="Atualizar">↻</button>
+    </header>
+
+    <div class="kpis">
+      <div class="kpi"><b id="k-cad">0</b><span>Cadastrados</span></div>
+      <div class="kpi"><b id="k-resp">0</b><span>Responderam</span></div>
+      <div class="kpi"><b id="k-conf">0</b><span>Confirmaram</span></div>
+      <div class="kpi"><b id="k-meta">--</b><span>Meta</span></div>
+    </div>
+    <div class="quick">
+      <button class="btn btn-sm" id="b-copy-quiz">📋 Link do quiz</button>
+      <a class="btn btn-sm" href="mural.html" target="_blank">🔥 Abrir mural</a>
+    </div>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab is-on" data-tab="setores" role="tab">Setores</button>
+      <button class="tab" data-tab="servos" role="tab">Servos</button>
+      <button class="tab" data-tab="cobrar" role="tab">Cobrar</button>
+    </nav>
+
+    <!-- ----- Aba: Setores ----- -->
+    <div class="pane is-on" id="pane-setores"></div>
+
+    <!-- ----- Aba: Servos ----- -->
+    <div class="pane" id="pane-servos">
+      <div class="panel-box" id="form-box">
+        <h3 id="form-title">Cadastrar servo</h3>
+        <div class="field"><label for="s-nome">Nome</label><input class="input" id="s-nome" placeholder="Nome e sobrenome" autocomplete="off"></div>
+        <div class="field"><label for="s-zap">WhatsApp</label><input class="input" id="s-zap" placeholder="(27) 99999-9999" inputmode="numeric" autocomplete="off"></div>
+        <div class="field"><label for="s-setor">Setor</label><select class="input" id="s-setor"></select></div>
+        <div class="form-actions">
+          <button class="btn btn-lime" id="s-save">Salvar servo</button>
+          <button class="btn" id="s-cancel" hidden>Cancelar</button>
+        </div>
+      </div>
+
+      <details class="panel-box">
+        <summary>📥 Colar uma lista inteira</summary>
+        <p class="hint">Uma pessoa por linha, no formato <b>Nome; WhatsApp; Setor</b>.<br>Ex.: João Silva; 27999998888; Revista</p>
+        <textarea class="input" id="bulk" placeholder="Nome; WhatsApp; Setor"></textarea>
+        <button class="btn btn-lime" id="b-bulk">Importar lista</button>
+      </details>
+
+      <p class="section-label" id="servos-count">Servos cadastrados</p>
+      <input class="input" id="search" placeholder="🔎 Buscar por nome ou número">
+      <div class="people" id="list-servos"></div>
+    </div>
+
+    <!-- ----- Aba: Cobrar ----- -->
+    <div class="pane" id="pane-cobrar">
+      <div class="panel-box">
+        <h3>Mensagem de cobrança</h3>
+        <p class="hint">{nome} vira o primeiro nome da pessoa e {link} vira o link do quiz.</p>
+        <textarea class="input" id="msg"></textarea>
+      </div>
+      <div class="chips" id="cob-chips">
+        <button class="chip is-on" data-f="pend">Não responderam<b id="c-pend">0</b></button>
+        <button class="chip" data-f="nconf">Não confirmaram<b id="c-nconf">0</b></button>
+        <button class="chip" data-f="semcad">Sem cadastro<b id="c-semcad">0</b></button>
+      </div>
+      <div class="people" id="list-cob"></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/config.js?v=7"></script>
+<script src="assets/core.js?v=7"></script>
+<script src="assets/painel.js?v=7"></script>
+</body>
+</html>

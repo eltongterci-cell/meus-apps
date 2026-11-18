@@ -2,20 +2,9 @@
    QUIZ DOS SERVOS · fluxo: início → perguntas → análise → revelação
    ========================================================= */
 (() => {
-  const { $, $$, esc, digits, firstName, rpc, EMOJI, SETORES, vibrate, confetti, embers } = FNV;
+  const { $, $$, esc, digits, nomeBonito, firstName, rpc, EMOJI, SETORES, vibrate, confetti, embers } = FNV;
 
-  const PERGUNTAS = [
-    ["Chegou no Fogo na Vila. Qual é a sua vibe?", [["🔥", "Já quero botar a mão na massa"], ["😎", "Observo e organizo tudo"], ["🙏", "Começo orando"], ["🤝", "Saio cumprimentando geral"]]],
-    ["Seu superpoder escondido é...", [["⚡", "Agilidade"], ["🧠", "Organização"], ["💬", "Comunicação"], ["🛡️", "Firmeza"]]],
-    ["Fila gigante na entrada. Você...", [["🏃", "Resolve rapidinho"], ["😄", "Anima a galera"], ["📋", "Organiza a fila"], ["👀", "Fica de olho em tudo"]]],
-    ["Seus amigos te chamam quando precisam de alguém que...", [["🧰", "Resolve qualquer coisa"], ["🍔", "Cuida da comida"], ["🎤", "Fala bem com as pessoas"], ["🫶", "Cuida de quem precisa"]]],
-    ["3 da manhã na vigília. Você está...", [["🔋", "100%, essa é minha hora"], ["☕", "No café, mas firme"], ["🙌", "No altar, adorando"], ["🧭", "Vendo se tá tudo certo"]]],
-    ["Qual emoji te representa?", [["🔥", "Intenso"], ["💪", "Forte"], ["🙏", "Consagrado"], ["😂", "Alegria pura"]]],
-    ["Se o evento fosse um time, você seria...", [["⚽", "Atacante: linha de frente"], ["🧤", "Goleiro: ninguém passa"], ["🎯", "Meio-campo: faz girar"], ["📣", "Torcida: anima geral"]]],
-    ["Deu um imprevisto. Você...", [["🛠️", "Arregaça as mangas"], ["🧘", "Mantém a calma"], ["📞", "Chama quem resolve"], ["🙏", "Ora e age"]]],
-    ["O que mais te enche de alegria num evento?", [["👥", "Ver a galera chegando"], ["✨", "Tudo funcionando"], ["🍽️", "Todo mundo bem servido"], ["🔥", "Ver Deus agindo"]]],
-    ["Pronto pra ser convocado pro Fogo na Vila?", [["🔥", "Nasci pronto"], ["🙌", "Eis-me aqui, envia-me"], ["💯", "Bora fazer história"], ["🚀", "Pode mandar a missão"]]]
-  ];
+  const PERGUNTAS = CONFIG.perguntas;
 
   const state = { nome: "", zap: "", i: 0, respostas: [], resultado: null, numero: null, travado: false };
 
@@ -41,7 +30,7 @@
 
   $("#f-start").addEventListener("submit", async e => {
     e.preventDefault();
-    const nome = $("#nome").value.trim().replace(/\s+/g, " ");
+    const nome = nomeBonito($("#nome").value);
     const zap = digits($("#zap").value);
     if (nome.length < 3) return erro("Coloca seu nome, por favor 😉", "#nome");
     if (zap.length < 10) return erro("Confere seu WhatsApp com DDD", "#zap");
@@ -242,7 +231,7 @@
     c.globalAlpha = 1;
 
     // canhoto: nome e número
-    const nome = state.nome.split(" ").slice(0, 2).join(" ");
+    const nome = nomeBonito(state.nome).split(" ").slice(0, 2).join(" ");
     let fs = 64; c.font = `800 ${fs}px Bricolage`;
     while (c.measureText(nome).width > tw - 140 && fs > 40) { fs -= 4; c.font = `800 ${fs}px Bricolage`; }
     c.textAlign = "left";

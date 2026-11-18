@@ -1,79 +1,12 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mural dos Convocados · Fogo na Vila</title>
-<meta name="theme-color" content="#0b0b0a">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/base.css?v=3">
-<style>
-/* MURAL · feito para projetar */
-.mural{position:relative;z-index:1;max-width:1240px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;align-items:center;
-  gap:clamp(16px,2.6vw,28px);padding:clamp(24px,4vw,56px) var(--gutter) 48px;text-align:center}
-.mural-logo{width:clamp(120px,14vw,190px)}
-.mural-title{font-size:clamp(36px,6.4vw,84px);line-height:1.05}
-.counter{display:flex;align-items:baseline;justify-content:center;gap:14px}
-.counter b{font:800 clamp(88px,15vw,200px)/.95 var(--display);color:var(--lime);letter-spacing:-.04em}
-.counter span{font:800 clamp(18px,2.4vw,30px)/1.2 var(--body);color:var(--muted)}
-.meter{width:min(640px,100%);height:16px;border-radius:var(--r-pill);background:var(--surface-2);overflow:hidden}
-.meter i{display:block;height:100%;width:0;background:var(--lime);border-radius:var(--r-pill);transition:width 1s var(--ease)}
-.names{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:1100px;margin-top:8px}
-.name{padding:12px 20px;border-radius:var(--r-pill);background:var(--surface);border:2px solid var(--line);border-bottom-width:5px;
-  font:800 clamp(16px,1.9vw,24px)/1 var(--body)}
-.name.is-new{background:var(--lime);border-color:var(--lime-press);color:var(--ink);animation:pop .9s var(--ease) both}
-.empty{color:var(--muted);font-size:var(--fs-lg)}
-.ping{position:fixed;left:50%;top:max(20px,env(safe-area-inset-top,0px));z-index:5;transform:translate(-50%,-180%);opacity:0;
-  padding:14px 26px;border-radius:var(--r-pill);background:var(--lime);color:var(--ink);font:800 clamp(16px,2vw,24px)/1.2 var(--body);
-  white-space:nowrap;transition:transform .5s var(--ease),opacity .5s}
-.ping.is-on{transform:translate(-50%,0);opacity:1}
-.fullscreen{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));width:auto}
-</style>
-</head>
-<body>
-<canvas class="embers" id="embers" aria-hidden="true"></canvas>
-<div class="floor-glow" aria-hidden="true"></div>
-<div class="ping" id="ping" role="status"></div>
-
-<main class="mural">
-  <img class="mural-logo" src="assets/logo.svg" alt="Fogo na Vila" width="190" height="150">
-  <span class="sticker" style="align-self:center">A maior vigília de Vila Velha</span>
-  <h1 class="mural-title">Mural dos <span class="mark">Convocados</span></h1>
-  <div class="counter"><b id="total">0</b><span>de <span id="meta">81</span> servos</span></div>
-  <div class="meter"><i id="meter"></i></div>
-  <div class="names" id="names"></div>
-  <p class="empty" id="empty">Aguardando os primeiros convocados... 🔥</p>
-</main>
-<button class="btn btn-sm fullscreen" onclick="document.documentElement.requestFullscreen?.()">Tela cheia</button>
-
-<script src="assets/core.js?v=3"></script>
-<script>
-(() => {
-  const { $, esc, rpc } = FNV, META = 81;
-  $("#meta").textContent = META;
-  let anterior = -1, timer;
-
-  function contar(el, ate) {
-    const de = +el.textContent || 0, t0 = performance.now();
-    (function passo(t) { const p = Math.min(1, (t - t0) / 900); el.textContent = Math.round(de + (ate - de) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(passo); })(t0);
-  }
-  function avisar(msg) { const p = $("#ping"); p.textContent = msg; p.classList.add("is-on"); clearTimeout(timer); timer = setTimeout(() => p.classList.remove("is-on"), 3500); }
-
-  async function carregar() {
-    try {
-      const d = await rpc("fnv_mural"), nomes = d.nomes || [];
-      const novos = anterior < 0 ? 0 : Math.max(0, d.total - anterior);
-      if (novos) avisar(`🔥 ${nomes[0]} acabou de ser convocado!`);
-      $("#names").innerHTML = nomes.map((n, i) => `<span class="name${i < novos ? " is-new" : ""}">${esc(n)}</span>`).join("");
-      $("#empty").hidden = nomes.length > 0;
-      contar($("#total"), d.total);
-      $("#meter").style.width = Math.min(100, d.total / META * 100) + "%";
-      anterior = d.total;
-    } catch (e) {}
-  }
-  carregar(); setInterval(carregar, 6000);
-  FNV.embers($("#embers"), 40);
-})();
-</script>
-</body>
-</html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fogo na Vila · Convocação dos servos</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Fogo na Vila · Sua missão será revelada">
+<meta property="og:description" content="Responda 10 perguntas e descubra onde você vai servir na maior vigília de Vila Velha.">
+<meta property="og:image" content="https://eltongterci-cell.github.io/meus-apps/fnv-servos/capa.jpg?v=3">
+<meta http-equiv="refresh" content="0; url=https://eltongterci-cell.github.io/meus-apps/fnv-servos/mural.html">
+<style>body{margin:0;background:#0b0b0a}</style>
+<script>location.replace("https://eltongterci-cell.github.io/meus-apps/fnv-servos/mural.html" + location.hash)</script>
+</head><body></body></html>
