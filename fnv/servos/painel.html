@@ -4,333 +4,95 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Painel · Fogo na Vila</title>
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#0b0b0a">
 <meta name="robots" content="noindex">
-<link rel="icon" href="logo-branco.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0a0a0a;--card:#151515;--card2:#1c1c1c;--line:#2a2a2a;--lime:#cbfc06;--lime-d:#537503;--txt:#f5f5f5;--muted:#9a9a9a;--wa:#25d366;--red:#ff6161;--amber:#ffc23d}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--txt);font:15px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer;border:0;background:none}
-.wrap{max-width:760px;margin:0 auto;padding:max(16px,env(safe-area-inset-top)) 16px 100px}
-.hidden{display:none!important}
-/* login */
-.login{min-height:90dvh;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:360px;margin:0 auto;text-align:center}
-.login img{width:170px;margin:0 auto 6px}
-.login h1{font:400 30px Anton,Impact,sans-serif;text-transform:uppercase}
-/* comuns */
-.in,select,textarea{width:100%;min-height:50px;padding:12px 14px;border-radius:14px;background:var(--card2);border:1.5px solid var(--line);outline:none;font-size:16px}
-.in:focus,select:focus,textarea:focus{border-color:var(--lime)}
-textarea{min-height:120px;resize:vertical;line-height:1.45}
-.btn{text-decoration:none;color:inherit;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:14px;font-weight:800;transition:transform .12s}
-.btn:active{transform:scale(.97)}
-.b-lime{background:var(--lime);color:#0a0a0a!important}
-.b-ghost{border:1.5px solid var(--line)}
-.b-wa{background:var(--wa);color:#04170b!important}
-.b-sm{min-height:38px;padding:6px 12px;border-radius:11px;font-size:13px}
-.full{width:100%}
-/* topo */
-.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.top img{width:64px}
-.top h1{font:400 24px Anton,Impact,sans-serif;text-transform:uppercase;line-height:1}
-.top small{color:var(--muted);font-weight:600}
-.top .sp{flex:1}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px}
-.stat{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center}
-.stat b{display:block;font:400 30px Anton,Impact,sans-serif;color:var(--lime);line-height:1.05}
-.stat span{display:block;overflow:hidden;text-overflow:ellipsis;font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-.links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.tabs{position:sticky;top:0;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 0;background:var(--bg);margin-bottom:10px}
-.tab{min-height:46px;border-radius:13px;background:var(--card);border:1.5px solid var(--line);font-weight:800;font-size:14px}
-.tab.on{background:var(--lime);color:#0a0a0a;border-color:var(--lime)}
-.pane{display:none}.pane.on{display:block}
-/* setores */
-.sec{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}
-.sec-h{display:flex;align-items:center;gap:12px;cursor:pointer}
-.sec-e{width:44px;height:44px;border-radius:13px;background:var(--card2);display:grid;place-items:center;font-size:22px;flex:none}
-.sec-t{flex:1;min-width:0}
-.sec-t b{display:block;font-weight:800;font-size:16px}
-.sec-t small{color:var(--muted);font-weight:600;font-size:13px}
-.sec-n{font:400 22px Anton,Impact,sans-serif;color:var(--lime);white-space:nowrap}
-.sec-n.ok{color:var(--lime)}.sec-n.low{color:var(--amber)}
-.meter{height:7px;border-radius:99px;background:#232323;margin:12px 0 2px;overflow:hidden}
-.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--lime-d),var(--lime));border-radius:99px}
-.sec-body{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:10px}
-.row2{display:grid;grid-template-columns:1fr 90px;gap:8px}
-.lbl{font-size:12px;color:var(--muted);font-weight:700;margin:0 0 4px 2px;display:block}
-.acts{display:flex;flex-wrap:wrap;gap:8px}
-.people{display:grid;gap:6px}
-.p{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:var(--card2)}
-.p .nm{flex:1;min-width:0;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.p .ph{color:var(--muted);font-size:13px;white-space:nowrap}
-.st{font-size:11px;font-weight:800;padding:4px 8px;border-radius:99px;white-space:nowrap}
-.st.c{background:rgba(203,252,6,.15);color:var(--lime)}
-.st.r{background:rgba(255,194,61,.14);color:var(--amber)}
-.st.p0{background:#262626;color:#aaa}
-.ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#262626;flex:none;font-size:15px}
-.ic.wa{background:var(--wa);color:#04170b;text-decoration:none}
-/* servos */
-.box{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;display:grid;gap:10px}
-.box h3{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--lime);font-weight:800}
-.hint{font-size:13px;color:var(--muted)}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{padding:8px 12px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:13px}
-.chip.on{border-color:var(--lime);color:var(--lime)}
-.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,160%);background:var(--lime);color:#0a0a0a;font-weight:800;padding:13px 22px;border-radius:99px;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .35s;opacity:0;z-index:20;max-width:92vw;text-align:center}
-.toast.on{transform:translate(-50%,0);opacity:1}
-.empty{color:var(--muted);text-align:center;padding:20px}
-h2.sub{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:800;margin:18px 2px 8px}
-@media (max-width:420px){.stat b{font-size:24px}.stat span{font-size:10px}}
-</style>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/base.css?v=3">
+<link rel="stylesheet" href="assets/painel.css?v=3">
 </head>
 <body>
-<div class="toast" id="toast"></div>
+<main class="shell is-wide">
 
-<!-- LOGIN -->
-<div class="login" id="login">
-  <img src="logo-branco.png" alt="Fogo na Vila">
-  <h1>Painel da liderança</h1>
-  <input class="in" id="pin" type="password" placeholder="Senha do painel" autocomplete="current-password" style="text-align:center">
-  <button class="btn b-lime full" id="b-login">Entrar</button>
-  <p class="hint" id="l-err" style="color:var(--red)"></p>
-</div>
-
-<!-- PAINEL -->
-<div class="wrap hidden" id="app">
-  <div class="top">
-    <img src="logo-branco.png" alt="">
-    <div><h1>Painel dos servos</h1><small>Fogo na Vila</small></div>
-    <div class="sp"></div>
-    <button class="btn b-ghost b-sm" id="b-refresh" title="Atualizar">↻</button>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><b id="k-cad">0</b><span>Cadastrados</span></div>
-    <div class="stat"><b id="k-resp">0</b><span>Responderam</span></div>
-    <div class="stat"><b id="k-conf">0</b><span>Confirmaram</span></div>
-    <div class="stat"><b id="k-meta">0</b><span>Meta total</span></div>
-  </div>
-
-  <div class="links">
-    <button class="btn b-ghost b-sm" id="copy-quiz">📋 Copiar link do quiz</button>
-    <a class="btn b-ghost b-sm" href="mural.html" target="_blank">🔥 Abrir o mural</a>
-  </div>
-
-  <div class="tabs">
-    <button class="tab on" data-t="setores">Setores</button>
-    <button class="tab" data-t="servos">Servos</button>
-    <button class="tab" data-t="cobrar">Cobrar</button>
-  </div>
-
-  <!-- SETORES -->
-  <section class="pane on" id="p-setores"></section>
-
-  <!-- SERVOS -->
-  <section class="pane" id="p-servos">
-    <div class="box" id="form-box">
-      <h3 id="form-title">Cadastrar servo</h3>
-      <input class="in" id="s-nome" placeholder="Nome e sobrenome" autocomplete="off">
-      <input class="in" id="s-zap" placeholder="WhatsApp com DDD" inputmode="numeric" autocomplete="off">
-      <select id="s-setor"></select>
-      <div class="acts">
-        <button class="btn b-lime" id="s-save" style="flex:1">Salvar servo</button>
-        <button class="btn b-ghost hidden" id="s-cancel">Cancelar</button>
-      </div>
-    </div>
-
-    <details class="box">
-      <summary style="cursor:pointer;font-weight:800">📥 Colar uma lista inteira de uma vez</summary>
-      <p class="hint">Uma pessoa por linha, no formato <b>Nome; WhatsApp; Setor</b>. Exemplo:<br>João Silva; 27999998888; Revista<br>Ana Souza; 27988887777; Intercessão</p>
-      <textarea id="bulk" placeholder="Nome; WhatsApp; Setor"></textarea>
-      <button class="btn b-lime" id="b-bulk">Importar lista</button>
-    </details>
-
-    <input class="in" id="search" placeholder="🔎 Buscar por nome ou número" style="margin-bottom:10px">
-    <div class="people" id="list-servos"></div>
+  <!-- ENTRADA -->
+  <section class="login" id="login">
+    <img class="login-logo" src="assets/logo.svg" alt="Fogo na Vila" width="150" height="119">
+    <span class="sticker" style="align-self:center">Painel da liderança</span>
+    <h1>Bem-vindo de volta</h1>
+    <input class="input" id="pin" type="password" placeholder="Senha do painel" autocomplete="current-password">
+    <button class="btn btn-lime" id="b-login">Entrar</button>
+    <p class="alert" id="l-err" role="alert"></p>
   </section>
 
-  <!-- COBRAR -->
-  <section class="pane" id="p-cobrar">
-    <div class="box">
-      <h3>Mensagem de cobrança</h3>
-      <p class="hint">Use {nome} para o primeiro nome e {link} para o link do quiz.</p>
-      <textarea id="msg"></textarea>
+  <!-- PAINEL -->
+  <section id="app" hidden>
+    <header class="top">
+      <img class="top-logo" src="assets/logo.svg" alt="" width="60" height="47">
+      <div><h1>Servos</h1><p>Fogo na Vila</p></div>
+      <button class="icon-btn" id="b-refresh" aria-label="Atualizar">↻</button>
+    </header>
+
+    <div class="kpis">
+      <div class="kpi"><b id="k-cad">0</b><span>Cadastrados</span></div>
+      <div class="kpi"><b id="k-resp">0</b><span>Responderam</span></div>
+      <div class="kpi"><b id="k-conf">0</b><span>Confirmaram</span></div>
+      <div class="kpi"><b id="k-meta">--</b><span>Meta</span></div>
     </div>
-    <div class="chips" id="cob-chips">
-      <button class="chip on" data-f="pend">Não responderam</button>
-      <button class="chip" data-f="nconf">Responderam, não confirmaram</button>
-      <button class="chip" data-f="semcad">Responderam sem cadastro</button>
+    <div class="quick">
+      <button class="btn btn-sm" id="b-copy-quiz">📋 Link do quiz</button>
+      <a class="btn btn-sm" href="mural.html" target="_blank">🔥 Abrir mural</a>
     </div>
-    <div class="people" id="list-cob" style="margin-top:12px"></div>
-  </section>
-</div>
 
-<script>
-const SB="https://pplhwupjbrtzqdwzlcem.supabase.co";
-const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbGh3dXBqYnJ0enFkd3psY2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODczODYsImV4cCI6MjEwNjU2MzM4Nn0.wOm9lQH2gN4Y01BrpUeQ09elDOASsd0gELs-yDwmf20";
-const EMOJI={"Pulseiras e QR Codes":"🎟️","Revista":"🛡️","Guarda-volumes":"🎒","Alimentos":"🍞","Fogo na Vila Store":"🛍️","Manutenção":"🧰","Recepção da porta":"🚪","Lanche dos voluntários":"🥪","Lanche do convidado":"🍽️","Venda dos churrasquinhos":"🍢","Venda dos refrigerantes":"🥤","Palco e instrumentação":"🎸","Intercessão":"🙏","Enfermagem":"🩺","Coordenação geral":"📋"};
-const QUIZ=location.origin+location.pathname.replace(/painel\.html$/,"");
-const DEF_MSG="A paz do Senhor, {nome}! Você foi convocado para servir no Fogo na Vila, a maior vigília de Vila Velha. Responda o quiz e descubra o seu setor: {link}";
-const $=s=>document.querySelector(s);
-const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const d8=t=>String(t||"").replace(/\D/g,"").slice(-8);
-const first=n=>String(n||"").trim().split(/\s+/)[0];
-const fmt=t=>{const d=String(t||"").replace(/\D/g,"");return d.length===11?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length===10?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d};
-const wa=t=>{let d=String(t||"").replace(/\D/g,"");if(!d.startsWith("55"))d="55"+d;return d};
-let PIN="",D={setores:[],servos:[],respostas:[]},open=new Set(),editId=null,cobF="pend";
+    <nav class="tabs" role="tablist">
+      <button class="tab is-on" data-tab="setores" role="tab">Setores</button>
+      <button class="tab" data-tab="servos" role="tab">Servos</button>
+      <button class="tab" data-tab="cobrar" role="tab">Cobrar</button>
+    </nav>
 
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2600)}
-async function rpc(fn,body){
-  const r=await fetch(`${SB}/rest/v1/rpc/${fn}`,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:JSON.stringify(body||{})});
-  const t=await r.text(); if(!r.ok) throw new Error(t.includes("PIN")?"PIN":t); return t?JSON.parse(t):null;
-}
-async function copy(txt,ok){try{await navigator.clipboard.writeText(txt)}catch(e){const a=document.createElement("textarea");a.value=txt;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove()}toast(ok||"Copiado!")}
+    <!-- Setores -->
+    <div class="pane is-on" id="pane-setores"></div>
 
-/* login */
-async function login(p){
-  try{D=await rpc("fnv_admin_dados",{p_pin:p});PIN=p;try{localStorage.setItem("fnv_pin",p)}catch(e){}
-    $("#login").classList.add("hidden");$("#app").classList.remove("hidden");render()}
-  catch(e){$("#l-err").textContent=e.message==="PIN"?"Senha incorreta":"Sem conexão. Tente de novo.";try{localStorage.removeItem("fnv_pin")}catch(_){}}
-}
-$("#b-login").onclick=()=>login($("#pin").value.trim());
-$("#pin").onkeydown=e=>{if(e.key==="Enter")login($("#pin").value.trim())};
-try{const s=localStorage.getItem("fnv_pin");if(s)login(s)}catch(e){}
-async function reload(){try{D=await rpc("fnv_admin_dados",{p_pin:PIN});render()}catch(e){toast("Erro ao atualizar")}}
-$("#b-refresh").onclick=()=>{reload();toast("Atualizado")};
-setInterval(()=>{if(PIN&&document.visibilityState==="visible"&&!document.activeElement.matches("input,textarea,select"))reload()},30000);
-
-/* status de cada servo */
-function statusOf(sv){
-  const rs=D.respostas.filter(r=>d8(r.whatsapp)===d8(sv.whatsapp));
-  if(rs.some(r=>r.confirmado))return"c"; if(rs.length)return"r"; return"p";
-}
-const stBadge={c:'<span class="st c">Confirmou</span>',r:'<span class="st r">Respondeu</span>',p:'<span class="st p0">Pendente</span>'};
-
-function render(){
-  const cad=D.servos.length, nums=new Set(D.respostas.map(r=>d8(r.whatsapp)));
-  const conf=new Set(D.respostas.filter(r=>r.confirmado).map(r=>d8(r.whatsapp)));
-  $("#k-cad").textContent=cad;$("#k-resp").textContent=nums.size;$("#k-conf").textContent=conf.size;
-  $("#k-meta").textContent=D.setores.reduce((a,s)=>a+(+s.meta||0),0)||"--";
-  $("#s-setor").innerHTML='<option value="">Escolha o setor</option>'+D.setores.map(s=>`<option value="${s.id}">${EMOJI[s.nome]||"🔥"} ${esc(s.nome)}</option>`).join("");
-  renderSetores();renderServos();renderCob();
-}
-
-/* SETORES */
-function renderSetores(){
-  $("#p-setores").innerHTML=D.setores.map(s=>{
-    const pp=D.servos.filter(v=>v.setor_id===s.id), n=pp.length, meta=+s.meta||0;
-    const c=pp.filter(v=>statusOf(v)==="c").length;
-    const pct=meta?Math.min(100,n/meta*100):(n?100:0);
-    const o=open.has(s.id);
-    return `<div class="sec" data-id="${s.id}">
-      <div class="sec-h" data-tog="${s.id}">
-        <div class="sec-e">${EMOJI[s.nome]||"🔥"}</div>
-        <div class="sec-t"><b>${esc(s.nome)}</b><small>${s.coordenador?"Coord.: "+esc(s.coordenador):"Sem coordenador"} · ${c} confirmados${s.link_whatsapp?" · grupo ✓":""}</small></div>
-        <div class="sec-n ${meta&&n<meta?"low":"ok"}">${n}${meta?"/"+meta:""}</div>
+    <!-- Servos -->
+    <div class="pane" id="pane-servos">
+      <div class="panel-box" id="form-box">
+        <h3 id="form-title">Cadastrar servo</h3>
+        <input class="input" id="s-nome" placeholder="Nome e sobrenome" autocomplete="off">
+        <input class="input" id="s-zap" placeholder="WhatsApp com DDD" inputmode="numeric" autocomplete="off">
+        <select class="input" id="s-setor"></select>
+        <div class="confirm-bar">
+          <button class="btn btn-lime grow" id="s-save">Salvar servo</button>
+          <button class="btn" id="s-cancel" hidden>Cancelar</button>
+        </div>
       </div>
-      <div class="meter"><i style="width:${pct}%"></i></div>
-      ${meta&&n<meta?`<small class="hint">Faltam ${meta-n} pessoas</small>`:""}
-      ${o?`<div class="sec-body">
-        <div><span class="lbl">Coordenador(a)</span><input class="in" data-f="coord" value="${esc(s.coordenador)}" placeholder="Nome do coordenador"></div>
-        <div class="row2">
-          <div><span class="lbl">Link do grupo de WhatsApp</span><input class="in" data-f="link" value="${esc(s.link_whatsapp)}" placeholder="https://chat.whatsapp.com/..."></div>
-          <div><span class="lbl">Meta</span><input class="in" data-f="meta" inputmode="numeric" value="${meta||""}" placeholder="0"></div>
-        </div>
-        <div class="acts">
-          <button class="btn b-lime b-sm" data-save="${s.id}">Salvar setor</button>
-          ${n?`<button class="btn b-ghost b-sm" data-copy="${s.id}">Copiar lista</button>`:""}
-          ${s.link_whatsapp?`<button class="btn b-ghost b-sm" data-sendlink="${s.id}">Enviar link do grupo</button>`:""}
-        </div>
-        <div class="people">${pp.length?pp.map(v=>`<div class="p"><span class="nm">${esc(v.nome)}</span>${stBadge[statusOf(v)]}<a class="ic wa" target="_blank" href="https://wa.me/${wa(v.whatsapp)}" aria-label="WhatsApp">✆</a></div>`).join(""):'<p class="empty">Ninguém neste setor ainda</p>'}</div>
-      </div>`:""}
-    </div>`}).join("");
-}
-$("#p-setores").addEventListener("click",async e=>{
-  const t=e.target.closest("[data-tog],[data-save],[data-copy],[data-sendlink]"); if(!t)return;
-  if(t.dataset.tog){const id=+t.dataset.tog;open.has(id)?open.delete(id):open.add(id);renderSetores();return}
-  if(t.dataset.save){
-    const box=t.closest(".sec"),id=+t.dataset.save;
-    const coord=box.querySelector('[data-f="coord"]').value.trim(),link=box.querySelector('[data-f="link"]').value.trim(),meta=parseInt(box.querySelector('[data-f="meta"]').value)||0;
-    if(link&&!/^https:\/\/chat\.whatsapp\.com\//.test(link)){toast("O link precisa começar com https://chat.whatsapp.com/");return}
-    t.disabled=true;try{await rpc("fnv_admin_salvar_setor",{p_pin:PIN,p_id:id,p_coordenador:coord,p_link:link,p_meta:meta});toast("Setor salvo ✓");await reload()}catch(err){toast("Erro ao salvar");t.disabled=false}
-  }
-  if(t.dataset.copy){const s=D.setores.find(x=>x.id==t.dataset.copy);const pp=D.servos.filter(v=>v.setor_id===s.id);
-    copy(`${s.nome.toUpperCase()}${s.coordenador?"\nCoordenação: "+s.coordenador:""}\n\n`+pp.map((v,i)=>`${i+1}. ${v.nome} - ${fmt(v.whatsapp)}`).join("\n"),"Lista copiada")}
-  if(t.dataset.sendlink){const s=D.setores.find(x=>x.id==t.dataset.sendlink);
-    copy(`A paz do Senhor! Este é o link do grupo do setor ${s.nome} do Fogo na Vila: ${s.link_whatsapp}`,"Mensagem com o link copiada")}
-});
 
-/* SERVOS */
-function renderServos(){
-  const q=$("#search").value.trim().toLowerCase(), qd=q.replace(/\D/g,"");
-  const list=D.servos.filter(v=>!q||v.nome.toLowerCase().includes(q)||(qd&&v.whatsapp.includes(qd)));
-  $("#list-servos").innerHTML=list.length?list.map(v=>{const s=D.setores.find(x=>x.id===v.setor_id);
-    return `<div class="p"><div style="flex:1;min-width:0"><div class="nm">${esc(v.nome)}</div><div class="ph">${fmt(v.whatsapp)} · ${s?(EMOJI[s.nome]||"")+" "+esc(s.nome):"Sem setor"}</div></div>
-    ${stBadge[statusOf(v)]}<button class="ic" data-edit="${v.id}" aria-label="Editar">✎</button><button class="ic" data-del="${v.id}" aria-label="Excluir">🗑</button></div>`}).join("")
-    :`<p class="empty">${D.servos.length?"Ninguém encontrado":"Nenhum servo cadastrado ainda. Cadastre acima ou cole uma lista."}</p>`;
-}
-$("#search").oninput=renderServos;
-$("#s-zap").addEventListener("input",e=>{e.target.value=fmt(e.target.value.replace(/\D/g,"").slice(0,11))});
-function resetForm(){editId=null;$("#s-nome").value="";$("#s-zap").value="";$("#s-setor").value="";$("#form-title").textContent="Cadastrar servo";$("#s-cancel").classList.add("hidden")}
-$("#s-cancel").onclick=resetForm;
-$("#s-save").onclick=async()=>{
-  const nome=$("#s-nome").value.trim().replace(/\s+/g," "),zap=$("#s-zap").value.replace(/\D/g,""),setor=+$("#s-setor").value||null;
-  if(nome.length<3)return toast("Coloque o nome");if(zap.length<10)return toast("WhatsApp com DDD");if(!setor)return toast("Escolha o setor");
-  const b=$("#s-save");b.disabled=true;
-  try{await rpc("fnv_admin_salvar_servo",{p_pin:PIN,p_id:editId,p_nome:nome,p_whatsapp:zap,p_setor_id:setor});toast(editId?"Servo atualizado ✓":"Servo cadastrado ✓");resetForm();await reload();$("#s-nome").focus()}
-  catch(e){toast(e.message.includes("duplicate")?"Esse número já está cadastrado":"Erro ao salvar")}
-  b.disabled=false;
-};
-$("#list-servos").addEventListener("click",async e=>{
-  const ed=e.target.closest("[data-edit]"),de=e.target.closest("[data-del]");
-  if(ed){const v=D.servos.find(x=>x.id==ed.dataset.edit);editId=v.id;$("#s-nome").value=v.nome;$("#s-zap").value=fmt(v.whatsapp);$("#s-setor").value=v.setor_id||"";
-    $("#form-title").textContent="Editar servo";$("#s-cancel").classList.remove("hidden");$("#form-box").scrollIntoView({behavior:"smooth"})}
-  if(de){const v=D.servos.find(x=>x.id==de.dataset.del);if(!confirm(`Excluir ${v.nome}?`))return;
-    try{await rpc("fnv_admin_excluir_servo",{p_pin:PIN,p_id:v.id});toast("Excluído");await reload()}catch(err){toast("Erro ao excluir")}}
-});
-/* importar lista */
-const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]/g,"");
-function findSetor(txt){const n=norm(txt);if(!n)return null;
-  return D.setores.find(s=>norm(s.nome)===n)||D.setores.find(s=>norm(s.nome).startsWith(n)||n.startsWith(norm(s.nome)))||D.setores.find(s=>norm(s.nome).includes(n))||null}
-$("#b-bulk").onclick=async()=>{
-  const lines=$("#bulk").value.split(/\n/).map(l=>l.trim()).filter(Boolean); if(!lines.length)return toast("Cole a lista primeiro");
-  const ok=[],bad=[];
-  for(const l of lines){const p=l.split(/[;\t|]/).map(x=>x.trim());let nome,zap,set;
-    if(p.length>=3){[nome,zap,set]=p}else{const m=l.match(/^(.*?)[,\s]+([\d()\-\s+]{10,})[,\s]+(.*)$/);if(m){nome=m[1];zap=m[2];set=m[3]}}
-    const s=findSetor(set),z=String(zap||"").replace(/\D/g,"");
-    if(nome&&z.length>=10&&s)ok.push({nome:nome.replace(/\s+/g," "),zap:z,id:s.id});else bad.push(l)}
-  if(!ok.length)return toast("Não entendi nenhuma linha. Use Nome; WhatsApp; Setor");
-  const b=$("#b-bulk");b.disabled=true;let n=0,fail=0;
-  for(const o of ok){b.textContent=`Importando ${++n}/${ok.length}...`;try{await rpc("fnv_admin_salvar_servo",{p_pin:PIN,p_id:null,p_nome:o.nome,p_whatsapp:o.zap,p_setor_id:o.id})}catch(e){fail++;bad.push(o.nome+"; "+o.zap+"; ?")}}
-  b.disabled=false;b.textContent="Importar lista";$("#bulk").value=bad.join("\n");
-  toast(`${ok.length-fail} importados${bad.length?` · ${bad.length} linha(s) para conferir`:""}`);await reload();
-};
+      <details class="panel-box">
+        <summary>📥 Colar uma lista inteira</summary>
+        <p class="hint">Uma pessoa por linha: <b>Nome; WhatsApp; Setor</b><br>Ex.: João Silva; 27999998888; Revista</p>
+        <textarea class="input" id="bulk" placeholder="Nome; WhatsApp; Setor"></textarea>
+        <button class="btn btn-lime" id="b-bulk">Importar lista</button>
+      </details>
 
-/* COBRAR */
-try{$("#msg").value=localStorage.getItem("fnv_msg")||DEF_MSG}catch(e){$("#msg").value=DEF_MSG}
-$("#msg").oninput=()=>{try{localStorage.setItem("fnv_msg",$("#msg").value)}catch(e){}};
-$("#cob-chips").onclick=e=>{const c=e.target.closest(".chip");if(!c)return;cobF=c.dataset.f;document.querySelectorAll("#cob-chips .chip").forEach(x=>x.classList.toggle("on",x===c));renderCob()};
-function renderCob(){
-  let list=[];
-  if(cobF==="pend")list=D.servos.filter(v=>statusOf(v)==="p").map(v=>({nome:v.nome,zap:v.whatsapp,sub:(D.setores.find(s=>s.id===v.setor_id)||{}).nome||""}));
-  if(cobF==="nconf")list=D.servos.filter(v=>statusOf(v)==="r").map(v=>({nome:v.nome,zap:v.whatsapp,sub:(D.setores.find(s=>s.id===v.setor_id)||{}).nome||""}));
-  if(cobF==="semcad"){const cad=new Set(D.servos.map(v=>d8(v.whatsapp)));const seen=new Set();
-    list=D.respostas.filter(r=>!cad.has(d8(r.whatsapp))&&!seen.has(d8(r.whatsapp))&&seen.add(d8(r.whatsapp))).map(r=>({nome:r.nome,zap:r.whatsapp,sub:"Sem setor definido",cad:true}))}
-  const msgFor=n=>$("#msg").value.replace(/\{nome\}/g,first(n)).replace(/\{link\}/g,QUIZ);
-  $("#list-cob").innerHTML=list.length?list.map(p=>`<div class="p"><div style="flex:1;min-width:0"><div class="nm">${esc(p.nome)}</div><div class="ph">${fmt(p.zap)}${p.sub?" · "+esc(p.sub):""}</div></div>
-    ${p.cad?`<button class="btn b-ghost b-sm" data-cad="${esc(p.nome)}|${esc(p.zap)}">Cadastrar</button>`:`<a class="btn b-wa b-sm" target="_blank" href="https://wa.me/${wa(p.zap)}?text=${encodeURIComponent(msgFor(p.nome))}">Chamar</a>`}</div>`).join("")
-    :`<p class="empty">${cobF==="pend"&&!D.servos.length?"Cadastre os servos na aba Servos primeiro.":"Ninguém aqui 🙌"}</p>`;
-}
-$("#list-cob").addEventListener("click",e=>{const c=e.target.closest("[data-cad]");if(!c)return;const[n,z]=c.dataset.cad.split("|");
-  document.querySelector('.tab[data-t="servos"]').click();editId=null;$("#s-nome").value=n;$("#s-zap").value=fmt(z);$("#s-setor").value="";$("#s-setor").focus();toast("Escolha o setor e salve")});
+      <input class="input" id="search" placeholder="🔎 Buscar por nome ou número">
+      <div class="people" id="list-servos"></div>
+    </div>
 
-/* abas e links */
-document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===t));document.querySelectorAll(".pane").forEach(p=>p.classList.toggle("on",p.id==="p-"+t.dataset.t))});
-$("#copy-quiz").onclick=()=>copy(QUIZ,"Link do quiz copiado");
-</script>
+    <!-- Cobrar -->
+    <div class="pane" id="pane-cobrar">
+      <div class="panel-box">
+        <h3>Mensagem de cobrança</h3>
+        <p class="hint">{nome} vira o primeiro nome e {link} vira o link do quiz.</p>
+        <textarea class="input" id="msg"></textarea>
+      </div>
+      <div class="chips" id="cob-chips">
+        <button class="chip is-on" data-f="pend">Não responderam</button>
+        <button class="chip" data-f="nconf">Não confirmaram</button>
+        <button class="chip" data-f="semcad">Sem cadastro</button>
+      </div>
+      <div class="people" id="list-cob"></div>
+    </div>
+  </section>
+</main>
+
+<script src="assets/core.js?v=3"></script>
+<script src="assets/painel.js?v=3"></script>
 </body>
 </html>
