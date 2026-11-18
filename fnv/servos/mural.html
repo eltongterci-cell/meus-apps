@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mural dos Convocados · Fogo na Vila</title>
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" href="logo-branco.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--lime:#cbfc06;--lime-d:#537503;--card:#151515;--line:#262626;--muted:#9a9a9a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#f5f5f5;font-family:Inter,system-ui,sans-serif;min-height:100dvh;overflow-x:hidden}
+.glow{position:fixed;left:50%;bottom:-35vh;width:150vw;height:80vh;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(203,252,6,.22),transparent);pointer-events:none}
+.wrap{position:relative;max-width:1200px;margin:0 auto;padding:clamp(20px,4vw,48px) 16px 40px;text-align:center}
+.logo{width:clamp(130px,18vw,220px);margin:0 auto 14px;filter:drop-shadow(0 0 30px rgba(203,252,6,.25))}
+.tag{color:var(--lime);font-weight:800;letter-spacing:3px;font-size:clamp(11px,1.5vw,15px);text-transform:uppercase}
+h1{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:clamp(34px,7vw,78px);line-height:1;text-transform:uppercase;margin:10px 0 24px}
+.counter{display:inline-flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.counter b{font-family:Anton,Impact,sans-serif;font-weight:400;font-size:clamp(84px,16vw,180px);line-height:.9;color:var(--lime);text-shadow:0 0 40px rgba(203,252,6,.45)}
+.counter span{font-size:clamp(18px,2.6vw,30px);font-weight:800;color:var(--muted)}
+.prog{max-width:620px;height:14px;border-radius:99px;background:#1d1d1d;margin:8px auto 34px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--lime-d),var(--lime));transition:width 1s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 18px rgba(203,252,6,.5)}
+.names{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.n{padding:10px 18px;border-radius:99px;background:var(--card);border:1.5px solid var(--line);font-weight:800;font-size:clamp(15px,1.8vw,22px)}
+.n.new{animation:pop 1.6s cubic-bezier(.2,.8,.2,1);border-color:var(--lime);color:var(--lime)}
+@keyframes pop{0%{transform:scale(.2);opacity:0}25%{transform:scale(1.25);opacity:1;box-shadow:0 0 40px rgba(203,252,6,.6)}100%{transform:scale(1)}}
+.empty{color:var(--muted);font-size:18px;margin-top:20px}
+.toast{position:fixed;left:50%;top:24px;transform:translate(-50%,-250%);opacity:0;background:var(--lime);color:#0a0a0a;font-weight:800;padding:14px 24px;border-radius:99px;font-size:clamp(16px,2vw,22px);transition:transform .5s cubic-bezier(.2,.8,.2,1),opacity .5s;z-index:5;white-space:nowrap}
+.toast.on{transform:translate(-50%,0);opacity:1}
+.fs{position:fixed;right:14px;bottom:14px;background:#1a1a1a;border:1px solid var(--line);color:#aaa;border-radius:12px;padding:10px 14px;font:600 13px Inter;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="toast" id="toast"></div>
+<div class="wrap">
+  <img class="logo" src="logo-branco.png" alt="Fogo na Vila">
+  <div class="tag">A maior vigília de Vila Velha</div>
+  <h1>Mural dos Convocados</h1>
+  <div class="counter"><b id="total">0</b><span>de <span id="meta">81</span> servos</span></div>
+  <div class="prog"><i id="prog"></i></div>
+  <div class="names" id="names"></div>
+  <p class="empty" id="empty">Aguardando os primeiros convocados... 🔥</p>
+</div>
+<button class="fs" onclick="document.documentElement.requestFullscreen?.()">Tela cheia</button>
+<script>
+const SB="https://pplhwupjbrtzqdwzlcem.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbGh3dXBqYnJ0enFkd3psY2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODczODYsImV4cCI6MjEwNjU2MzM4Nn0.wOm9lQH2gN4Y01BrpUeQ09elDOASsd0gELs-yDwmf20";
+const META=81; document.getElementById("meta").textContent=META;
+let shown=-1,timer;
+function animateNum(el,to){const from=+el.textContent||0,t0=performance.now();(function s(t){const p=Math.min(1,(t-t0)/900);el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s)})(t0)}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("on");clearTimeout(timer);timer=setTimeout(()=>t.classList.remove("on"),3500)}
+async function load(){
+  try{
+    const r=await fetch(`${SB}/rest/v1/rpc/fnv_mural`,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:"{}"});
+    const d=await r.json(); const nomes=d.nomes||[];
+    if(shown>=0&&d.total>shown){const novos=nomes.slice(0,d.total-shown);toast(`🔥 ${novos[0]} acabou de ser convocado!`)}
+    const nNew=shown<0?0:Math.max(0,d.total-shown);
+    document.getElementById("names").innerHTML=nomes.map((n,i)=>`<span class="n${i<nNew?" new":""}">${n.replace(/</g,"&lt;")}</span>`).join("");
+    document.getElementById("empty").style.display=nomes.length?"none":"block";
+    animateNum(document.getElementById("total"),d.total);
+    document.getElementById("prog").style.width=Math.min(100,d.total/META*100)+"%";
+    shown=d.total;
+  }catch(e){}
+}
+load(); setInterval(load,6000);
+</script>
+</body>
+</html>

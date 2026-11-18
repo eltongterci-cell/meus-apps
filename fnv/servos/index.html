@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fogo na Vila · Descubra seu setor</title>
+<meta name="description" content="Convocação dos servos do Fogo na Vila. Responda e descubra onde você vai servir.">
+<meta name="theme-color" content="#0a0a0a">
+<meta property="og:title" content="Fogo na Vila · Sua missão será revelada">
+<meta property="og:description" content="Responda 10 perguntas e descubra onde você vai servir na maior vigília de Vila Velha.">
+<meta property="og:image" content="logo-branco.png">
+<link rel="icon" href="logo-branco.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a; --bg2:#121212; --card:#171717; --line:#2a2a2a;
+  --lime:#cbfc06; --lime-d:#537503; --lime-glow:rgba(203,252,6,.35);
+  --txt:#f5f5f5; --muted:#a3a3a3; --danger:#ff5d5d;
+  --r:20px; --ease:cubic-bezier(.2,.8,.2,1);
+  --display:'Anton',Impact,'Arial Narrow',sans-serif;
+  --body:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--body);font-size:16px;line-height:1.5;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+img{display:block;max-width:100%}
+
+/* fundo: brasas */
+#embers{position:fixed;inset:0;z-index:0;pointer-events:none}
+.glow{position:fixed;left:50%;bottom:-30vh;width:140vw;height:70vh;transform:translateX(-50%);
+  background:radial-gradient(closest-side,rgba(203,252,6,.18),transparent);z-index:0;pointer-events:none}
+
+.app{position:relative;z-index:1;min-height:100dvh;max-width:480px;margin:0 auto;
+  padding:max(20px,env(safe-area-inset-top)) 20px max(24px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+
+.screen{display:none;flex:1;flex-direction:column}
+.screen.on{display:flex;animation:in .5s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* botões */
+.btn{text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;padding:16px 22px;
+  border-radius:16px;font-weight:800;font-size:17px;letter-spacing:.2px;transition:transform .15s var(--ease),box-shadow .2s,opacity .2s}
+.btn:active{transform:scale(.97)}
+.btn-lime{background:var(--lime);color:#0a0a0a;box-shadow:0 10px 30px -8px var(--lime-glow)}
+.btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--txt)}
+.btn-wa{background:#25d366;color:#05170c;box-shadow:0 10px 30px -10px rgba(37,211,102,.5)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn svg{width:22px;height:22px;flex:none}
+
+/* INÍCIO */
+.hero{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:12px 0}
+.hero-logo{width:min(62%,240px);margin:0 auto;filter:drop-shadow(0 0 28px rgba(203,252,6,.25));animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+.kicker{display:inline-flex;align-items:center;gap:8px;align-self:center;padding:7px 14px;border-radius:99px;
+  border:1px solid rgba(203,252,6,.35);color:var(--lime);font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase}
+.kicker i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 10px var(--lime);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.h1{font-family:var(--display);font-weight:400;font-size:clamp(38px,11vw,52px);line-height:1;text-transform:uppercase;text-align:center;letter-spacing:.5px}
+.h1 em{font-style:normal;color:var(--lime)}
+.lead{color:var(--muted);text-align:center;font-size:16px;max-width:340px;margin:0 auto}
+.form{display:flex;flex-direction:column;gap:14px}
+.field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px 4px;letter-spacing:.3px}
+.field input{width:100%;min-height:58px;padding:0 18px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);
+  font-size:18px;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input::placeholder{color:#5c5c5c;font-weight:500}
+.field input:focus{border-color:var(--lime);box-shadow:0 0 0 4px rgba(203,252,6,.12)}
+.err{color:var(--danger);font-size:14px;font-weight:600;min-height:20px;text-align:center}
+.tiny{color:#6b6b6b;font-size:12px;text-align:center}
+
+/* QUIZ */
+.qtop{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.back{width:44px;height:44px;border-radius:14px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.back svg{width:20px;height:20px}
+.bar{flex:1;height:10px;border-radius:99px;background:#1f1f1f;position:relative}
+.bar b{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,var(--lime-d),var(--lime));
+  transition:width .5s var(--ease);box-shadow:0 0 14px var(--lime-glow)}
+.bar b::after{content:"🔥";position:absolute;right:-10px;top:50%;transform:translateY(-55%);font-size:20px}
+.count{font-weight:800;font-size:14px;color:var(--muted);min-width:42px;text-align:right}
+.count b{color:var(--lime)}
+.qbox{flex:1;display:flex;flex-direction:column}
+.qnum{font-family:var(--display);color:var(--lime);font-size:15px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.qtxt{font-size:clamp(25px,7vw,30px);font-weight:800;line-height:1.18;letter-spacing:-.4px;margin-bottom:26px}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;min-height:68px;padding:12px 16px;border-radius:18px;text-align:left;
+  background:var(--card);border:1.5px solid var(--line);font-weight:700;font-size:17px;
+  transition:transform .15s var(--ease),border-color .2s,background .2s;opacity:0;animation:pop .45s var(--ease) forwards}
+.opt:nth-child(2){animation-delay:.06s}.opt:nth-child(3){animation-delay:.12s}.opt:nth-child(4){animation-delay:.18s}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.opt .em{width:44px;height:44px;border-radius:13px;background:#222;display:grid;place-items:center;font-size:24px;flex:none}
+.opt:active{transform:scale(.98)}
+.opt.sel{border-color:var(--lime);background:rgba(203,252,6,.1)}
+.opt.sel .em{background:var(--lime)}
+.qbox.out{animation:out .28s ease forwards}
+@keyframes out{to{opacity:0;transform:translateX(-30px)}}
+
+/* ANALISANDO */
+.anal{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center}
+.ring{width:150px;height:150px;border-radius:50%;position:relative;display:grid;place-items:center}
+.ring::before{content:"";position:absolute;inset:0;border-radius:50%;border:4px solid #1f1f1f;border-top-color:var(--lime);animation:spin 1s linear infinite}
+.ring span{font-size:58px;animation:flick .5s infinite alternate}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flick{to{transform:scale(1.12) rotate(-4deg)}}
+.anal-txt{font-weight:800;font-size:20px;min-height:30px}
+.roulette{height:64px;overflow:hidden;width:100%;border-radius:18px;border:1.5px solid var(--line);background:var(--card);position:relative}
+.roulette::before,.roulette::after{content:"";position:absolute;left:0;right:0;height:18px;z-index:2}
+.roulette::before{top:0;background:linear-gradient(var(--card),transparent)}
+.roulette::after{bottom:0;background:linear-gradient(transparent,var(--card))}
+.roulette div{font-family:var(--display);font-size:26px;text-transform:uppercase;line-height:64px;color:var(--lime);letter-spacing:.5px}
+
+/* RESULTADO */
+#fx{position:fixed;inset:0;z-index:50;pointer-events:none}
+.flash{position:fixed;inset:0;background:var(--lime);z-index:49;pointer-events:none;opacity:0}
+.flash.go{animation:flash .7s ease-out}
+@keyframes flash{0%{opacity:.85}100%{opacity:0}}
+.res{display:flex;flex-direction:column;gap:18px;padding-bottom:20px}
+.res-head{text-align:center;padding:18px 0 4px}
+.res-logo{width:120px;margin:0 auto 16px}
+.congrats{font-family:var(--display);font-size:clamp(44px,13vw,64px);line-height:.95;text-transform:uppercase;
+  background:linear-gradient(180deg,#fff 30%,var(--lime));-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:boom .8s var(--ease) both}
+@keyframes boom{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+.name{font-weight:800;font-size:20px;margin-top:6px}
+.sector{margin-top:18px;padding:26px 18px;border-radius:24px;text-align:center;position:relative;overflow:hidden;
+  background:radial-gradient(120% 100% at 50% 0%,rgba(203,252,6,.22),rgba(203,252,6,.02) 60%),var(--card);
+  border:1.5px solid rgba(203,252,6,.5);box-shadow:0 0 50px -12px var(--lime-glow);animation:boom .9s .25s var(--ease) both}
+.sector small{display:block;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:2px;font-size:12px}
+.sector .se{font-size:52px;margin:6px 0 2px;animation:float 3s ease-in-out infinite}
+.sector h2{font-family:var(--display);font-weight:400;font-size:clamp(34px,10vw,46px);line-height:1.02;text-transform:uppercase;color:var(--lime);letter-spacing:.5px}
+.mission{color:#d6d6d6;font-size:16px;margin-top:12px;line-height:1.55}
+.coord{display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:9px 14px;border-radius:99px;background:#0d0d0d;border:1px solid var(--line);font-size:14px;font-weight:600}
+.coord b{color:var(--lime)}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px}
+.card h3{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--lime);font-weight:800;margin-bottom:12px}
+.verse{text-align:center;font-style:italic;color:#d6d6d6;font-size:17px;line-height:1.5}
+.verse span{display:block;font-style:normal;font-weight:800;color:var(--lime);font-size:13px;letter-spacing:1px;margin-top:8px}
+.sched{display:grid;gap:2px}
+.sched div{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px dashed #262626;font-weight:600}
+.sched div:last-child{border:0}
+.sched b{font-family:var(--display);font-weight:400;font-size:20px;color:var(--lime);letter-spacing:.5px}
+.confirmed{text-align:center;padding:22px 18px;border-radius:var(--r);background:linear-gradient(135deg,rgba(203,252,6,.16),rgba(203,252,6,.03));border:1.5px solid rgba(203,252,6,.45)}
+.confirmed .big{font-family:var(--display);font-size:64px;line-height:1;color:var(--lime)}
+.confirmed p{font-weight:700;font-size:17px}
+.confirmed small{display:block;color:var(--muted);margin-top:4px}
+.badge-prev{border-radius:18px;overflow:hidden;border:1.5px solid var(--line);margin-bottom:14px;aspect-ratio:9/16;max-height:62vh;margin-inline:auto;background:#000}
+.badge-prev canvas{width:100%;height:100%;display:block}
+video{width:100%;border-radius:16px;background:#000;display:block}
+.notfound{text-align:center;padding:28px 18px}
+.notfound .se{font-size:56px}
+.notfound h2{font-family:var(--display);font-weight:400;font-size:34px;text-transform:uppercase;color:var(--lime);margin:8px 0}
+.notfound p{color:#cfcfcf}
+.hidden{display:none!important}
+.stack{display:grid;gap:12px}
+.foot{text-align:center;color:#555;font-size:12px;margin-top:8px}
+.foot a{color:#777}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="embers" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+<div class="flash" id="flash"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<main class="app">
+
+  <!-- INÍCIO -->
+  <section class="screen on" id="s-start">
+    <div class="hero">
+      <img class="hero-logo" src="logo-branco.png" alt="Fogo na Vila">
+      <span class="kicker"><i></i>Convocação dos servos</span>
+      <h1 class="h1">Sua missão<br>será <em>revelada</em></h1>
+      <p class="lead">Responda 10 perguntas rápidas e descubra onde você vai servir na maior vigília de Vila Velha.</p>
+      <form class="form" id="f-start" novalidate>
+        <div class="field">
+          <label for="nome">Seu nome</label>
+          <input id="nome" autocomplete="name" placeholder="Nome e sobrenome" maxlength="80" enterkeyhint="next">
+        </div>
+        <div class="field">
+          <label for="zap">Seu WhatsApp</label>
+          <input id="zap" inputmode="numeric" autocomplete="tel-national" placeholder="(27) 99999-9999" maxlength="16" enterkeyhint="go">
+        </div>
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn btn-lime" type="submit">Bora começar 🔥</button>
+        <p class="tiny">Use o mesmo número que você passou para a liderança.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- PERGUNTAS -->
+  <section class="screen" id="s-quiz">
+    <div class="qtop">
+      <button class="back" id="back" aria-label="Voltar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="bar"><b id="bar"></b></div>
+      <div class="count"><b id="cur">1</b>/<span id="tot">10</span></div>
+    </div>
+    <div class="qbox" id="qbox"></div>
+  </section>
+
+  <!-- ANALISANDO -->
+  <section class="screen" id="s-anal">
+    <div class="anal">
+      <div class="ring"><span>🔥</span></div>
+      <p class="anal-txt" id="anal-txt">Analisando suas respostas...</p>
+      <div class="roulette"><div id="roul">...</div></div>
+    </div>
+  </section>
+
+  <!-- RESULTADO -->
+  <section class="screen" id="s-res">
+    <div class="res" id="res-ok">
+      <div class="res-head">
+        <img class="res-logo" src="logo-branco.png" alt="Fogo na Vila">
+        <div class="congrats">Parabéns!</div>
+        <div class="name" id="r-name"></div>
+        <div class="sector">
+          <small>Você servirá na equipe</small>
+          <div class="se" id="r-emoji">🔥</div>
+          <h2 id="r-setor"></h2>
+          <p class="mission" id="r-missao"></p>
+          <div class="coord hidden" id="r-coord">Coordenação: <b></b></div>
+        </div>
+      </div>
+
+      <div class="stack" id="cta">
+        <button class="btn btn-lime" id="b-confirm">Confirmo meu chamado 🙌</button>
+        <a class="btn btn-wa hidden" id="b-group" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.6-1.3a.5.5 0 0 0 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+          Entrar no grupo do meu setor
+        </a>
+      </div>
+
+      <div class="confirmed hidden" id="r-pos">
+        <div class="big" id="r-num">--</div>
+        <p>Você é o <span id="r-num2">--</span>º convocado para a maior vigília de Vila Velha!</p>
+        <small>Seu nome já está no Mural dos Convocados 🔥</small>
+      </div>
+
+      <div class="card hidden" id="badge-card">
+        <h3>Seu crachá para o story</h3>
+        <div class="badge-prev"><canvas id="badge" width="1080" height="1920"></canvas></div>
+        <button class="btn btn-lime" id="b-share">Compartilhar no story 📲</button>
+        <p class="tiny" style="margin-top:10px">Marque o <b style="color:var(--lime)">@fogonavila_</b> no seu story!</p>
+      </div>
+
+      <div class="card hidden" id="video-card">
+        <h3>Uma palavra pra você</h3>
+        <video id="video" controls playsinline preload="metadata"></video>
+      </div>
+
+      <div class="card">
+        <h3>Orientações do dia</h3>
+        <div class="sched">
+          <div>Chegada dos voluntários <b>19h00</b></div>
+          <div>Momento de oração <b>20h00</b></div>
+          <div>Todos nos postos <b>20h30</b></div>
+          <div>Abertura ao público <b>21h00</b></div>
+          <div>Início da vigília <b>22h00</b></div>
+        </div>
+      </div>
+
+      <div class="card verse">"Depois disto, ouvi a voz do Senhor, que dizia: A quem enviarei? Então disse eu: Eis-me aqui, envia-me a mim."<span>ISAÍAS 6:8</span></div>
+      <p class="foot">Fogo na Vila · AD Fonte de Vida Itaparica</p>
+    </div>
+
+    <div class="res hidden" id="res-nf">
+      <div class="card notfound">
+        <div class="se">⏳</div>
+        <h2>Quase lá, <span id="nf-name"></span>!</h2>
+        <p>Suas respostas foram enviadas. Seu setor ainda está sendo finalizado pela liderança e será revelado em breve.</p>
+        <p style="margin-top:12px;color:var(--muted);font-size:14px">Se achar que digitou o número errado, tente de novo.</p>
+      </div>
+      <button class="btn btn-ghost" onclick="location.reload()">Tentar de novo</button>
+    </div>
+  </section>
+</main>
+
+<script>
+const SB="https://pplhwupjbrtzqdwzlcem.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbGh3dXBqYnJ0enFkd3psY2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODczODYsImV4cCI6MjEwNjU2MzM4Nn0.wOm9lQH2gN4Y01BrpUeQ09elDOASsd0gELs-yDwmf20";
+async function rpc(fn,body){
+  const r=await fetch(`${SB}/rest/v1/rpc/${fn}`,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:JSON.stringify(body||{})});
+  const t=await r.text(); if(!r.ok) throw new Error(t); return t?JSON.parse(t):null;
+}
+
+const Q=[
+ ["Chegou no Fogo na Vila. Qual é a sua vibe?",[["🔥","Já quero botar a mão na massa"],["😎","Observo e organizo tudo"],["🙏","Começo orando"],["🤝","Saio cumprimentando geral"]]],
+ ["Seu superpoder escondido é...",[["⚡","Agilidade"],["🧠","Organização"],["💬","Comunicação"],["🛡️","Firmeza"]]],
+ ["Fila gigante na entrada. Você...",[["🏃","Resolve rapidinho"],["😄","Anima a galera"],["📋","Organiza a fila"],["👀","Fica de olho na segurança"]]],
+ ["Seus amigos te chamam quando precisam de alguém que...",[["🧰","Resolve qualquer coisa"],["🍔","Cuida da comida"],["🎤","Fala bem com as pessoas"],["🫶","Cuida de quem precisa"]]],
+ ["3 da manhã na vigília. Você está...",[["🔋","100%, essa é minha hora"],["☕","No café, mas firme"],["🙌","No altar, adorando"],["🧭","Rodando pra ver se tá tudo certo"]]],
+ ["Qual emoji te representa?",[["🔥","Intenso"],["💪","Forte"],["🙏","Consagrado"],["😂","Alegria pura"]]],
+ ["Se o evento fosse um time, você seria...",[["⚽","Atacante: linha de frente"],["🧤","Goleiro: ninguém passa"],["🎯","Meio-campo: faz tudo girar"],["📣","Torcida: anima todo mundo"]]],
+ ["Deu um imprevisto. Você...",[["🛠️","Arregaça as mangas"],["🧘","Mantém a calma"],["📞","Chama quem resolve"],["🙏","Ora e age"]]],
+ ["O que mais te enche de alegria num evento?",[["👥","Ver a galera chegando"],["✨","Tudo funcionando perfeito"],["🍽️","Todo mundo bem servido"],["🔥","Ver Deus agindo"]]],
+ ["Pronto pra ser convocado pro Fogo na Vila?",[["🔥","Nasci pronto"],["🙌","Eis-me aqui, envia-me a mim"],["💯","Bora fazer história"],["🚀","Pode mandar a missão"]]]
+];
+const EMOJI={"Pulseiras e QR Codes":"🎟️","Revista":"🛡️","Guarda-volumes":"🎒","Alimentos":"🍞","Fogo na Vila Store":"🛍️",
+ "Manutenção":"🧰","Recepção da porta":"🚪","Lanche dos voluntários":"🥪","Lanche do convidado":"🍽️","Venda dos churrasquinhos":"🍢",
+ "Venda dos refrigerantes":"🥤","Palco e instrumentação":"🎸","Intercessão":"🙏","Enfermagem":"🩺","Coordenação geral":"📋"};
+const SETORES=Object.keys(EMOJI);
+
+const $=s=>document.querySelector(s);
+const st={nome:"",zap:"",i:0,ans:[],res:null,pos:null};
+const buzz=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));window.scrollTo(0,0)}
+
+/* máscara do telefone */
+$("#zap").addEventListener("input",e=>{
+  let d=e.target.value.replace(/\D/g,"").slice(0,11);
+  e.target.value=d.length>10?`(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`:d.length>6?`(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`:d.length>2?`(${d.slice(0,2)}) ${d.slice(2)}`:d;
+});
+$("#nome").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("#zap").focus()}});
+$("#f-start").addEventListener("submit",e=>{
+  e.preventDefault();
+  const n=$("#nome").value.trim().replace(/\s+/g," "), z=$("#zap").value.replace(/\D/g,"");
+  if(n.length<3){$("#err").textContent="Coloca seu nome, por favor 😉";$("#nome").focus();return}
+  if(z.length<10){$("#err").textContent="Confere seu WhatsApp com DDD";$("#zap").focus();return}
+  $("#err").textContent=""; st.nome=n; st.zap=z; st.i=0; st.ans=[];
+  document.activeElement.blur(); buzz(20); show("s-quiz"); renderQ();
+});
+
+function renderQ(){
+  const [q,opts]=Q[st.i];
+  $("#tot").textContent=Q.length; $("#cur").textContent=st.i+1;
+  $("#bar").style.width=((st.i)/Q.length*100+4)+"%";
+  $("#qbox").className="qbox";
+  $("#qbox").innerHTML=`<div class="qnum">Pergunta ${st.i+1}</div><h2 class="qtxt">${q}</h2>
+    <div class="opts">${opts.map((o,k)=>`<button class="opt${st.ans[st.i]===o[1]?" sel":""}" data-k="${k}"><span class="em">${o[0]}</span><span>${o[1]}</span></button>`).join("")}</div>`;
+  $("#qbox").querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(b,opts[b.dataset.k][1]));
+}
+let locked=false;
+function pick(b,val){
+  if(locked) return; locked=true; buzz(15);
+  $("#qbox").querySelectorAll(".opt").forEach(o=>o.classList.remove("sel")); b.classList.add("sel");
+  st.ans[st.i]=val;
+  setTimeout(()=>{
+    $("#qbox").classList.add("out");
+    setTimeout(()=>{locked=false; if(st.i<Q.length-1){st.i++;renderQ()}else finish()},260);
+  },320);
+}
+$("#back").onclick=()=>{if(locked)return; if(st.i===0){show("s-start");return} st.i--; renderQ()};
+
+async function finish(){
+  $("#bar").style.width="100%"; show("s-anal");
+  const msgs=["Analisando suas respostas...","Lendo seu perfil de servo...","Consultando a liderança...","Encontrando seu lugar..."];
+  let m=0; const mi=setInterval(()=>{m=(m+1)%msgs.length;$("#anal-txt").textContent=msgs[m]},1100);
+  let k=0; const ri=setInterval(()=>{$("#roul").textContent=SETORES[k++%SETORES.length]},90);
+  const t0=Date.now();
+  let res; try{res=await rpc("fnv_revelar",{p_nome:st.nome,p_whatsapp:st.zap,p_respostas:st.ans})}catch(e){res={erro:true}}
+  const wait=Math.max(0,4200-(Date.now()-t0));
+  setTimeout(()=>{
+    clearInterval(mi);
+    if(res.erro){clearInterval(ri);alert("Ops, a internet falhou. Vamos tentar de novo.");show("s-quiz");return}
+    if(!res.encontrado){clearInterval(ri);notFound();return}
+    // desacelera a roleta até o setor
+    clearInterval(ri); let d=90,n=0;
+    const slow=()=>{ $("#roul").textContent=SETORES[k++%SETORES.length]; buzz(8); d*=1.22; n++;
+      if(n<9) setTimeout(slow,d); else { $("#roul").textContent=res.setor; $("#anal-txt").textContent="Encontramos! 🔥"; setTimeout(()=>reveal(res),700) } };
+    slow();
+  },wait);
+}
+function notFound(){
+  $("#nf-name").textContent=st.nome.split(" ")[0];
+  $("#res-ok").classList.add("hidden"); $("#res-nf").classList.remove("hidden"); show("s-res");
+}
+function reveal(r){
+  st.res=r;
+  $("#r-name").textContent=st.nome.split(" ")[0]+", você foi convocado!";
+  $("#r-setor").textContent=r.setor; $("#r-emoji").textContent=EMOJI[r.setor]||"🔥";
+  $("#r-missao").textContent=r.missao||"";
+  if(r.coordenador){$("#r-coord").classList.remove("hidden");$("#r-coord b").textContent=r.coordenador}
+  if(r.link){$("#b-group").href=r.link;$("#b-group").classList.remove("hidden")}
+  show("s-res");
+  $("#flash").classList.add("go"); buzz([120,60,120,60,300]); explode();
+}
+
+/* confirmação + crachá */
+$("#b-confirm").onclick=async()=>{
+  const b=$("#b-confirm"); b.disabled=true; b.textContent="Confirmando...";
+  try{
+    const pos=await rpc("fnv_confirmar",{p_rid:st.res.rid}); st.pos=pos;
+    b.classList.add("hidden");
+    $("#r-num").textContent=pos+"º"; $("#r-num2").textContent=pos;
+    $("#r-pos").classList.remove("hidden"); $("#badge-card").classList.remove("hidden");
+    buzz([60,40,60]); explode(.6); await drawBadge();
+    $("#r-pos").scrollIntoView({behavior:"smooth",block:"center"});
+  }catch(e){b.disabled=false;b.textContent="Confirmo meu chamado 🙌";alert("Não consegui confirmar. Tenta de novo?")}
+};
+
+const logo=new Image(); logo.src="logo-branco.png";
+async function drawBadge(){
+  const c=$("#badge"),x=c.getContext("2d"),W=1080,H=1920;
+  try{await document.fonts.load("120px Anton");await document.fonts.load("800 40px Inter")}catch(e){}
+  if(!logo.complete) await new Promise(r=>{logo.onload=r;logo.onerror=r});
+  x.fillStyle="#0a0a0a"; x.fillRect(0,0,W,H);
+  let g=x.createRadialGradient(W/2,H*1.05,50,W/2,H*1.05,H*.75); g.addColorStop(0,"rgba(203,252,6,.42)"); g.addColorStop(1,"rgba(203,252,6,0)");
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  g=x.createRadialGradient(W/2,0,10,W/2,0,700); g.addColorStop(0,"rgba(203,252,6,.18)"); g.addColorStop(1,"rgba(203,252,6,0)");
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  for(let i=0;i<70;i++){x.fillStyle=`rgba(203,252,6,${Math.random()*.6+.1})`;x.beginPath();x.arc(Math.random()*W,H*.45+Math.random()*H*.55,Math.random()*5+1,0,7);x.fill()}
+  x.strokeStyle="rgba(203,252,6,.55)"; x.lineWidth=4; rr(x,60,60,W-120,H-120,48); x.stroke();
+  const lw=520,lh=lw*logo.height/logo.width; x.drawImage(logo,(W-lw)/2,170,lw,lh);
+  x.textAlign="center"; x.fillStyle="#cbfc06"; x.font="800 34px Inter"; x.fillText("C R A C H Á   O F I C I A L   D E   S E R V O",W/2,280+lh);
+  x.fillStyle="#fff"; x.font="150px Anton"; x.fillText("CONVOCADO",W/2,470+lh);
+  x.fillStyle="#cbfc06"; x.font="110px Anton"; x.fillText("PRO FOGO NA VILA",W/2,600+lh);
+  const first=st.nome.split(" ").slice(0,2).join(" ").toUpperCase();
+  let fs=96; x.font=`${fs}px Anton`; while(x.measureText(first).width>W-200&&fs>50){fs-=4;x.font=`${fs}px Anton`}
+  x.fillStyle="#fff"; x.fillText(first,W/2,800+lh);
+  rr(x,W/2-230,860+lh,460,120,60); x.fillStyle="#cbfc06"; x.fill();
+  x.fillStyle="#0a0a0a"; x.font="72px Anton"; x.fillText(`SERVO Nº ${st.pos}`,W/2,945+lh);
+  x.fillStyle="#e5e5e5"; x.font="italic 600 46px Inter";
+  x.fillText("Eu não vou só assistir,",W/2,1110+lh); x.fillText("eu vou fazer acontecer.",W/2,1172+lh);
+  x.fillStyle="#cbfc06"; x.font="800 44px Inter"; x.fillText("@fogonavila_",W/2,H-150);
+  x.fillStyle="#8a8a8a"; x.font="600 30px Inter"; x.fillText("A maior vigília de Vila Velha",W/2,H-100);
+}
+function rr(x,a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+$("#b-share").onclick=()=>{
+  $("#badge").toBlob(async blob=>{
+    const file=new File([blob],"servo-fogo-na-vila.png",{type:"image/png"});
+    try{ if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Fogo na Vila"});return} }catch(e){if(e.name==="AbortError")return}
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=file.name; a.click();
+  },"image/png");
+};
+
+/* vídeo da liderança (aparece só se existir) */
+fetch("video.mp4",{method:"HEAD"}).then(r=>{if(r.ok&&(r.headers.get("content-type")||"").includes("video")){$("#video").src="video.mp4";$("#video-card").classList.remove("hidden")}}).catch(()=>{});
+
+/* explosão */
+const fx=$("#fx"),fc=fx.getContext("2d"); let parts=[],fxOn=false;
+function size(){fx.width=innerWidth*devicePixelRatio;fx.height=innerHeight*devicePixelRatio;em.width=innerWidth*devicePixelRatio;em.height=innerHeight*devicePixelRatio}
+function explode(power=1){
+  const W=innerWidth,H=innerHeight,cols=["#cbfc06","#e9ff7a","#ffffff","#9bd10a","#ffd23f","#ff8a1f"];
+  for(let b=0;b<3;b++){
+    const ox=W*(.2+.3*b),oy=H*(.35+Math.random()*.15);
+    for(let i=0;i<Math.round(90*power);i++){
+      const a=Math.random()*Math.PI*2,s=(Math.random()*9+3)*(b===1?1.2:1);
+      parts.push({x:ox,y:oy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,g:.22,life:1,dec:Math.random()*.012+.008,
+        w:Math.random()*8+4,h:Math.random()*5+3,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:cols[Math.random()*cols.length|0],fl:Math.random()<.35});
+    }
+  }
+  if(!fxOn){fxOn=true;requestAnimationFrame(loop)}
+}
+function loop(){
+  const d=devicePixelRatio; fc.setTransform(d,0,0,d,0,0); fc.clearRect(0,0,innerWidth,innerHeight);
+  parts=parts.filter(p=>p.life>0&&p.y<innerHeight+40);
+  for(const p of parts){
+    p.vx*=.985;p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life-=p.dec;
+    fc.globalAlpha=Math.max(0,p.life);
+    if(p.fl){fc.font="18px serif";fc.fillText("🔥",p.x,p.y)}
+    else{fc.save();fc.translate(p.x,p.y);fc.rotate(p.r);fc.fillStyle=p.c;fc.fillRect(-p.w/2,-p.h/2,p.w,p.h);fc.restore()}
+  }
+  fc.globalAlpha=1;
+  if(parts.length) requestAnimationFrame(loop); else {fxOn=false;fc.clearRect(0,0,innerWidth,innerHeight)}
+}
+
+/* brasas de fundo */
+const em=$("#embers"),ec=em.getContext("2d"); let embers=[];
+for(let i=0;i<38;i++) embers.push({x:Math.random(),y:Math.random(),s:Math.random()*2.4+.6,v:Math.random()*.0016+.0006,o:Math.random()*.6+.2,w:Math.random()*Math.PI*2});
+function emLoop(){
+  const d=devicePixelRatio,W=innerWidth,H=innerHeight; ec.setTransform(d,0,0,d,0,0); ec.clearRect(0,0,W,H);
+  for(const e of embers){e.y-=e.v;e.w+=.03;if(e.y<-.02){e.y=1.02;e.x=Math.random()}
+    ec.globalAlpha=e.o*(e.y<.3?e.y/.3:1);ec.fillStyle="#cbfc06";ec.shadowColor="#cbfc06";ec.shadowBlur=8;
+    ec.beginPath();ec.arc(e.x*W+Math.sin(e.w)*10,e.y*H,e.s,0,7);ec.fill()}
+  requestAnimationFrame(emLoop);
+}
+addEventListener("resize",size); size();
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches) emLoop();
+</script>
+</body>
+</html>
