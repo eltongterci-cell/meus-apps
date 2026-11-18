@@ -17,8 +17,8 @@
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/base.css?v=4">
-<link rel="stylesheet" href="assets/quiz.css?v=4">
+<link rel="stylesheet" href="assets/base.css?v=5">
+<link rel="stylesheet" href="assets/quiz.css?v=5">
 </head>
 <body>
 <canvas class="embers" id="embers" aria-hidden="true"></canvas>
@@ -80,9 +80,9 @@
   <section class="screen" id="s-reveal">
     <div class="reveal" id="reveal">
       <header class="reveal-head">
-        <span class="sticker">Convocação confirmada</span>
+        <span class="sticker" id="r-sticker">Convocação confirmada</span>
         <h1 class="reveal-hi">Parabéns, <span id="r-first"></span>!</h1>
-        <p class="reveal-sub">Você foi convocado para o Fogo na Vila</p>
+        <p class="reveal-sub" id="r-sub">Você foi convocado para o Fogo na Vila</p>
       </header>
 
       <article class="ticket" aria-label="Seu setor">
@@ -158,14 +158,14 @@
     <div class="waiting" id="waiting" hidden>
       <div class="big-emoji">⏳</div>
       <h1>Quase lá, <span id="w-first"></span>!</h1>
-      <p class="muted">Suas respostas chegaram. Seu setor ainda está sendo finalizado pela liderança e será revelado em breve.</p>
-      <p class="tiny">Se achar que digitou o número errado, tente de novo.</p>
-      <button class="btn" onclick="location.reload()">Tentar de novo</button>
+      <p class="muted" id="w-msg">Suas respostas chegaram. Seu setor ainda está sendo finalizado pela liderança e será revelado em breve.</p>
+      <p class="tiny">Digitou o número errado? Use outro número.</p>
+      <button class="btn" id="b-retry">Usar outro número</button>
     </div>
   </section>
 </main>
 
-<script src="assets/core.js?v=4"></script>
-<script src="assets/quiz.js?v=4"></script>
+<script src="assets/core.js?v=5"></script>
+<script src="assets/quiz.js?v=5"></script>
 </body>
 </html>

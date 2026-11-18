@@ -19,6 +19,12 @@
 
   const state = { nome: "", zap: "", i: 0, respostas: [], resultado: null, numero: null, travado: false };
 
+  /* Lembra no aparelho quem já respondeu, para voltar direto ao resultado */
+  const MEMO = "fnv_servo";
+  const lembrar = () => { try { localStorage.setItem(MEMO, JSON.stringify({ nome: state.nome, zap: state.zap })); } catch (e) {} };
+  const lembrado = () => { try { return JSON.parse(localStorage.getItem(MEMO) || "null"); } catch (e) { return null; } };
+  const esquecer = () => { try { localStorage.removeItem(MEMO); } catch (e) {} };
+
   function mostrar(id) {
     $$(".screen").forEach(s => s.classList.toggle("is-on", s.id === id));
     scrollTo(0, 0);
@@ -33,7 +39,7 @@
   });
   $("#nome").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#zap").focus(); } });
 
-  $("#f-start").addEventListener("submit", e => {
+  $("#f-start").addEventListener("submit", async e => {
     e.preventDefault();
     const nome = $("#nome").value.trim().replace(/\s+/g, " ");
     const zap = digits($("#zap").value);
@@ -42,6 +48,15 @@
     $("#err").textContent = "";
     Object.assign(state, { nome, zap, i: 0, respostas: [] });
     document.activeElement.blur(); vibrate(20);
+
+    // cada número responde uma vez só: se já respondeu, vai direto ao resultado
+    const btn = $("#f-start button[type=submit]"), txt = btn.textContent;
+    btn.disabled = true; btn.textContent = "Verificando...";
+    let r = null;
+    try { r = await rpc("fnv_consultar", { p_whatsapp: zap }); }
+    catch (err) { btn.disabled = false; btn.textContent = txt; return erro("A internet falhou. Tenta de novo?", "#zap"); }
+    btn.disabled = false; btn.textContent = txt;
+    if (r && r.respondeu) { state.nome = r.nome || nome; lembrar(); return mostrarResultado(r, true); }
     montarSegmentos(); mostrar("s-quiz"); renderPergunta();
   });
   function erro(msg, campo) { $("#err").textContent = msg; $(campo).focus(); }
@@ -106,7 +121,8 @@
     setTimeout(() => {
       clearInterval(tFrase); clearInterval(tSlot);
       if (res.falhou) { FNV.toast("A internet falhou. Tenta de novo?"); return mostrar("s-quiz"); }
-      if (!res.encontrado) return aguardando();
+      lembrar();
+      if (!res.encontrado) return aguardando(false);
       // roleta desacelerando até o setor
       let atraso = 90, giros = 0;
       (function girar() {
@@ -119,14 +135,24 @@
     }, Math.max(0, 4200 - (Date.now() - inicio)));
   }
 
-  function aguardando() {
+  function aguardando(voltou) {
     $("#w-first").textContent = firstName(state.nome);
+    if (voltou) $("#w-msg").textContent = "Você já respondeu o quiz. Seu setor ainda está sendo finalizado pela liderança e será revelado em breve.";
     $("#reveal").hidden = true; $("#waiting").hidden = false;
     mostrar("s-reveal");
   }
 
+  /* Resultado de quem já tinha respondido */
+  function mostrarResultado(r, voltou) {
+    if (!r.encontrado) return aguardando(voltou);
+    revelar(r, voltou);
+    if (r.confirmado && r.numero) aplicarConfirmacao(r.numero, false);
+  }
+
+  $("#b-retry").addEventListener("click", () => { esquecer(); location.reload(); });
+
   /* ---------- REVELAÇÃO ---------- */
-  function revelar(r) {
+  function revelar(r, voltou = false) {
     state.resultado = r;
     $("#r-first").textContent = firstName(state.nome);
     $("#r-sector").textContent = r.setor;
@@ -138,10 +164,26 @@
     $("#r-emoji2").textContent = EMOJI[r.setor] || "🔥";
     $("#r-coord").textContent = r.coordenador || "A definir";
     if (r.link) { $("#b-group").href = r.link; $("#b-group").hidden = false; }
+    $("#reveal").hidden = false; $("#waiting").hidden = true;
     mostrar("s-reveal");
+    if (voltou) {
+      $("#r-sticker").textContent = "Bem-vindo de volta";
+      $("#r-sub").textContent = "Seu setor já foi revelado. Confira tudo abaixo.";
+      return;
+    }
     $("#flash").classList.add("is-on");
     vibrate([120, 60, 120, 60, 300]);
     confetti($("#fx"));
+  }
+
+  async function aplicarConfirmacao(n, comFesta) {
+    state.numero = n;
+    $("#b-confirm").hidden = true;
+    $("#r-num").textContent = `Nº ${n}`;
+    $("#r-pos-n").textContent = `${n}º`; $("#r-pos-n2").textContent = n;
+    $("#r-pos").hidden = false; $("#story").hidden = false;
+    if (comFesta) { vibrate([60, 40, 60]); confetti($("#fx"), .6); }
+    await desenharCracha();
   }
 
   $("#b-confirm").addEventListener("click", async () => {
@@ -149,13 +191,7 @@
     b.disabled = true; b.textContent = "Confirmando...";
     try {
       const n = await rpc("fnv_confirmar", { p_rid: state.resultado.rid });
-      state.numero = n;
-      b.hidden = true;
-      $("#r-num").textContent = `Nº ${n}`;
-      $("#r-pos-n").textContent = `${n}º`; $("#r-pos-n2").textContent = n;
-      $("#r-pos").hidden = false; $("#story").hidden = false;
-      vibrate([60, 40, 60]); confetti($("#fx"), .6);
-      await desenharCracha();
+      await aplicarConfirmacao(n, true);
       $("#r-pos").scrollIntoView({ behavior: "smooth", block: "center" });
     } catch (e) {
       b.disabled = false; b.textContent = "Confirmo meu chamado 🙌";
@@ -244,6 +280,20 @@
   fetch("video.mp4", { method: "HEAD" }).then(r => {
     if (r.ok && (r.headers.get("content-type") || "").includes("video")) { $("#video").src = "video.mp4"; $("#video-card").hidden = false; }
   }).catch(() => {});
+
+  /* Ao abrir: se este aparelho já respondeu, volta direto ao resultado */
+  (async () => {
+    const memo = lembrado();
+    if (!memo || !memo.zap) return;
+    $("#think-text").textContent = "Carregando seu resultado...";
+    mostrar("s-think");
+    try {
+      const r = await rpc("fnv_consultar", { p_whatsapp: memo.zap });
+      if (r && r.respondeu) { Object.assign(state, { nome: r.nome || memo.nome, zap: memo.zap }); return mostrarResultado(r, true); }
+      esquecer();
+    } catch (e) {}
+    mostrar("s-start");
+  })();
 
   embers($("#embers"));
 })();
