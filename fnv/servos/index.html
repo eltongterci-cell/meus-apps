@@ -17,8 +17,8 @@
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/plus-jakarta-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/base.css?v=3">
-<link rel="stylesheet" href="assets/quiz.css?v=3">
+<link rel="stylesheet" href="assets/base.css?v=4">
+<link rel="stylesheet" href="assets/quiz.css?v=4">
 </head>
 <body>
 <canvas class="embers" id="embers" aria-hidden="true"></canvas>
@@ -98,13 +98,18 @@
         </div>
       </article>
 
-      <div class="card mission">
-        <span class="mission-icon">🎯</span>
-        <div class="stack-sm">
-          <span class="card-title" style="margin:0">Sua missão</span>
-          <p id="r-mission"></p>
-        </div>
-      </div>
+      <section class="mission" aria-labelledby="mission-title">
+        <header class="mission-top">
+          <span class="eyebrow" id="mission-title">Sua missão</span>
+          <span class="mission-tag">Filho e servo</span>
+        </header>
+        <p class="mission-lead" id="r-lead"></p>
+        <p class="mission-body" id="r-body"></p>
+        <footer class="mission-foot">
+          <span class="mission-emoji" id="r-emoji2" aria-hidden="true">🔥</span>
+          <span>Você é parte essencial do que Deus vai fazer nesta noite.</span>
+        </footer>
+      </section>
 
       <div class="stack" id="actions">
         <button class="btn btn-lime" id="b-confirm">Confirmo meu chamado 🙌</button>
@@ -160,7 +165,7 @@
   </section>
 </main>
 
-<script src="assets/core.js?v=3"></script>
-<script src="assets/quiz.js?v=3"></script>
+<script src="assets/core.js?v=4"></script>
+<script src="assets/quiz.js?v=4"></script>
 </body>
 </html>

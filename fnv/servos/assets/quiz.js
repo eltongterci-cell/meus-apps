@@ -131,7 +131,11 @@
     $("#r-first").textContent = firstName(state.nome);
     $("#r-sector").textContent = r.setor;
     $("#r-emoji").textContent = EMOJI[r.setor] || "🔥";
-    $("#r-mission").textContent = r.missao || "Você faz parte do time que vai fazer o Fogo na Vila acontecer.";
+    const missao = (r.missao || "Você faz parte do time que vai fazer o Fogo na Vila acontecer.").trim();
+    const [lead, ...resto] = missao.split(/(?<=[.!?])\s+/);
+    $("#r-lead").textContent = lead;
+    $("#r-body").textContent = resto.join(" ");
+    $("#r-emoji2").textContent = EMOJI[r.setor] || "🔥";
     $("#r-coord").textContent = r.coordenador || "A definir";
     if (r.link) { $("#b-group").href = r.link; $("#b-group").hidden = false; }
     mostrar("s-reveal");
