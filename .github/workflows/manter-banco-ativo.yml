@@ -2,7 +2,7 @@
 name: Manter banco ativo
 on:
   schedule:
-    - cron: "17 11 */2 * *"   # a cada 2 dias, 08:17 em Brasília
+    - cron: "17 11 * * *"   # todo dia, 08:17 em Brasília
   workflow_dispatch:
 jobs:
   ping:
@@ -13,3 +13,7 @@ jobs:
           curl -fsS -X POST "https://pplhwupjbrtzqdwzlcem.supabase.co/rest/v1/rpc/bemviver_mes_aberto" \
             -H "apikey: sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93" \
             -H "Content-Type: application/json" -d '{}'
+      - name: Consulta leve ao banco do Relógio de Oração do FNV
+        run: |
+          curl -fsS "https://ebbvkmaazyefsysbnvag.supabase.co/rest/v1/fnv_oracao?select=id&limit=1" \
+            -H "apikey: sb_publishable_iUUNVitPX8ei2dCT9fV5bA_oDKIx3bC"
