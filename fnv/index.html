@@ -21,8 +21,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Relógio FNV">
-<link rel="preconnect" href="https://ebbvkmaazyefsysbnvag.supabase.co" crossorigin>
-<link rel="dns-prefetch" href="https://ebbvkmaazyefsysbnvag.supabase.co">
+<link rel="preconnect" href="https://pplhwupjbrtzqdwzlcem.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://pplhwupjbrtzqdwzlcem.supabase.co">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
@@ -902,9 +902,9 @@ window.addEventListener("load",function(){setTimeout(function(){if(!window.__rel
 (function(){ /* app isolado: nada de fora (ex.: selo do Netlify) consegue colidir com nomes daqui */
 try{
 /* ---------- configuração ---------- */
-const SB="https://ebbvkmaazyefsysbnvag.supabase.co";
-const KEY="sb_publishable_iUUNVitPX8ei2dCT9fV5bA_oDKIx3bC";
-const ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViYnZrbWFhenllZnN5c2JudmFnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNTk3NjcsImV4cCI6MjA5NDkzNTc2N30.4Y2Ullu9E8DvL0EmTRNFA5LkFXHRqe_a0Hxoihcm3c4";
+const SB="https://pplhwupjbrtzqdwzlcem.supabase.co";
+const KEY="sb_publishable_0X4Jd1nj8bF6YcoqkbawvA_UPOkdH93";
+const ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBwbGh3dXBqYnJ0enFkd3psY2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5ODczODYsImV4cCI6MjEwNjU2MzM4Nn0.wOm9lQH2gN4Y01BrpUeQ09elDOASsd0gELs-yDwmf20";
 const H={apikey:KEY,"Content-Type":"application/json"};
 const SITE="https://eltongterci-cell.github.io/meus-apps/fnv";
 const MAX=5, TURNO_MIN=30, TOLERANCIA_MIN=5;
@@ -991,7 +991,7 @@ function leuHoje(dia){
 async function marcarLeitura(dia,nome,el){
   nome=(nome||"").trim(); if(!nome){toast("Escreva seu nome para marcar a leitura.");return false}
   try{
-    await rpc("fnv_ler",{p_dia:dia,p_nome:nome});
+    await rpc("fnvo_ler",{p_dia:dia,p_nome:nome});
     ls("rel_nome",nome); lido[dia]=1; ls("rel_lido",JSON.stringify(lido));
     leituras.push({dia,nome}); render(); burst(null); toast("Leitura do dia concluída!"); avisar(); carregar(); return true;
   }catch(err){toast(err.message);return false}
@@ -1110,10 +1110,10 @@ async function carregar(){
   const seq=++cargaSeq, de=`&dia=gte.${DAYS[0].k}&dia=lte.${DAYS[DAYS.length-1].k}`;
   try{
     const [novas,lidas,jej,ren]=await Promise.all([
-      tudo("fnv_oracao?select=id,dia,hora,nome,equipe,orando_em&order=created_at.asc,id.asc"+de,true),
-      tudo("fnv_leitura?select=dia,nome&order=id.asc"+de),
-      tudo("fnv_jejum?select=dia,tipo&order=dia.asc,tipo.asc"+de),
-      tudo("fnv_renuncia?select=dia&order=dia.asc"+de)]);
+      tudo("fnvo_oracao?select=id,dia,hora,nome,equipe,orando_em&order=created_at.asc,id.asc"+de,true),
+      tudo("fnvo_leitura?select=dia,nome&order=id.asc"+de),
+      tudo("fnvo_jejum?select=dia,tipo&order=dia.asc,tipo.asc"+de),
+      tudo("fnvo_renuncia?select=dia&order=dia.asc"+de)]);
     if(seq!==cargaSeq) return;               // chegou uma resposta mais nova; ignora esta
     if(jej) jejuns=jej;
     if(ren) renuncias=ren;
@@ -1444,7 +1444,7 @@ document.addEventListener("click",async e=>{
   if(rm){
     if(rm.dataset.sure!=="1"){rm.dataset.sure="1";rm.classList.add("sure");rm.textContent="Remover?";setTimeout(()=>{if(rm.isConnected){rm.dataset.sure="";rm.classList.remove("sure");rm.textContent="×"}},4000);return}
     rm.disabled=true; const id=rm.dataset.admRm;
-    try{await rpc("fnv_admin_remover",{p_senha:liderSenha,p_id:id});
+    try{await rpc("fnvo_admin_remover",{p_senha:liderSenha,p_id:id});
       reservas=reservas.filter(x=>x.id!==id); if(mine[id]){delete mine[id];saveMine()} render(); toast("Nome removido"); avisar()}
     catch(err){toast(err.message); if(/senha/i.test(err.message)) sairLider()}
     carregar(); return}
@@ -1463,7 +1463,7 @@ document.addEventListener("click",async e=>{
     const dia=jo.dataset.jejumOk, nome=ls("rel_nome")||"";
     if(!nome){pedirNome=true;renderMeuDia();toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
     jo.disabled=true;
-    try{await rpc("fnv_jejuar",{p_dia:dia,p_nome:nome,p_tipo:jejumTipo});
+    try{await rpc("fnvo_jejuar",{p_dia:dia,p_nome:nome,p_tipo:jejumTipo});
       jejumFeito[dia]=jejumTipo; ls("rel_jejum_feito",JSON.stringify(jejumFeito)); jejuns.push({dia,tipo:jejumTipo});
       render(); burst(null); toast("Jejum concluído. Deus vê em secreto!"); avisar(); carregar()}
     catch(err){toast(err.message);jo.disabled=false}
@@ -1473,7 +1473,7 @@ document.addEventListener("click",async e=>{
     const dia=ro.dataset.renOk, nome=ls("rel_nome")||"";
     if(!nome){pedirNome=true;renderMeuDia();toast("Coloque seu nome para marcar.");setTimeout(()=>$("nomeLeitura")&&$("nomeLeitura").focus(),30);return}
     ro.disabled=true;
-    try{await rpc("fnv_renunciar",{p_dia:dia,p_nome:nome});
+    try{await rpc("fnvo_renunciar",{p_dia:dia,p_nome:nome});
       renFeito[dia]=1; ls("rel_renuncia_feito",JSON.stringify(renFeito)); renuncias.push({dia});
       render(); burst(null); toast("Renúncia concluída. Deus vê em secreto!"); avisar(); carregar()}
     catch(err){toast(err.message);ro.disabled=false}
@@ -1497,7 +1497,7 @@ document.addEventListener("click",async e=>{
   const cf=t.closest("[data-confirm]");
   if(cf){cf.disabled=true;const id=cf.dataset.confirm;
     cf.lastChild.textContent="Acendendo…";
-    try{await rpc("fnv_confirmar",{p_id:id,p_token:mine[id]});
+    try{await rpc("fnvo_confirmar",{p_id:id,p_token:mine[id]});
       const r=reservas.find(x=>x.id===id); if(r) r.orando_em=new Date().toISOString();
       render(); burst(null); toast("Chama acesa! Deus está ouvindo."); avisar()}
     catch(err){toast(err.message);cf.disabled=false;cf.lastChild.textContent="Comecei a orar"}
@@ -1507,7 +1507,7 @@ document.addEventListener("click",async e=>{
   if(cc){
     if(cc.dataset.sure!=="1"){const txt=cc.textContent;cc.dataset.sure="1";cc.classList.add("sure");cc.textContent="Sim, cancelar";setTimeout(()=>{if(cc.isConnected){cc.dataset.sure="";cc.classList.remove("sure");cc.textContent=txt}},4000);return}
     cc.disabled=true;const id=cc.dataset.cancel;
-    try{await rpc("fnv_cancelar",{p_id:id,p_token:mine[id]});delete mine[id];saveMine();reservas=reservas.filter(x=>x.id!==id);ticketAberto="";render();toast("Horário cancelado");avisar()}
+    try{await rpc("fnvo_cancelar",{p_id:id,p_token:mine[id]});delete mine[id];saveMine();reservas=reservas.filter(x=>x.id!==id);ticketAberto="";render();toast("Horário cancelado");avisar()}
     catch(err){toast(err.message)}
     carregar();
   }
@@ -1550,7 +1550,7 @@ $("form").addEventListener("submit",async e=>{
   $("salvar").disabled=true; $("salvar").textContent="Reservando…";
   try{
     const {dia,hora}=pending;
-    const j=await rpc("fnv_reservar",{p_dia:dia,p_hora:hora,p_nome:nome,p_pin:garantirPin()});
+    const j=await rpc("fnvo_reservar",{p_dia:dia,p_hora:hora,p_nome:nome,p_pin:garantirPin()});
     ls("rel_pin_sync","1");
     const row=Array.isArray(j)?j[0]:j;
     if(row&&row.id){mine[row.id]=row.token;saveMine();reservas.push({id:row.id,dia,hora,nome,equipe,orando_em:null})}
@@ -1608,7 +1608,7 @@ $("recForm").addEventListener("submit",async e=>{
   if(!nome||!/^\d{4}$/.test(pin)){recErr("Escreva seu nome e o código de 4 números.");return}
   $("recOk").disabled=true; $("recOk").textContent="Procurando…";
   try{
-    const rows=await rpc("fnv_recuperar",{p_nome:nome,p_pin:pin})||[];
+    const rows=await rpc("fnvo_recuperar",{p_nome:nome,p_pin:pin})||[];
     if(!rows.length){recErr("Não achamos horários com esse nome e código.");return}
     rows.forEach(r=>{mine[r.id]=r.token}); saveMine();
     ls("rel_nome",nome); meuPin=pin; ls("rel_pin",pin); ls("rel_pin_sync","1");
@@ -1620,7 +1620,7 @@ $("recForm").addEventListener("submit",async e=>{
 function sincronizarPin(){
   if(ls("rel_pin_sync")||!Object.keys(mine).length) return;
   ls("rel_pin_sync","1"); const p=garantirPin();
-  for(const [id,tk] of Object.entries(mine)) rpc("fnv_definir_pin",{p_id:id,p_token:tk,p_pin:p}).catch(()=>{});
+  for(const [id,tk] of Object.entries(mine)) rpc("fnvo_definir_pin",{p_id:id,p_token:tk,p_pin:p}).catch(()=>{});
 }
 
 /* ---------- modo líder ---------- */
@@ -1635,7 +1635,7 @@ $("lidForm").addEventListener("submit",async e=>{
   const senha=$("lidSenha").value; if(!senha){lidErr("Digite a senha.");return}
   $("lidOk").disabled=true; $("lidOk").textContent="Conferindo…";
   try{
-    const ok=await rpc("fnv_admin_ok",{p_senha:senha});
+    const ok=await rpc("fnvo_admin_ok",{p_senha:senha});
     if(ok!==true){lidErr("Senha incorreta.");return}
     liderSenha=senha; try{sessionStorage.setItem("rel_lider",senha)}catch(x){}
     $("lidbg").hidden=true; toast("Modo líder ativo"); irPara("horarios");
