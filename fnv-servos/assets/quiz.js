@@ -139,6 +139,7 @@
   }
 
   $("#b-retry").addEventListener("click", () => { esquecer(); location.reload(); });
+  $("#b-outro").addEventListener("click", () => { esquecer(); location.reload(); });
 
   /* ---------- REVELAÇÃO ---------- */
   function revelar(r, voltou = false) {
