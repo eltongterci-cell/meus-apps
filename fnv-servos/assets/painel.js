@@ -267,7 +267,9 @@
   });
 
   /* ---------- 7. COBRANÇA ---------- */
-  $("#msg").value = store.get("fnv_msg") || CONFIG.mensagemCobranca;
+  const MSG_ANTIGA = "A paz do Senhor, {nome}! Você foi convocado para servir no Fogo na Vila, a maior vigília de Vila Velha. Responda o quiz e descubra o seu setor: {link}";
+  const salva = store.get("fnv_msg");
+  $("#msg").value = salva && salva !== MSG_ANTIGA ? salva : CONFIG.mensagemCobranca;
   $("#msg").addEventListener("input", () => { store.set("fnv_msg", $("#msg").value); renderCobranca(); });
   $("#cob-chips").addEventListener("click", e => {
     const c = e.target.closest(".chip"); if (!c) return;
@@ -289,7 +291,7 @@
   function renderCobranca() {
     const L = listasCobranca();
     $("#c-pend").textContent = L.pend.length; $("#c-nconf").textContent = L.nconf.length; $("#c-sgrupo").textContent = L.sgrupo.length; $("#c-semcad").textContent = L.semcad.length;
-    const textoGrupo = v => { const st = setorDe(v) || {}; return `A paz do Senhor, ${firstName(nomeDe(v))}! Vimos que você ainda não entrou no grupo do seu setor (${st.nome}) do Fogo na Vila. É por lá que vão todas as orientações. Entre agora pelo link: ${st.link_whatsapp}`; };
+    const textoGrupo = v => { const st = setorDe(v) || {}; return `A paz do Senhor, *${firstName(nomeDe(v))}*! 🙌\n\nFalta só um passo: entrar no grupo do seu setor, *${st.nome}*.\n\nÉ por lá que vão todas as orientações para o *Fogo na Vila*. Toque no link e entre agora:\n\n${st.link_whatsapp}`; };
     const texto = n => $("#msg").value.replace(/\{nome\}/g, firstName(n)).replace(/\{link\}/g, QUIZ);
     let html = "";
     if (filtro === "semcad") {
