@@ -170,9 +170,25 @@
     </div>
   </section>
 </main>
+<a id="zapbar" class="zapbar" target="_blank" rel="noopener" hidden>
+  <span class="zapbar-txt"><small>Último passo</small><b>Entre no grupo do seu setor</b></span>
+  <span class="zapbar-go">Entrar ➜</span>
+</a>
+<style>
+.zapbar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;display:flex;align-items:center;justify-content:space-between;gap:12px;
+padding:14px 16px;border-radius:18px;background:#25D366;color:#06210f;text-decoration:none;box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 0 rgba(37,211,102,.7);animation:zapPulse 1.6s infinite}
+.zapbar[hidden]{display:none}
+.zapbar-txt{display:flex;flex-direction:column;line-height:1.15}
+.zapbar-txt small{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.zapbar-txt b{font-size:17px;font-weight:800}
+.zapbar-go{background:#06210f;color:#25D366;font-weight:800;padding:10px 14px;border-radius:12px;white-space:nowrap}
+@keyframes zapPulse{0%{box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 0 rgba(37,211,102,.7)}70%{box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 10px 30px rgba(0,0,0,.55),0 0 0 0 rgba(37,211,102,0)}}
+@media (prefers-reduced-motion:reduce){.zapbar{animation:none}}
+body.tem-zapbar #s-reveal{padding-bottom:110px}
+</style>
 
 <script src="assets/config.js?v=10"></script>
 <script src="assets/core.js?v=7"></script>
-<script src="assets/quiz.js?v=10"></script>
+<script src="assets/quiz.js?v=11"></script>
 </body>
 </html>
