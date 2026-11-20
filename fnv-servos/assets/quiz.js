@@ -266,10 +266,6 @@
     }, "image/png");
   });
 
-  /* vídeo da liderança: aparece só se existir */
-  fetch("video.mp4", { method: "HEAD" }).then(r => {
-    if (r.ok && (r.headers.get("content-type") || "").includes("video")) { $("#video").src = "video.mp4"; $("#video-card").hidden = false; }
-  }).catch(() => {});
 
   /* Ao abrir: se este aparelho já respondeu, volta direto ao resultado */
   (async () => {

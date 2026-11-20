@@ -22,7 +22,7 @@ const CONFIG = {
     "Venda de Refrigerante e Salgado": "🥤",
     "Palco e instrumentação": "🎸",
     "Intercessão": "🙏",
-    "Enfermagem": "🩺",
+    "Enfermaria": "🩺",
     "Coordenação geral": "📋"
   },
 
