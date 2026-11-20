@@ -309,6 +309,46 @@
     $("#list-cob").innerHTML = html || `<p class="empty">${filtro === "pend" && !D.servos.length ? "Cadastre os servos na aba Servos primeiro." : "Ninguém aqui 🙌"}</p>`;
   }
 
+  /* ---------- 7b. LISTAS DOS NÚMEROS DO TOPO ---------- */
+  const msgCobranca = v => $("#msg").value.replace(/\{nome\}/g, firstName(nomeDe(v))).replace(/\{link\}/g, QUIZ);
+  const chamar = (v, txt) => `<a class="btn btn-lime btn-sm" target="_blank" rel="noopener" href="https://wa.me/${waNumber(v.whatsapp)}?text=${encodeURIComponent(txt)}">Chamar</a>`;
+  const nomeSetorDe = v => { const st = setorDe(v); return st ? `${EMOJI[st.nome] || "🔥"} ${esc(st.nome)}` : "Sem setor"; };
+  const secao = (titulo, lista, opts = {}) => `<h3 class="sheet-sec${opts.warn ? " is-warn" : ""}">${titulo} (${lista.length})</h3>` +
+    (lista.length ? lista.map(v => linhaPessoa(v, { detalhe: nomeSetorDe(v), lado: opts.lado ? opts.lado(v) : "" })).join("") : '<p class="empty">Ninguém aqui 🙌</p>');
+
+  function abrirLista(tipo) {
+    const todos = [...D.servos].sort((a, b) => nomeDe(a).localeCompare(nomeDe(b)));
+    let titulo = "", html = "";
+    if (tipo === "cad") {
+      titulo = `Cadastrados (${D.servos.length})`;
+      html = D.setores.map(st => { const ps = pessoasDo(st); return ps.length ? `<h3 class="sheet-sec">${EMOJI[st.nome] || "🔥"} ${esc(st.nome)} (${ps.length})</h3>` + ps.map(v => linhaPessoa(v)).join("") : ""; }).join("");
+    } else if (tipo === "resp") {
+      titulo = "Quem respondeu";
+      html = secao("Já responderam", todos.filter(v => situacao(v) !== "no")) +
+             secao("Ainda não responderam", todos.filter(v => situacao(v) === "no"), { warn: true, lado: v => chamar(v, msgCobranca(v)) });
+      const L = listasCobranca();
+      if (L.semcad.length) html += `<h3 class="sheet-sec is-warn">Responderam sem cadastro (${L.semcad.length})</h3>` + L.semcad.map(r => `<div class="person"><div class="person-info"><b>${esc(nomeBonito(r.nome))}</b><small>${phone(r.whatsapp)} · Cadastre na aba Servos</small></div></div>`).join("");
+    } else if (tipo === "conf") {
+      titulo = "Quem confirmou";
+      html = secao("Confirmaram", todos.filter(v => situacao(v) === "ok")) +
+             secao("Responderam, mas não confirmaram", todos.filter(v => situacao(v) === "mid"), { warn: true, lado: v => chamar(v, msgCobranca(v)) }) +
+             secao("Ainda não responderam", todos.filter(v => situacao(v) === "no"), { warn: true, lado: v => chamar(v, msgCobranca(v)) });
+    } else {
+      titulo = "Meta por setor";
+      html = D.setores.map(st => {
+        const ps = pessoasDo(st), n = ps.length, meta = +st.meta || 0, conf = ps.filter(v => situacao(v) === "ok").length;
+        const falta = meta ? Math.max(0, meta - n) : 0;
+        return `<div class="meta-row"><div><b>${EMOJI[st.nome] || "🔥"} ${esc(st.nome)}</b><small>${conf} de ${n} confirmado${n === 1 ? "" : "s"}${falta ? ` · faltam ${falta} para a meta` : ""}</small></div><b class="${falta ? "short" : "ok"}">${n}${meta ? "/" + meta : ""}</b></div>`;
+      }).join("");
+    }
+    $("#sheet-title").textContent = titulo; $("#sheet-body").innerHTML = html;
+    $("#sheet").hidden = false; document.body.style.overflow = "hidden"; $("#sheet-body").scrollTop = 0;
+  }
+  const fecharLista = () => { $("#sheet").hidden = true; document.body.style.overflow = ""; };
+  $$(".kpi[data-kpi]").forEach(k => k.addEventListener("click", () => abrirLista(k.dataset.kpi)));
+  $("#sheet-x").addEventListener("click", fecharLista);
+  $("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") fecharLista(); });
+
   $("#list-cob").addEventListener("click", e => {
     const c = e.target.closest("[data-cad]"); if (!c) return;
     const [n, z] = c.dataset.cad.split("|");

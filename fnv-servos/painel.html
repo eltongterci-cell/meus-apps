@@ -38,10 +38,10 @@
     </header>
 
     <div class="kpis">
-      <div class="kpi"><b id="k-cad">0</b><span>Cadastrados</span></div>
-      <div class="kpi"><b id="k-resp">0</b><span>Responderam</span></div>
-      <div class="kpi"><b id="k-conf">0</b><span>Confirmaram</span></div>
-      <div class="kpi"><b id="k-meta">--</b><span>Meta</span></div>
+      <button class="kpi" data-kpi="cad"><b id="k-cad">0</b><span>Cadastrados</span></button>
+      <button class="kpi" data-kpi="resp"><b id="k-resp">0</b><span>Responderam</span></button>
+      <button class="kpi" data-kpi="conf"><b id="k-conf">0</b><span>Confirmaram</span></button>
+      <button class="kpi" data-kpi="meta"><b id="k-meta">--</b><span>Meta</span></button>
     </div>
     <div class="quick">
       <button class="btn btn-sm" id="b-copy-quiz">📋 Link do quiz</button>
@@ -100,8 +100,31 @@
   </section>
 </main>
 
+<div class="sheet-bg" id="sheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <header class="sheet-head"><h2 id="sheet-title"></h2><button class="icon-btn" id="sheet-x" aria-label="Fechar">✕</button></header>
+    <div class="sheet-body" id="sheet-body"></div>
+  </div>
+</div>
+<style>
+button.kpi{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button.kpi:active{transform:scale(.97)}
+.sheet-bg{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.65);display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg[hidden]{display:none}
+.sheet{width:100%;max-width:640px;max-height:88vh;display:flex;flex-direction:column;background:#141413;border:1px solid rgba(255,255,255,.08);border-bottom:0;border-radius:24px 24px 0 0;animation:sheetUp .22s ease-out}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 18px 10px}
+.sheet-head h2{margin:0;font-size:22px}
+.sheet-body{overflow-y:auto;padding:0 18px calc(24px + env(safe-area-inset-bottom))}
+.sheet-sec{margin:14px 0 6px;font:800 12px/1.3 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--lime)}
+.sheet-sec.is-warn{color:#FBBF24}
+.meta-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.meta-row small{display:block;color:var(--muted)}
+.meta-row b.ok{color:var(--lime)} .meta-row b.short{color:#FBBF24}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+</style>
+
 <script src="assets/config.js?v=10"></script>
 <script src="assets/core.js?v=7"></script>
-<script src="assets/painel.js?v=8"></script>
+<script src="assets/painel.js?v=9"></script>
 </body>
 </html>
