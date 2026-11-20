@@ -23,7 +23,7 @@ const CONFIG = {
     "Palco e instrumentação": "🎸",
     "Intercessão": "🙏",
     "Enfermaria": "🩺",
-    "Coordenação geral": "📋"
+    "Coordenação do Pátio": "📋"
   },
 
   /* Perguntas do quiz: [pergunta, [[emoji, resposta], ...]] — sempre 4 respostas */
