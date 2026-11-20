@@ -6,7 +6,7 @@
 const CONFIG = {
 
   /* Meta total de servos (aparece no Mural dos Convocados) */
-  metaMural: 100,
+  metaMural: 101,   // 100 servos + Jesus, o 1º convocado
 
   /* Emoji de cada setor. O nome precisa ser igual ao cadastrado no banco. */
   setores: {
