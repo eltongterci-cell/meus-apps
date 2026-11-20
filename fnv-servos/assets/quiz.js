@@ -154,6 +154,7 @@
     $("#r-emoji2").textContent = EMOJI[r.setor] || "🔥";
     $("#r-coord").textContent = r.coordenador || "A definir";
     if (r.link) { $("#b-group").href = r.link; $("#b-group").hidden = false; }
+    if (r.link_lideres) { $("#b-lideres").href = r.link_lideres; $("#b-lideres").hidden = false; }
     $("#reveal").hidden = false; $("#waiting").hidden = true;
     mostrar("s-reveal");
     if (voltou) {
