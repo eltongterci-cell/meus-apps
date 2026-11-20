@@ -41,5 +41,5 @@ const CONFIG = {
   ],
 
   /* Mensagem padrão de cobrança no painel ({nome} e {link} são trocados sozinhos) */
-  mensagemCobranca: "A paz do Senhor, *{nome}*! 🔥\n\nVocê foi *convocado* para servir no *Fogo na Vila*, a maior vigília de Vila Velha.\n\nSua missão já está separada. Responda o quiz rapidinho e descubra *em qual setor você vai servir*:\n\n{link}"
+  mensagemCobranca: "A paz do Senhor, *{nome}*! 🔥\n\nVocê foi *convocado* para servir no *Fogo na Vila*, a maior vigília de Vila Velha.\n\nResponda as 10 perguntas rapidinho e descubra *a função que foi preparada para você*:\n\n👉 {link}\n\n📲 Use o seu número de WhatsApp.\n⏰ *Só até hoje, 23h59!*"
 };
