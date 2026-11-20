@@ -6,7 +6,7 @@
 const CONFIG = {
 
   /* Meta total de servos (aparece no Mural dos Convocados) */
-  metaMural: 81,
+  metaMural: 100,
 
   /* Emoji de cada setor. O nome precisa ser igual ao cadastrado no banco. */
   setores: {
@@ -17,10 +17,9 @@ const CONFIG = {
     "Fogo na Vila Store": "🛍️",
     "Manutenção": "🧰",
     "Recepção da porta": "🚪",
-    "Lanche dos voluntários": "🥪",
-    "Lanche do convidado": "🍽️",
+    "Lanche de Servos e Convidados": "🥪",
     "Venda dos churrasquinhos": "🍢",
-    "Venda dos refrigerantes": "🥤",
+    "Venda de Refrigerante e Salgado": "🥤",
     "Palco e instrumentação": "🎸",
     "Intercessão": "🙏",
     "Enfermagem": "🩺",
