@@ -158,7 +158,7 @@
       const chave = "fnv_grupo_" + String(state.zap || "").replace(/\D/g, "");
       let entrou = false; try { entrou = localStorage.getItem(chave) === "1"; } catch (e) {}
       const bar = $("#zapbar"); bar.href = r.link;
-      const marcar = () => { try { localStorage.setItem(chave, "1"); } catch (e) {} bar.hidden = true; document.body.classList.remove("tem-zapbar"); };
+      const marcar = () => { try { localStorage.setItem(chave, "1"); } catch (e) {} bar.hidden = true; document.body.classList.remove("tem-zapbar"); const rid = state.resultado && state.resultado.rid; if (rid) rpc("fnv_grupo", { p_rid: rid }).catch(() => {}); };
       if (!entrou) { bar.hidden = false; document.body.classList.add("tem-zapbar"); }
       if (!bar.dataset.ok) { bar.dataset.ok = "1"; bar.addEventListener("click", marcar); $("#b-group").addEventListener("click", marcar); }
     }

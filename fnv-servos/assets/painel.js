@@ -48,6 +48,9 @@
   const situacao = sv => { const r = respostaDe(sv); return !r ? "no" : r.confirmado ? "ok" : "mid"; };
   const SELO = { ok: '<span class="status ok">Confirmou</span>', mid: '<span class="status mid">Respondeu</span>', no: '<span class="status no">Pendente</span>' };
   const setorDe = sv => D.setores.find(s => s.id === sv.setor_id);
+  /* Grupo: quem já tocou no botão "Entrar no grupo do meu setor" */
+  const abriuGrupo = sv => D.respostas.some(r => last8(r.whatsapp) === last8(sv.whatsapp) && r.grupo_em);
+  const seloGrupo = sv => situacao(sv) === "no" ? "" : abriuGrupo(sv) ? ' <span class="status ok">Abriu o grupo</span>' : ' <span class="status no">Não abriu o grupo</span>';
   const pessoasDo = s => D.servos.filter(v => v.setor_id === s.id).sort((a, b) => nomeDe(a).localeCompare(nomeDe(b)));
 
   /* Linha de uma pessoa: nome, detalhes e situação à esquerda; botões à direita */
@@ -60,7 +63,7 @@
           <b>${esc(nome)}</b>
           <small>${phone(v.whatsapp)}${detalhe ? " · " + detalhe : ""}</small>
           ${antes}
-          ${selo ? `<span>${SELO[situacao(v)]}</span>` : ""}
+          ${selo ? `<span>${SELO[situacao(v)]}${seloGrupo(v)}</span>` : ""}
         </div>
         <div class="person-side">${lado}</div>
       </div>`;
@@ -277,6 +280,7 @@
     return {
       pend: D.servos.filter(v => situacao(v) === "no"),
       nconf: D.servos.filter(v => situacao(v) === "mid"),
+      sgrupo: D.servos.filter(v => situacao(v) !== "no" && !abriuGrupo(v) && (setorDe(v) || {}).link_whatsapp),
       semcad: D.respostas.filter(r => { const k = last8(r.whatsapp); if (cad.has(k) || vistos.has(k)) return false; vistos.add(k); return true; }),
       nomeSetor
     };
@@ -284,7 +288,8 @@
 
   function renderCobranca() {
     const L = listasCobranca();
-    $("#c-pend").textContent = L.pend.length; $("#c-nconf").textContent = L.nconf.length; $("#c-semcad").textContent = L.semcad.length;
+    $("#c-pend").textContent = L.pend.length; $("#c-nconf").textContent = L.nconf.length; $("#c-sgrupo").textContent = L.sgrupo.length; $("#c-semcad").textContent = L.semcad.length;
+    const textoGrupo = v => { const st = setorDe(v) || {}; return `A paz do Senhor, ${firstName(nomeDe(v))}! Vimos que você ainda não entrou no grupo do seu setor (${st.nome}) do Fogo na Vila. É por lá que vão todas as orientações. Entre agora pelo link: ${st.link_whatsapp}`; };
     const texto = n => $("#msg").value.replace(/\{nome\}/g, firstName(n)).replace(/\{link\}/g, QUIZ);
     let html = "";
     if (filtro === "semcad") {
@@ -297,7 +302,7 @@
       html = L[filtro].map(v => {
         return linhaPessoa(v, {
           detalhe: esc(L.nomeSetor(v)), selo: false,
-          lado: `<a class="btn btn-lime btn-sm" target="_blank" rel="noopener" href="https://wa.me/${waNumber(v.whatsapp)}?text=${encodeURIComponent(texto(nomeDe(v)))}">Chamar</a>`
+          lado: `<a class="btn btn-lime btn-sm" target="_blank" rel="noopener" href="https://wa.me/${waNumber(v.whatsapp)}?text=${encodeURIComponent(filtro === "sgrupo" ? textoGrupo(v) : texto(nomeDe(v)))}">Chamar</a>`
         });
       }).join("");
     }
